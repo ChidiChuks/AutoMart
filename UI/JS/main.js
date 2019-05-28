@@ -101,3 +101,9 @@ function passwordReset() {
 function emailIsValid(email) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
+
+const search = document.querySelector("#search");
+const table = document.querySelector(".table");
+search.addEventListener('keyup', () => {
+    filterTable(table);
+});

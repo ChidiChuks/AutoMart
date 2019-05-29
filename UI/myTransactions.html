@@ -10,6 +10,7 @@
 </head>
 
 <body>
+
     <div class="header">
         <!-- start of top header-->
         <div class="top-header">
@@ -57,8 +58,8 @@
                 <nav>
                     <ul>
                         <li><a href="postAd.html">Create Ad</a></li>
-                        <li><a href="userAds.html" class="active">My Ads</a></li>
-                        <li><a href="myTransactions.html">Transactions</a></li>
+                        <li><a href="userAds.html">My Ads</a></li>
+                        <li><a href="myTransactions.html" class="active">Transactions</a></li>
                     </ul>
                 </nav>
             </div>
@@ -67,55 +68,63 @@
 
     <div class="content">
         <div class="wrap">
+            <div class="resize-table">
+                <h3 class="txt-center caption">My Transactions</h3>
+                <input type="text" name="search" placeholder="Search table" class="search" id="search" />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>SN</th>
+                            <th>Transaction ID</th>
+                            <th>Transaction Type</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="invoice.html">7X6XY7637E</a></td>
+                            <td>Bought</td>
+                            <td> N12.5m</td>
+                            <td>12/03/2019</td>
+                            <td>Delivered</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><a href="">83734A7D4</a></td>
+                            <td>Sold</td>
+                            <td> N3.1m</td>
+                            <td>12/03/2019</td>
+                            <td>Pending</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><a href="">9039D83HD</a></td>
+                            <td>Sold</td>
+                            <td> N5.3m</td>
+                            <td>12/03/2019</td>
+                            <td>Delivered</td>
 
-            <div class="container">
-                <form action="">
-                    <div class="row">
-                        <h1 class="txt-center">UPDATE AD STATUS</h1>
-                        <div class="col-25">
-                            <label for="email">Buyer Email</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="email" id="email" name="email" placeholder="Buyer email..">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="email">Buyer's Name</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="text" id="bname" name="bname" placeholder="Buyer name ..">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="status">Status</label>
-                        </div>
-                        <div class="col-75">
-                            <select id="status" name="status">
-                  <option value="sold" selected disabled>Sold</option>
-                </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="subject">Review</label>
-                        </div>
-                        <div class="col-75">
-                            <textarea id="review" name="review" placeholder="Write your review and suggestions here .." style="height:200px"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <input type="submit" value="Submit" class="btn">
-                    </div>
-                </form>
+
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td><a href="">3749D738D</a></td>
+                            <td>Bought</td>
+                            <td> N7.4m</td>
+                            <td>12/03/2019</td>
+                            <td>Delivered</td>
+
+                        </tr>
+
+                </table>
             </div>
-
         </div>
         <div class="clear"> </div>
 
     </div>
-
 
     <!---- footer---->
     <div class="bottom-cols">
@@ -143,15 +152,14 @@
                 <ul>
                     <li> <a href="#">Privacy Policy</a> <span></span> </li>
                     <li><a href="#">Cookie Settings</a></li>
-                    <div class="clear"></div>
                 </ul>
             </div>
             <div class="clear"></div>
         </div>
     </footer>
 
-    <script src="./js/main.js"></script>
 
+    <script src="./js/main.js"></script>
 </body>
 
 </html>

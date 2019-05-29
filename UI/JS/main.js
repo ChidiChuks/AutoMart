@@ -107,3 +107,13 @@ const table = document.querySelector(".table");
 search.addEventListener('keyup', () => {
     filterTable(table);
 });
+
+const img1 = document.getElementById("img1");
+const img2 = document.getElementById("img2");
+
+img2.addEventListener("click", () => {
+    switchImage("img2");
+});
+img1.addEventListener("click", () => {
+    switchImage("img1");
+});

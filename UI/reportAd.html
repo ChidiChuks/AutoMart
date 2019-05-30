@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Auto Mart - #1 Car dealership online shop</title>
+    <link rel="stylesheet" type="text/css" href="CSS/styleTwo.css" />
+</head>
+
+<body>
+    <div class="header">
+        <!-- start of top header-->
+        <div class="top-header">
+            <div class="wrap">
+                <div class="top-header-center">
+                    <div class="top-header-center-alert-right">
+                        <div class="txt-center">
+                            <span id="info">Auto Mart - #1 Car dealership online shop</span>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="top-header-right">
+                    <li class="dropdown">
+                        <div class="txt-center">&#10064;</div>
+                        <div class="links">
+                            <a href="index.html">Logout</a>
+                            <a href="userProfile.html">Profile</a>
+                        </div>
+                    </li>
+
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!----start-mid-head---->
+        <div class="mid-header">
+            <div class="wrap">
+                <div class="mid-grid-left">
+                    <a class="logo" href="homepage.html"><img src="IMAGES/logo.png" alt="AutoMart Logo"></a>
+                </div>
+                <div class="mid-grid-right">
+                    <form>
+                        <label for="search"></label>
+                        <input type="text" placeholder="Search..." class="search" />
+                    </form>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <div class="header-bottom">
+            <div class="wrap">
+                <nav>
+                    <ul>
+                        <li><a href="postAd.html">Create Ad</a></li>
+                        <li><a href="userAds.html">My Ads</a></li>
+                        <li><a href="myTransactions.html">Transactions</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!--- start-content---->
+    <div class="details-page">
+        <div class="vehicle-details">
+            <div class="wrap">
+                <ul class="details-head">
+                    <li><a href="#">Home</a> <span>::</span></li>
+                    <li class="active-page"><a href="#">Ad Report Page</a></li>
+                    <div class="clear"> </div>
+                </ul>
+                <!-- Details -->
+                <div class="details-left">
+                    <div class="details-left-img">
+                        <img src="/UI/IMAGES/camry.jpg" />
+                        <div class="clear"> </div>
+
+                    </div>
+                    <div class="details-left-info">
+                        <h1>Manufacturer, model name</h1>
+                        <p class="vehicle-detail-info">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </p>
+                        <div class="vehicle-more-details">
+                            <p>Production Year: 2013<span class="float-rt"> Vehicle State: New</span></p>
+                            <p>Seller Mobile: +234817374848 <span class="float-rt">Location: Lagos, Nigeria.</span>
+                            </p>
+
+                        </div>
+                    </div>
+
+                    <div class="clear"> </div>
+                </div>
+
+            </div>
+
+
+            <div class="clear"> </div>
+            <div class="wrap">
+                <hr>
+
+                <div class="container">
+                    <form action="">
+                        <div class="row">
+                            <h3 class="txt-center">ADD REPORT FORM</h3>
+                            <p class="txt-center">Kindly be detailed as much as possible and attach any evidence you may have. Do note that, you may be contacted by our Representative for further details.</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="reason">This Vehicle is:</label>
+                            </div>
+                            <div class="col-75">
+                                <select id="status" name="status">
+                                <option value="stolen">Stolen</option>
+                                <option value="notnew">Not New</option>
+                                <option value="damaged">Damaged</option>
+        
+                              </select> </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="description">Description</label>
+                            </div>
+                            <div class="col-75">
+                                <textarea id="description" name="description" placeholder="Write a detailed report here .." style="height:200px"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="evidence">Evidence</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="file" name="evidence">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <input type="submit" value="Report" class="btn">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!---- footer---->
+    <div class="bottom-cols">
+        <div class="wrap">
+            <div class="bottom-col">
+                <h6>Terms of Use</h6>
+                <a href="#">Read here</a>
+            </div>
+            <div class="bottom-col">
+                <h6>Return Policy</h6>
+                <a href="#">Read here</a>
+            </div>
+            <div class="bottom-col">
+                <h6>Contact Support Team</h6>
+                <a href="#">Contact us here</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!--End of upper footer -->
+
+    <footer class="footer">
+        <div class="wrap">
+            <div class="footer-left">
+                <ul>
+                    <li> <a href="#">Privacy Policy</a> <span></span> </li>
+                    <li><a href="#">Cookie Settings</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </footer>
+
+    <script src="/UI/JS/main.js"></script>
+
+</body>
+
+</html>

@@ -21,15 +21,15 @@ function confirmAction(btn, msg) {
         modal.style.display = "block";
     });
 
-    const accept = document.querySelector("#yes");
-    const decline = document.querySelector("#no");
+    const yes = document.querySelector("#yes");
+    const no = document.querySelector("#no");
 
-    accept.addEventListener("click", () => {
+    yes.addEventListener("click", () => {
         alert(`Yep! You agreed to ${msg}`);
         modal.style.display = "none";
     });
 
-    decline.addEventListener("click", () => {
+    no.addEventListener("click", () => {
         alert(`Hmm, that's a decline`);
         modal.style.display = "none";
     });

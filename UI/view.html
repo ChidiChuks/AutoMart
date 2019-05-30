@@ -25,12 +25,12 @@
                 </div>
 
                 <div class="top-header-right">
-                    <span>Hello Chidi</span>
+                    <span>Hello, Admin</span>
                     <li class="dropdown">
                         <div class="txt-center">&#10064;</div>
                         <div class="links">
                             <a href="index.html">Logout</a>
-                            <a href="userProfile.html">Profile</a>
+                            <a href="profile.html">Profile</a>
                         </div>
                     </li>
                 </div>
@@ -57,9 +57,10 @@
             <div class="wrap">
                 <nav>
                     <ul>
-                        <li><a href="postAd.html">Create Ad</a></li>
-                        <li><a href="userAds.html">My Ads</a></li>
-                        <li><a href="myTransactions.html" class="active">Transactions</a></li>
+                        <li><a href="users.html">All Users</a></li>
+                        <li><a href="view.html" class="active">All Ads</a></li>
+                        <li><a href="transactions.html">All Transactions</a></li>
+                        <li><a href="notifications.html">Notifications</a></li>
                     </ul>
                 </nav>
             </div>
@@ -69,62 +70,95 @@
     <div class="content">
         <div class="wrap">
             <div class="resize-table">
-                <h3 class="txt-center caption">My Transactions</h3>
+                <h3 class="txt-center caption">ALL POSTED ADS</h3>
                 <input type="text" name="search" placeholder="Search table" class="search" id="search" />
                 <table class="table">
                     <thead>
                         <tr>
                             <th>SN</th>
-                            <th>Transaction ID</th>
-                            <th>Transaction Type</th>
-                            <th>Amount</th>
-                            <th>Date</th>
+                            <th>Ad ID</th>
+                            <th>Name</th>
+                            <th>State</th>
                             <th>Status</th>
+                            <th>Date</th>
+                            <th>User</th>
+                            <th>Deactivate</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>1</td>
-                            <td><a href="invoice.html">7X6XY7637E</a></td>
-                            <td>Bought</td>
-                            <td> N12.5m</td>
+                            <td><a href="details.html">#45SJ9EHDJ</a></td>
+                            <td>Benz, 2018</td>
+                            <td>Used</td>
+                            <td>Available</td>
                             <td>12/03/2019</td>
-                            <td>Delivered</td>
+                            <td><a href="profile.html">#939D8S8DJD</a></td>
+                            <td><button id="confirm">Deactivate</button></td>
                         </tr>
                         <tr>
-                            <td>2</td>
-                            <td><a href="">83734A7D4</a></td>
+                            <td>1</td>
+                            <td><a href="details.html">#9S9XYDISH12</a></td>
+                            <td>Benz, 2018</td>
+                            <td>Used</td>
                             <td>Sold</td>
-                            <td> N3.1m</td>
                             <td>12/03/2019</td>
-                            <td>Pending</td>
+                            <td><a href="">#8373DH3AGD3</a></td>
+                            <td><button>Deactivate</button></td>
                         </tr>
                         <tr>
-                            <td>3</td>
-                            <td><a href="">9039D83HD</a></td>
+                            <td>1</td>
+                            <td><a href="details.html">#938DAH34K390</a></td>
+                            <td>Benz, 2018</td>
+                            <td>Used</td>
+                            <td>Available</td>
+                            <td>12/03/2019</td>
+                            <td><a href="">#83ID3DUADG3</a></td>
+                            <td><button>Deactivate</button></td>
+
+
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td><a href="details.html">#34DID2S3455</a></td>
+                            <td>Benz, 2018</td>
+                            <td>Used</td>
+                            <td>Available</td>
+                            <td>12/03/2019</td>
+                            <td><a href="">#HD383948493D</a></td>
+                            <td><button>Deactivate</button></td>
+
+                        </tr>
+
+                        <tr>
+                            <td>1</td>
+                            <td><a href="details.html">#39D8383193DA</a></td>
+                            <td>Benz, 2018</td>
+                            <td>Used</td>
                             <td>Sold</td>
-                            <td> N5.3m</td>
                             <td>12/03/2019</td>
-                            <td>Delivered</td>
-
+                            <td><a href="">#839D3Y34SAO</a></td>
+                            <td><button>Deactivate</button></td>
 
                         </tr>
                         <tr>
-                            <td>4</td>
-                            <td><a href="">3749D738D</a></td>
-                            <td>Bought</td>
-                            <td> N7.4m</td>
+                            <td>1</td>
+                            <td><a href="details.html">#12d8aud7ed8</a></td>
+                            <td>Benz, 2018</td>
+                            <td>Used</td>
+                            <td>Available</td>
                             <td>12/03/2019</td>
-                            <td>Delivered</td>
+                            <td><a href="">#837dh7da7h3ahd</a></td>
+                            <td><button>Deactivate</button></td>
 
                         </tr>
-
                 </table>
             </div>
         </div>
         <div class="clear"> </div>
 
     </div>
+
 
     <!---- footer---->
     <div class="bottom-cols">
@@ -159,9 +193,22 @@
     </footer>
 
 
+    <!-- Modal content -->
     <script src="/UI/JS/main.js"></script>
 
+    <div class="modal">
+        <div class="content">
+            <h4></h4>
+            <hr />
+            <button class="btn" id="yes">Yes</button>
+            <button class="btn" id="no">No</button>
+        </div>
+    </div>
     <script>
+        const msg = "deactivate this ad";
+        confirmAction("confirm", msg);
+
+        // search 
         const search = document.querySelector("#search");
         const table = document.querySelector(".table");
         search.addEventListener('keyup', () => {

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Auto Mart - #1 Car dealership online shop</title>
+    <link rel="stylesheet" type="text/css" href="CSS/styleTwo.css" />
+</head>
+
+<body>
+
+    <div class="header">
+        <!-- start of top header-->
+        <div class="top-header">
+            <div class="wrap">
+                <div class="top-header-center">
+                    <div class="top-header-center-alert-right">
+                        <div class="txt-center">
+                            <span id="info">Auto Mart - #1 Car dealership online shop</span>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+
+                <div class="top-header-right">
+                    <li class="dropdown">
+                        <div class="txt-center">&#10064;</div>
+                        <div class="links">
+                            <a href="index.html">Logout</a>
+                            <a href="userProfile.html">Profile</a>
+                        </div>
+                    </li>
+
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <!----start-mid-head---->
+        <div class="mid-header">
+            <div class="wrap">
+                <div class="mid-grid-left">
+                    <a class="logo" href="homepage.html"><img src="IMAGES/logo.png" alt="AutoMart Logo"></a>
+                </div>
+                <div class="mid-grid-right">
+                    <form>
+                        <label for="search"></label>
+                        <input type="text" placeholder="Search..." class="search" />
+                    </form>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <div class="header-bottom">
+            <div class="wrap">
+                <nav>
+                    <ul>
+                        <li><a href="postAd.html">Create Ad</a></li>
+                        <li><a href="userAds.html">My Ads</a></li>
+                        <li><a href="myTransactions.html">Transactions</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="wrap">
+            <div class="resize-table">
+
+                <h3>ORDER SUMMARY</h3>
+                <table id="table">
+                    <thead>
+                        <th>SN</th>
+                        <th>Item No.</th>
+                        <th>Vehicle</th>
+                        <th>Name</th>
+                        <th>State</th>
+                        <th>Owner Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                    </thead>
+                    <tbody>
+                        <td>1</td>
+                        <td>#1837382jd23w</td>
+                        <td>
+                            <img src="/UI/IMAGES/benz.jpg" alt="vehicle" width="150">
+                        </td>
+                        <td> Benz, Cl-550 </td>
+                        <td>Used</td>
+                        <td>Chidi Chukwuma</td>
+                        <td>example@email.com</td>
+                        <td>+2348136266387</td>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="wrap">
+            <p id="note">Before making payment, do confirm the state of the vehicle, test and be satisfied.</p>
+            <div class="container">
+                <form action="">
+
+                    <div class="flex-row">
+                        <div class="flex-col-50">
+                            <h3>BILLING ADDRESS</h3>
+                            <label for="fname"> Full Name</label>
+                            <input type="text" id="fname" name="firstname" placeholder="Chidi Chukwuma">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email" placeholder="chidi@example.com">
+                            <label for="adr">Address</label>
+                            <input type="text" id="adr" name="address" placeholder="170 Ikorodu Road">
+                            <label for="city">City</label>
+                            <input type="text" id="city" name="city" placeholder="Lagos">
+
+                            <div class="flex-row">
+                                <div class="flex-col-50">
+                                    <label for="state">State</label>
+                                    <input type="text" id="state" name="state" placeholder="Lagos">
+                                </div>
+                            </div>
+                            <input type="submit" value="Continue to checkout" class="btn">
+
+                        </div>
+
+                        <div class="flex-col-50">
+                            <h3>PAYMENT</h3>
+                            <label for="fname">Accepted Cards</label>
+                            <div id="cards">
+                                <img src="/UI/IMAGES/paystack.png" alt="">
+                            </div>
+                            <label for="cname">Name on Card</label>
+                            <input type="text" id="cname" name="cardname" placeholder="Vivian Elisca">
+                            <label for="ccnum">Credit card number</label>
+                            <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                            <label for="expmonth">Exp Month</label>
+                            <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                            <div class="flex-row">
+                                <div class="flex-col-50">
+                                    <label for="expyear">Exp Year</label>
+                                    <input type="text" id="expyear" name="expyear" placeholder="2018">
+                                </div>
+                                <div class="flex-col-50">
+                                    <label for="cvv">CVV</label>
+                                    <input type="text" id="cvv" name="cvv" placeholder="352">
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+        <div class="clear"> </div>
+
+    </div>
+
+
+    <!---- footer---->
+    <div class="bottom-cols">
+        <div class="wrap">
+            <div class="bottom-col">
+                <h6>Terms of Use</h6>
+                <a href="#">Read here</a>
+            </div>
+            <div class="bottom-col">
+                <h6>Return Policy</h6>
+                <a href="#">Read here</a>
+            </div>
+            <div class="bottom-col">
+                <h6>Contact Support Team</h6>
+                <a href="#">Contact us here</a>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </div>
+    <!--End of upper footer -->
+
+    <footer class="footer">
+        <div class="wrap">
+            <div class="footer-left">
+                <ul>
+                    <li> <a href="#">Privacy Policy</a> <span></span> </li>
+                    <li><a href="#">Cookie Settings</a></li>
+                </ul>
+            </div>
+            <div class="clear"></div>
+        </div>
+    </footer>
+
+    <script src="/UI/JS/main.js"></script>
+
+</body>
+
+</html>

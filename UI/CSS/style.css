@@ -5,7 +5,7 @@
 }
 
 body {
-    background: url("IMAGES/benz.jpg");
+    background: url(".\IMAGES/benz.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;

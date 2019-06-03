@@ -989,7 +989,7 @@ body {
 #welcome {
     min-height: 500px;
     width: 100%;
-    background: url("/UI/IMAGES/benz2.jpg");
+    background: url("../IMAGES/benz2.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;

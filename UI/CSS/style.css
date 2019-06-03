@@ -4,7 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 body {
-    background: url("/AutoMart-gh-pages/UI/IMAGES/benz.jpg");
+    background: url("../IMAGES/benz.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;

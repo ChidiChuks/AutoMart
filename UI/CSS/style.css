@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
-* {
-    box-sizing: border-box;
-}
-
-body {
+html, body {
     background: url(".\IMAGES/benz.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;

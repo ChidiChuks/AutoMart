@@ -671,6 +671,7 @@ body {
 
 .product-pic p a {
     display: block;
+    margin-top: 10%;
     color: #2a2323;
     font-size: 0.875em;
 }
@@ -1150,7 +1151,8 @@ body {
     }
     .product-pic a img {
         display: block;
-        margin: 0 auto;
+        height: 50%;
+        object-fit: contain;
     }
     .product-grid-head {
         padding: 1em;

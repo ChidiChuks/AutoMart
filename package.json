@@ -1,0 +1,42 @@
+{
+    "name": "automart",
+    "version": "1.0.0",
+    "description": "Online marketplace for automobiles",
+    "main": "index.js",
+    "scripts": {
+        "dev": "babel-node server/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ChidiChuks/AutoMart.git"
+    },
+    "keywords": [
+        "test",
+        "npm",
+        "mocha",
+        "chai",
+        "api"
+    ],
+    "author": "Chidiebere Chukwuma",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ChidiChuks/AutoMart/issues"
+    },
+    "homepage": "https://github.com/ChidiChuks/AutoMart#readme",
+    "dependencies": {
+        "express": "^4.17.1",
+        "winston": "^3.2.1"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.4.5",
+        "@babel/node": "^7.4.5",
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "babel-register": "^6.26.0",
+        "babel-watch": "^7.0.0",
+        "eslint": "^5.16.0",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-plugin-import": "^2.17.3"
+    }
+}

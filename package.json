@@ -11,13 +11,6 @@
         "type": "git",
         "url": "git+https://github.com/ChidiChuks/AutoMart.git"
     },
-    "keywords": [
-        "test",
-        "npm",
-        "mocha",
-        "chai",
-        "api"
-    ],
     "author": "Chidiebere Chukwuma",
     "license": "ISC",
     "bugs": {
@@ -25,18 +18,40 @@
     },
     "homepage": "https://github.com/ChidiChuks/AutoMart#readme",
     "dependencies": {
-        "express": "^4.17.1",
-        "winston": "^3.2.1"
+        "bcrypt": "3.0.6",
+        "body-parser": "1.19.0",
+        "cloudinary": "1.14.0",
+        "debug": "4.1.1",
+        "dotenv": "8.0.0",
+        "express": "4.17.1",
+        "json-web-token": "3.0.0",
+        "jsonwebtoken": "8.5.1",
+        "multer": "1.4.1",
+        "winston": "3.2.1"
     },
     "devDependencies": {
-        "@babel/core": "^7.4.5",
-        "@babel/node": "^7.4.5",
-        "babel-cli": "^6.26.0",
-        "babel-preset-env": "^1.7.0",
-        "babel-register": "^6.26.0",
-        "babel-watch": "^7.0.0",
-        "eslint": "^5.16.0",
-        "eslint-config-airbnb-base": "^13.1.0",
-        "eslint-plugin-import": "^2.17.3"
+        "@babel/core": "7.4.5",
+        "@babel/node": "7.4.5",
+        "babel-cli": "6.26.0",
+        "babel-preset-env": "1.7.0",
+        "babel-register": "6.26.0",
+        "babel-watch": "7.0.0",
+        "chai": "4.2.0",
+        "chai-http": "4.3.0",
+        "coveralls": "3.0.4",
+        "eslint": "5.16.0",
+        "eslint-config-airbnb-base": "13.1.0",
+        "eslint-plugin-import": "2.17.3",
+        "istanbul": "0.4.5",
+        "mocha": "5.2.0",
+        "mocha-lcov-reporter": "1.3.0",
+        "nodemon": "1.19.1",
+        "nyc": "14.1.1",
+        "supertest": "4.0.2"
+    },
+    "nyc": {
+        "exclude": [
+            "**/test/**"
+        ]
     }
 }

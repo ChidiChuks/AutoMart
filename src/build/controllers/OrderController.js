@@ -1,6 +1,22 @@
-import CarModel from '../models/CarModel';
-import UserModel from '../models/UserModel';
-import OrderModel from '../models/OrderModel';
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+
+const _CarModel = require('../models/CarModel');
+
+const _CarModel2 = _interopRequireDefault(_CarModel);
+
+const _UserModel = require('../models/UserModel');
+
+const _UserModel2 = _interopRequireDefault(_UserModel);
+
+const _OrderModel = require('../models/OrderModel');
+
+const _OrderModel2 = _interopRequireDefault(_OrderModel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const Order = {
   create(req, res) {
@@ -19,7 +35,7 @@ const Order = {
     }
 
     // verify the car and its status
-    const car = CarModel.findSingle(req.body.carId);
+    const car = _CarModel2.default.findSingle(req.body.carId);
     if (!car) {
       return res.status(404).send({
         status: 404,
@@ -35,8 +51,7 @@ const Order = {
     }
     const buyerId = req.userId;
 
-
-    const seller = UserModel.getUser(car.owner);
+    const seller = _UserModel2.default.getUser(car.owner);
     if (!seller) {
       return res.status(404).send({
         status: 404,
@@ -50,7 +65,7 @@ const Order = {
         message: 'The seller is not permitted transactions',
       });
     }
-    const order = OrderModel.createOrder({
+    const order = _OrderModel2.default.createOrder({
       buyerId,
       sellerId: car.owner,
       carId: req.body.carId,
@@ -80,7 +95,7 @@ const Order = {
       });
     }
     // check that the order exist and status is still pending
-    const order = OrderModel.getSingleOrder(req.body.orderId);
+    const order = _OrderModel2.default.getSingleOrder(req.body.orderId);
     if (!order || order.status.toLowerCase() !== 'pending') {
       return res.status(404).send({
         status: 404,
@@ -106,7 +121,7 @@ const Order = {
       });
     }
     // update the price and return the response
-    const updatedPriceOrder = OrderModel.updateOrderPrice(req.body.orderId, req.body.newPrice);
+    const updatedPriceOrder = _OrderModel2.default.updateOrderPrice(req.body.orderId, req.body.newPrice);
     return res.status(200).send({
       status: 200,
       data: updatedPriceOrder,
@@ -114,4 +129,4 @@ const Order = {
   },
 };
 
-export default Order;
+exports.default = Order;

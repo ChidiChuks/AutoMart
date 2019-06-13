@@ -1,9 +1,25 @@
-import cloudinary from 'cloudinary';
-import dotenv from 'dotenv';
-import CarModel from '../models/CarModel';
 
-dotenv.config();
-cloudinary.v2.config({
+
+Object.defineProperty(exports, '__esModule', {
+  value: true,
+});
+
+const _cloudinary = require('cloudinary');
+
+const _cloudinary2 = _interopRequireDefault(_cloudinary);
+
+const _dotenv = require('dotenv');
+
+const _dotenv2 = _interopRequireDefault(_dotenv);
+
+const _CarModel = require('../models/CarModel');
+
+const _CarModel2 = _interopRequireDefault(_CarModel);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+_dotenv2.default.config();
+_cloudinary2.default.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API,
   api_secret: process.env.CLOUDINARY_SECRET,
@@ -11,8 +27,7 @@ cloudinary.v2.config({
 
 const Car = {
   async create(req, res) {
-    if (!req.body.manufacturer || !req.body.state || !req.body.status || !req.body.price
-            || !req.body.model || !req.body.body_type) {
+    if (!req.body.manufacturer || !req.body.state || !req.body.status || !req.body.price || !req.body.model || !req.body.body_type) {
       return res.status(400).send({
         status: 400,
         message: 'Fill all required fields',
@@ -31,7 +46,7 @@ const Car = {
       description: req.body.description,
     };
 
-    const checkInDb = CarModel.similarUserCar(owner, newCarData);
+    const checkInDb = _CarModel2.default.similarUserCar(owner, newCarData);
     if (checkInDb) {
       return res.status(400).send({
         status: 400,
@@ -45,13 +60,13 @@ const Car = {
       });
     }
     try {
-      const image = await cloudinary.uploader.upload(req.file.path, {
+      const image = await _cloudinary2.default.uploader.upload(req.file.path, {
         folder: 'automart/',
         format: 'png',
       });
       newCarData.img = image.url;
 
-      const newCar = CarModel.createCar(newCarData);
+      const newCar = _CarModel2.default.createCar(newCarData);
       return res.status(201).send({
         status: 201,
         data: newCar,
@@ -64,7 +79,7 @@ const Car = {
     }
   },
   getAll(req, res) {
-    const cars = CarModel.getAllCars();
+    const cars = _CarModel2.default.getAllCars();
     if (cars.length < 1) {
       return res.send({
         status: 404,
@@ -81,13 +96,12 @@ const Car = {
     let cars;
 
     if (reqParam.toLowerCase() === 'manufacturer') {
-      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
+      cars = _CarModel2.default.getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
     } else if (reqParam.toLowerCase() === 'body_type') {
-      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.body_type);
+      cars = _CarModel2.default.getUnsoldCarsByProperty(reqParam, req.params.body_type);
     } else {
-      cars = CarModel.getUnsoldCarsByProperty(reqParam, req.params.state);
+      cars = _CarModel2.default.getUnsoldCarsByProperty(reqParam, req.params.state);
     }
-
 
     if (cars.length < 1) {
       return res.status(404).send({
@@ -101,7 +115,7 @@ const Car = {
     });
   },
   getAllUnsoldCars(req, res) {
-    const cars = CarModel.getAllUnsoldCars();
+    const cars = _CarModel2.default.getAllUnsoldCars();
     if (cars.length < 1) {
       return res.status(404).send({
         status: 404,
@@ -120,7 +134,7 @@ const Car = {
         message: 'Invalid ad id',
       });
     }
-    const car = CarModel.findSingle(req.params.id);
+    const car = _CarModel2.default.findSingle(req.params.id);
     if (!car) {
       return res.status(404).send({
         status: 404,
@@ -134,7 +148,7 @@ const Car = {
   },
 
   updateAdvert(req, res) {
-    const car = CarModel.findSingle(req.body.id);
+    const car = _CarModel2.default.findSingle(req.body.id);
     if (!car) {
       return res.status(404).send({
         status: 404,
@@ -151,9 +165,9 @@ const Car = {
     }
     let updatedCar;
     if (parseInt(userId, 10) === parseInt(car.owner, 10)) {
-      updatedCar = CarModel.completeUpdate(req.body.id, req.body);
+      updatedCar = _CarModel2.default.completeUpdate(req.body.id, req.body);
     } else {
-      updatedCar = CarModel.updateAdStatus(req.body.id, req.body);
+      updatedCar = _CarModel2.default.updateAdStatus(req.body.id, req.body);
     }
     return res.status(200).send({
       status: 200,
@@ -165,7 +179,7 @@ const Car = {
     const min = req.query.min ? req.query.min : 0;
     const max = req.query.max ? req.query.max : 3000000;
 
-    const cars = CarModel.getCarsWithinPriceRange(min, max);
+    const cars = _CarModel2.default.getCarsWithinPriceRange(min, max);
 
     if (cars.length < 1) {
       return res.status(404).send({
@@ -188,14 +202,14 @@ const Car = {
       });
     }
 
-    const car = CarModel.findSingle(req.params.id);
+    const car = _CarModel2.default.findSingle(req.params.id);
     if (!car) {
       return res.status(404).send({
         status: 404,
         message: 'The ad is no longer available',
       });
     }
-    const deleteACarAd = CarModel.deleteCar(car);
+    const deleteACarAd = _CarModel2.default.deleteCar(car);
     if (deleteACarAd.length < 1) {
       return res.status(500).send({
         status: 500,
@@ -210,4 +224,4 @@ const Car = {
   },
 };
 
-export default Car;
+exports.default = Car;

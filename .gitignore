@@ -34,7 +34,6 @@ build/Release
 server/build
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -61,3 +60,6 @@ typings/
 # coveralls
 .coveralls.yml
 lcov.info
+
+# Node modules (Dependency directories)
+node_modules

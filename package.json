@@ -1,0 +1,20 @@
+{
+    "name": "AutoMart",
+    "version": "1.0.0",
+    "description": "An online marketplace for automobiles of diverse makes, model or body type. Auto Mart's users can sell their cars or buy from trusted dealerships or private sellers.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ChidiChuks/AutoMart.git"
+    },
+    "keywords": [],
+    "author": "Chidiebere Chukwuma",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ChidiChuks/AutoMart/issues"
+    },
+    "homepage": "https://github.com/ChidiChuks/AutoMart#readme"
+}

@@ -1,7 +1,7 @@
 import express from 'express';
 import winston from 'winston';
 import routes from './routes/index';
-import logger from './logger';
+import logger from './logging';
 
 const app = express();
 app.use(express.json());

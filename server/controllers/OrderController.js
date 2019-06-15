@@ -1,117 +1,224 @@
 import CarModel from '../models/CarModel';
 import UserModel from '../models/UserModel';
 import OrderModel from '../models/OrderModel';
+import validateData from '../lib/validateData';
+
 
 const Order = {
-  create(req, res) {
-    if (!req.body.carId || !req.body.priceOffered) {
-      return res.status(412).send({
-        status: 412,
-        message: 'Select car and state amount you want to pay',
-      });
-    }
-    // check whether the car id is valid
-    if (req.body.carId.toString().length !== 13) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid ad id',
-      });
-    }
+    create(req, res) {
+        req.body.buyerId = req.userId;
+        const requiredParams = ['carId', 'priceOffered', 'buyerId'];
+        if (validateData(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+            return res.status(400).send({
+                status: 400,
+                message: 'Select car and state amount you want to pay',
+            });
+        }
+        // verify the car and its status
+        const car = CarModel.carIsEligible(req.body.carId);
+        if (!car) {
+            return res.status(404).send({
+                status: 404,
+                message: 'This car is not available for purchase',
+            });
+        }
 
-    // verify the car and its status
-    const car = CarModel.findSingle(req.body.carId);
-    if (!car) {
-      return res.status(404).send({
-        status: 404,
-        message: 'This car is no longer available',
-      });
-    }
+        const seller = UserModel.isUserActive('id', car.owner);
+        if (!seller) {
+            return res.status(404).send({
+                status: 404,
+                message: 'Unverified seller. Kindly check back',
+            });
+        }
+        const order = OrderModel.createOrder({
+            buyerId: req.body.buyerId,
+            sellerId: car.owner,
+            carId: req.body.carId,
+            price: car.price,
+            priceOffered: req.body.priceOffered,
+        });
+        return res.status(200).send({
+            status: 200,
+            data: {
+                id: order.id,
+                carId: req.body.carId,
+                date: order.date,
+                status: order.status,
+                price: order.price,
+                priceOffered: order.priceOffered,
+                sellerId: seller.id,
+                buyerId: order.buyerId,
+            },
+        });
+    },
+    updatePrice(req, res) {
+        const requiredParams = ['orderId', 'newPrice'];
 
-    if (car.status.toLowerCase() !== 'available') {
-      return res.status(403).send({
-        status: 403,
-        message: 'The car is not available for purchase now',
-      });
-    }
-    const buyerId = req.userId;
+        if (validateData(requiredParams, req.body)) {
+            return res.status(400).send({
+                status: 400,
+                message: 'Ensure to send the order id and new price',
+            });
+        }
+        // check that the order exist and status is still pending
+        const order = OrderModel.getOrder(req.body.orderId);
+        if (!order || order.status.toLowerCase() !== 'pending') {
+            return res.status(404).send({
+                status: 404,
+                message: 'Check that the order is still pending',
+            });
+        }
+        // check that the request is coming from the buyer
+        const buyer = req.userId;
 
+        if (parseInt(buyer, 10) !== parseInt(order.buyerId, 10)) {
+            return res.status(403).send({
+                status: 403,
+                message: 'You dont have the permission to modify this order',
+            });
+        }
 
-    const seller = UserModel.getUser(car.owner);
-    if (!seller) {
-      return res.status(404).send({
-        status: 404,
-        message: 'Unverified seller. Kindly check back',
-      });
-    }
-    // checks if the user is active
-    if (seller.status !== 'active') {
-      return res.status(412).send({
-        status: 412,
-        message: 'The seller is not permitted transactions',
-      });
-    }
-    const order = OrderModel.createOrder({
-      buyerId,
-      sellerId: car.owner,
-      carId: req.body.carId,
-      price: car.price,
-      priceOffered: req.body.priceOffered,
-    });
-    return res.status(200).send({
-      status: 200,
-      data: {
-        id: order.id,
-        carId: req.body.carId,
-        date: order.date,
-        status: order.status,
-        price: order.price,
-        priceOffered: order.priceOffered,
-        sellerId: seller.id,
-        buyerId,
-      },
-    });
-  },
-  updatePrice(req, res) {
-    // check that req contains the new price and orderid
-    if (!req.body.orderId || !req.body.newPrice) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Ensure to send the order id and new price',
-      });
-    }
-    // check that the order exist and status is still pending
-    const order = OrderModel.getSingleOrder(req.body.orderId);
-    if (!order || order.status.toLowerCase() !== 'pending') {
-      return res.status(404).send({
-        status: 404,
-        message: 'Check that the order is still pending',
-      });
-    }
+        // check that the new price is diff from the former
+        if (parseFloat(req.body.newPrice) === parseFloat(order.priceOffered)) {
+            return res.status(400).send({
+                status: 400,
+                message: 'The new offered price and the old are the same',
+            });
+        }
+        // update the price and return the response
+        const updatedPriceOrder = OrderModel.updateOrderPrice(req.body.orderId, req.body.newPrice);
+        return res.status(200).send({
+            status: 200,
+            data: updatedPriceOrder,
+        });
+    },
+    mySoldAds(req, res) {
+        const { userId } = req;
+        const soldAds = OrderModel.getSoldAdsByUser(userId);
+        if (soldAds.length === 0) {
+            return res.status(404).send({
+                status: 404,
+                message: 'You have not sold on the platform',
+            });
+        }
+        return res.status(200).send({
+            status: 200,
+            data: soldAds,
+        });
+    },
+    getAllOrders(req, res) {
+        const orders = OrderModel.getAllOrders();
+        if (orders < 1) {
+            return res.send({
+                status: 404,
+                message: 'There are no orders now. Check back',
+            });
+        }
+        return res.send({
+            status: 200,
+            data: orders,
+        });
+    },
 
-    // check that the request is coming from the buyer
-    const buyer = req.userId;
+    /**
+     * status could be pending, accepted (by seller), rejected(by seller),
+     * completed(buyer), cancelled(buyer)
+     */
+    updateOrderStatus(req, res) {
+        const reqPerson = parseInt(req.userId, 10);
 
-    if (parseInt(buyer, 10) !== parseInt(order.buyerId, 10)) {
-      return res.status(403).send({
-        status: 403,
-        message: 'You dont have the permission to modify this order',
-      });
-    }
+        // get orderid
+        const { orderId, status } = req.params;
+        if (!orderId || !status) {
+            return res.status(400).send({
+                status: 400,
+                message: 'Invalid input',
+            });
+        }
+        // retrieve the order
+        const order = OrderModel.getOrder(orderId);
+        if (!order) {
+            return res.status(404).send({
+                status: 404,
+                message: 'Order details not found',
+            });
+        }
+        // check if seller and buyer are active
+        const seller = UserModel.isUserActive('id', order.sellerId);
+        const buyer = UserModel.isUserActive('id', order.buyerId);
+        if (!seller || !buyer) {
+            return res.status(406).send({
+                status: 406,
+                message: 'Seller or buyer inactive',
+            });
+        }
+        // buyer
+        if (reqPerson !== parseInt(buyer.id, 10) && reqPerson !== parseInt(seller.id, 10)) {
+            return res.status(403).send({
+                status: 403,
+                message: 'You dont have the permission to modify this resource',
+            });
+        }
+        const updatedOrder = OrderModel.updateOrderStatus(orderId, status);
+        return res.status(200).send({
+            status: 200,
+            data: updatedOrder,
+        });
+    },
 
-    // check that the new price is diff from the former
-    if (parseFloat(req.body.newPrice) === parseFloat(order.priceOffered)) {
-      return res.status(400).send({
-        status: 400,
-        message: 'The new offered price and the old are the same',
-      });
-    }
-    // update the price and return the response
-    const updatedPriceOrder = OrderModel.updateOrderPrice(req.body.orderId, req.body.newPrice);
-    return res.status(200).send({
-      status: 200,
-      data: updatedPriceOrder,
-    });
-  },
+    deleteAnOrder(req, res) {
+        const order = OrderModel.getOrder(req.params.orderId);
+        if (!order) {
+            return res.status(404).send({
+                status: 404,
+                message: 'The order does not exist',
+            });
+        }
+        const seller = parseInt(order.sellerId, 10);
+
+        // seller can deleted a cancelled order
+        const requester = parseInt(req.userId, 10);
+        if (requester !== seller && !req.role) {
+            return res.status(403).send({
+                status: 403,
+                message: 'You dont have permission to delete this resource',
+            });
+        }
+
+        if (order.status.toLowerCase() !== 'cancelled' && requester === seller) {
+            return res.status(400).send({
+                status: 400,
+                message: 'You cannot delete an incomplete transaction',
+            });
+        }
+
+        const deletedOrder = OrderModel.deleteOrder(order);
+        return res.status(200).send({
+            status: 200,
+            data: deletedOrder[0],
+        });
+    },
+    getSingleOrder(req, res) {
+        const order = OrderModel.getOrder(req.params.orderId);
+        if (!order) {
+            return res.status(404).send({
+                status: 404,
+                message: 'Order not found',
+            });
+        }
+        const requester = parseInt(req.userId, 10);
+        if ((requester !== parseInt(order.sellerId, 10)) && (requester !== parseInt(order.buyerId, 10)) &&
+            !req.role) {
+            return res.status(403).send({
+                status: 403,
+                message: 'You dont have the permission to view this resource',
+            });
+        }
+        return res.status(200).send({
+            status: 200,
+            data: order,
+        });
+    },
 };
 
 export default Order;

@@ -11,31 +11,35 @@ Below are the views for each category
 
 #### Users
 
-- [x] [Authentication Page](https://chidichuks.github.io/AutoMart/UI/)
+- [-] [Authentication Page](https://chidichuks.github.io/AutoMart/UI/)
 
 #### Registered Users
 
-- [x] [Homepage](https://chidichuks.github.io/AutoMart/UI/homepage.html?)
-- [x] [Post Ad](https://chidichuks.github.io/AutoMart/UI/postAd.html)
-- [x] [Products](https://chidichuks.github.io/AutoMart/UI/products.html)
-- [x] [Product Details](https://chidichuks.github.io/AutoMart/UI/details.html)
-- [x] [User Adverts](https://chidichuks.github.io/AutoMart/UI/userAds.html)
-- [x] [User Transactions](https://chidichuks.github.io/AutoMart/UI/myTransactions.html)
-- [x] [Order Page](https://chidichuks.github.io/AutoMart/UI/order.html)
-- [x] [Update Status](https://chidichuks.github.io/AutoMart/UI/updateStatus.html)
-- [x] [Update Status](https://chidichuks.github.io/AutoMart/UI/updateAd.html)
-- [x] [Invoice](https://chidichuks.github.io/AutoMart/UI/invoice.html)
-- [x] [Profile update](https://chidichuks.github.io/AutoMart/UI/userProfile.html)
-- [x] [Report Ad](https://chidichuks.github.io/AutoMart/UI/reportAd.html)
-- [x] [Contact Page](https://chidichuks.github.io/AutoMart/UI/contact.html)
+- [-] [Homepage](https://chidichuks.github.io/AutoMart/UI/homepage.html?)
+- [-] [Post Ad](https://chidichuks.github.io/AutoMart/UI/postAd.html)
+- [-] [Products](https://chidichuks.github.io/AutoMart/UI/products.html)
+- [-] [Product Details](https://chidichuks.github.io/AutoMart/UI/details.html)
+- [-] [User Adverts](https://chidichuks.github.io/AutoMart/UI/userAds.html)
+- [-] [User Transactions](https://chidichuks.github.io/AutoMart/UI/myTransactions.html)
+- [-] [Order Page](https://chidichuks.github.io/AutoMart/UI/order.html)
+- [-] [Update Status](https://chidichuks.github.io/AutoMart/UI/updateStatus.html)
+- [-] [Update Status](https://chidichuks.github.io/AutoMart/UI/updateAd.html)
+- [-] [Invoice](https://chidichuks.github.io/AutoMart/UI/invoice.html)
+- [-] [Profile update](https://chidichuks.github.io/AutoMart/UI/userProfile.html)
+- [-] [Report Ad](https://chidichuks.github.io/AutoMart/UI/reportAd.html)
+- [-] [Contact Page](https://chidichuks.github.io/AutoMart/UI/contact.html)
 
 #### Admin
 
-- [x] [All Users](https://chidichuks.github.io/AutoMart/UI/users.html)
-- [x] [All Ads](https://chidichuks.github.io/AutoMart/UI/view.html)
-- [x] [All Transactions](https://chidichuks.github.io/AutoMart/UI/transactions.html)
-- [x] [All Notifications](https://chidichuks.github.io/AutoMart/UI/notifications.html)
-- [x] [Notification Read](https://chidichuks.github.io/AutoMart/UI/readNotification.html)
+- [-] [All Users](https://chidichuks.github.io/AutoMart/UI/users.html)
+- [-] [All Ads](https://chidichuks.github.io/AutoMart/UI/view.html)
+- [-] [All Transactions](https://chidichuks.github.io/AutoMart/UI/transactions.html)
+- [-] [All Notifications](https://chidichuks.github.io/AutoMart/UI/notifications.html)
+- [-] [Notification Read](https://chidichuks.github.io/AutoMart/UI/readNotification.html)
+
+#### API Documentation
+
+View the detailed API documentation [here](https://app.swaggerhub.com/apis/ChidiChuks/API_Documentation_for_AutoMart/1.0.0)
 
 
 ##### Thanks! Your feedback will be highly appreciated

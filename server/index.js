@@ -1,6 +1,7 @@
 import express from 'express';
 import winston from 'winston';
 import routes from './routes/index';
+import express from 'express';
 import logger from './logging';
 
 const app = express();

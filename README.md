@@ -1,5 +1,7 @@
 # AutoMart
 
+[![Coverage Status](https://coveralls.io/repos/github/ChidiChuks/AutoMart/badge.svg?branch=develop)](https://coveralls.io/github/ChidiChuks/AutoMart?branch=develop)
+
 An online marketplace for automobiles of diverse makes, model or body type. Auto Mart's users can sell their cars or buy from trusted dealerships or private sellers.
 
 ## Web Application is built with the following;

@@ -10,6 +10,7 @@
         "prebuild": "rimraf server/build",
         "server": "babel-node ./server/",
         "start": "node server/build/index.js",
+        "start:dev": "nodemon --exec babel-node server/index",
         "coverage": "nyc report --reporter=text-lcov | coveralls"
     },
     "repository": {
@@ -23,6 +24,7 @@
     },
     "homepage": "https://github.com/ChidiChuks/AutoMart#readme",
     "dependencies": {
+        "@babel/polyfill": "7.4.4",
         "bcrypt": "3.0.6",
         "cloudinary": "1.14.0",
         "debug": "4.1.1",

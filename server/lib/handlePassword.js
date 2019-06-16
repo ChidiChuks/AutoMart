@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import "regenerator-runtime/runtime";
 
 /**
  * @description -function to hash password
@@ -6,15 +7,15 @@ import bcrypt from 'bcrypt';
  * @returns {Promise}
  */
 
-export const hashPassword = async (password) => {
-  try {
-    const salt = await bcrypt.genSalt(10);
+export const hashPassword = async(password) => {
+    try {
+        const salt = await bcrypt.genSalt(10);
 
-    const hashed = await bcrypt.hash(password, salt);
-    return hashed;
-  } catch (error) {
-    throw error;
-  }
+        const hashed = await bcrypt.hash(password, salt);
+        return hashed;
+    } catch (error) {
+        throw error;
+    }
 };
 
 /**
@@ -24,11 +25,11 @@ export const hashPassword = async (password) => {
  * @returns {<boolean>}
  */
 
-export const comparePassword = async (password, hashedPassword) => {
-  try {
-    const checkPassword = await bcrypt.compare(password, hashedPassword);
-    return checkPassword;
-  } catch (error) {
-    throw error;
-  }
+export const comparePassword = async(password, hashedPassword) => {
+    try {
+        const checkPassword = await bcrypt.compare(password, hashedPassword);
+        return checkPassword;
+    } catch (error) {
+        throw error;
+    }
 };

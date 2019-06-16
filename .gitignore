@@ -56,7 +56,6 @@ typings/
 .env
 
 # coveralls
-.coveralls.yml
 lcov.info
 
 # Node modules (Dependency directories)

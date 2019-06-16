@@ -12,8 +12,10 @@ class UserModel {
     create(data) {
         const newUser = {
             id: Math.floor(Math.random() * 100000) + 1 + Date.now(),
-            name: data.name || '',
             email: data.email || '',
+            first_name: data.first_name || '',
+            last_name: data.last_name || '',
+            phone: data.phone || '',
             password: data.password || '',
             isAdmin: data.isAdmin || false,
             status: 'active',

@@ -101,6 +101,7 @@ const Car = {
         });
     },
     getAllUnsoldCars(req, res) {
+        //let minPrice = req.query.min_price;
         const cars = CarModel.getAllUnsoldCars();
         if (cars.length < 1) {
             return res.status(404).send({

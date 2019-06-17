@@ -5,13 +5,14 @@
     "main": "build/index.js",
     "scripts": {
         "dev": "nodemon --exec babel-node server/index.js",
-        "test": "nyc mocha --require babel-core/register server/test/**/**.spec.js --exit || true",
+        "test": "nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000 || true",
         "build": "babel server --out-dir server/build",
         "prebuild": "rimraf server/build",
         "server": "babel-node ./server/",
         "start": "node server/build/index.js",
         "start:dev": "nodemon --exec babel-node server/index",
-        "coverage": "nyc report --reporter=text-lcov | coveralls"
+        "coverage": "nyc report --reporter=text-lcov | coveralls",
+        "coveralls": "nyc --reporter=lcov --reporter=text-lcov npm test"
     },
     "repository": {
         "type": "git",

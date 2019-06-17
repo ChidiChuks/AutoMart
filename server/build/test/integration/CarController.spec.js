@@ -8,10 +8,6 @@ var _chaiHttp = require("chai-http");
 
 var _chaiHttp2 = _interopRequireDefault(_chaiHttp);
 
-var _supertest = require("supertest");
-
-var _supertest2 = _interopRequireDefault(_supertest);
-
 var _path = require("path");
 
 var _path2 = _interopRequireDefault(_path);
@@ -69,7 +65,7 @@ describe('Cars', function () {
       user.isAdmin = false;
       var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
 
-      _chai2["default"].request(_index2["default"]).post(adUrl).type('form').set('x-auth', token).attach('img', _path2["default"].join(loc, '/src/test/benz.jpg')).set('Content-Type', 'image/jpeg').field('status', 'available').field('price', '').field('state', 'new').field('model', 'CL550').field('manufacturer', 'Benz').field('body_type', 'car').field('description', 'This is additional description').end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(adUrl).type('form').set('x-auth', token).attach('img', _path2["default"].join(loc, '/server/test/benz.jpg')).set('Content-Type', 'image/jpeg').field('status', 'available').field('price', '').field('state', 'new').field('model', 'E350').field('manufacturer', 'Benz').field('body_type', 'car').field('description', 'This is additional description').end(function (err, res) {
         expect(res.body.status).to.eq(400);
         expect(res.body.message).to.eq('Fill all required fields');
         done();
@@ -84,7 +80,7 @@ describe('Cars', function () {
       var data = _carsData2["default"][0];
       carsArray();
 
-      _chai2["default"].request(_index2["default"]).post(adUrl).type('form').set('x-auth', token).attach('img', _path2["default"].join(loc, '/src/test/benz.jpg')).field('owner', data.owner).field('price', data.price).field('state', data.state).field('status', data.status).field('model', data.model).field('manufacturer', data.manufacturer).field('body_type', data.body_type).field('description', 'This is additional description').end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(adUrl).type('form').set('x-auth', token).attach('img', _path2["default"].join(loc, '/server/test/benz.jpg')).field('owner', data.owner).field('price', data.price).field('state', data.state).field('status', data.status).field('model', data.model).field('manufacturer', data.manufacturer).field('body_type', data.body_type).field('description', 'This is additional description').end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('You have a similar unsold car');
         done();
@@ -97,17 +93,17 @@ describe('Cars', function () {
       var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
       var data = {
         owner: _usersData2["default"][1].id,
-        status: 'available',
+        status: 'avaialable',
         price: 2500000,
         state: 'new',
-        model: 'cls v',
+        model: 'es6 v',
         manufacturer: 'Benz',
-        body_type: 'Radar',
+        body_type: 'Sedan',
         description: 'The car is still new'
       };
 
       _chai2["default"].request(_index2["default"]).post(adUrl).set('x-auth', token).send(data).end(function (err, res) {
-        expect(res.body.message).to.eq('Upload images for your product');
+        expect(res.body.message).to.eq('Fill all required fields');
         expect(res.status).to.eq(400);
         done();
       });
@@ -115,10 +111,10 @@ describe('Cars', function () {
     it('should return error 401 if token is not provided', function (done) {
       var data = {
         owner: 'owner',
-        status: 'available',
+        status: 'avaialable',
         price: '2.5m',
         state: 'new',
-        manufacturer: 'Benz',
+        manufacturer: 'BMW',
         body_type: 'car',
         description: 'The car is still new',
         img: 'https://mydummyimgurl.com'
@@ -133,7 +129,7 @@ describe('Cars', function () {
   }); // unsold cars according to manufacturer
 
   describe('view available cars by manufacturer', function () {
-    var manufacturers = ['Benz', 'Toyota', 'BMW'];
+    var manufacturers = ['Benz', 'BMW', 'TOYOTA'];
     it('should return all unsold cars by a manufacturer', function (done) {
       carsArray();
 
@@ -146,7 +142,7 @@ describe('Cars', function () {
     it('should return a custom error if no vehicle is found for the manufacturer', function (done) {
       carsArray();
 
-      _chai2["default"].request(_index2["default"]).get('/api/v1/car/manufacturer/Chidi').end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).get('/api/v1/car/manufacturer/tyonum').end(function (err, res) {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('There are no cars for the selected manufacturer');
         done();
@@ -177,7 +173,7 @@ describe('Cars', function () {
   }); // view available cars by state (used, new)
 
   describe('view available cars by state', function () {
-    var state = ['Used', 'New'];
+    var state = ['USED', 'New'];
     it('should return all available cars by state -used', function (done) {
       carsArray();
 

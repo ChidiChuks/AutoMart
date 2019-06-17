@@ -30,12 +30,12 @@ var Flag = {
       });
     }
 
-    var cartoFlag = _CarModel2["default"].carIsEligible(req.body.carId);
+    var carToFlag = _CarModel2["default"].carIsEligible(req.body.carId);
 
-    if (!cartoFlag) {
+    if (!carToFlag) {
       return res.status(404).send({
         status: 404,
-        message: 'The ad is not longer active. Thank you.'
+        message: 'The ad is no longer active. Thank you.'
       });
     }
 
@@ -48,7 +48,8 @@ var Flag = {
 
     return res.status(200).send({
       status: 200,
-      data: newFlag
+      data: newFlag,
+      message: 'Ok. Flag has been created'
     });
   },
   updateFlag: function updateFlag(req, res) {

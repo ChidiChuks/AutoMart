@@ -43,7 +43,9 @@ var User = {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'password_confirmation'];
+              requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone',
+              /*'account_number', 'bank',*/
+              'password_confirmation'];
 
               if (!((0, _validateData2["default"])(requiredProperties, req.body) || !(0, _validateEmail2["default"])(req.body.email))) {
                 _context.next = 3;
@@ -104,9 +106,13 @@ var User = {
                 data: {
                   token: token,
                   id: user.id,
-                  "first_name": user.first_name,
-                  "last_name": user.last_name,
+                  first_name: user.first_name,
+                  last_name: user.last_name,
                   email: user.email,
+                  phone: user.phone,
+                  // address: user.address,
+                  // account_number: user.account_number,
+                  // bank: user.bank,
                   isAdmin: user.isAdmin
                 }
               }));

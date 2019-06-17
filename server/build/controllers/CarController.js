@@ -16,6 +16,10 @@ var _CarModel = require("../models/CarModel");
 
 var _CarModel2 = _interopRequireDefault(_CarModel);
 
+var _validateData = require("../lib/validateData");
+
+var _validateData2 = _interopRequireDefault(_validateData);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -35,13 +39,16 @@ var Car = {
     var _create = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(req, res) {
-      var owner, newCarData, checkInDb, image, newCar;
+      var requiredFields, checkInDb, image, newCar;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(!req.body.manufacturer || !req.body.state || !req.body.status || !req.body.price || !req.body.model || !req.body.body_type)) {
-                _context.next = 2;
+              requiredFields = ['owner', 'state', 'status', 'price', 'manufacturer', 'model', 'body_type', 'description'];
+              req.body.owner = req.userId;
+
+              if (!((0, _validateData2["default"])(requiredFields, req.body) || !req.file)) {
+                _context.next = 4;
                 break;
               }
 
@@ -50,19 +57,8 @@ var Car = {
                 message: 'Fill all required fields'
               }));
 
-            case 2:
-              owner = req.userId;
-              newCarData = {
-                owner: owner,
-                state: req.body.state,
-                status: req.body.status,
-                price: req.body.price,
-                manufacturer: req.body.manufacturer,
-                model: req.body.model,
-                body_type: req.body.body_type,
-                description: req.body.description
-              };
-              checkInDb = _CarModel2["default"].similarUserCar(owner, newCarData);
+            case 4:
+              checkInDb = _CarModel2["default"].similarUserCar(req.body.owner, req.body);
 
               if (!checkInDb) {
                 _context.next = 7;
@@ -75,47 +71,36 @@ var Car = {
               }));
 
             case 7:
-              if (req.file) {
-                _context.next = 9;
-                break;
-              }
-
-              return _context.abrupt("return", res.status(400).send({
-                status: 400,
-                message: 'Upload images for your product'
-              }));
-
-            case 9:
-              _context.prev = 9;
-              _context.next = 12;
+              _context.prev = 7;
+              _context.next = 10;
               return _cloudinary2["default"].uploader.upload(req.file.path, {
-                folder: 'automart/',
-                format: 'png'
+                folder: 'AutoMart/',
+                format: 'jpg'
               });
 
-            case 12:
+            case 10:
               image = _context.sent;
-              newCarData.img = image.url;
-              newCar = _CarModel2["default"].createCar(newCarData);
+              req.body.img = image.url;
+              newCar = _CarModel2["default"].createCar(req.body);
               return _context.abrupt("return", res.status(201).send({
                 status: 201,
                 data: newCar
               }));
 
-            case 18:
-              _context.prev = 18;
-              _context.t0 = _context["catch"](9);
-              return _context.abrupt("return", res.status(400).send({
-                status: 400,
-                message: 'There\'s problem uploading your image, try again'
+            case 16:
+              _context.prev = 16;
+              _context.t0 = _context["catch"](7);
+              return _context.abrupt("return", res.status(500).send({
+                status: 500,
+                message: 'There\'s a problem uploading your image, try again'
               }));
 
-            case 21:
+            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[9, 18]]);
+      }, _callee, this, [[7, 16]]);
     }));
 
     function create(_x, _x2) {
@@ -164,7 +149,6 @@ var Car = {
     });
   },
   getAllUnsoldCars: function getAllUnsoldCars(req, res) {
-    //let minPrice = req.query.min_price;
     var cars = _CarModel2["default"].getAllUnsoldCars();
 
     if (cars.length < 1) {
@@ -221,14 +205,7 @@ var Car = {
       });
     }
 
-    var updatedCar;
-
-    if (parseInt(userId, 10) === parseInt(car.owner, 10)) {
-      updatedCar = _CarModel2["default"].completeUpdate(req.body.id, req.body);
-    } else {
-      updatedCar = _CarModel2["default"].updateAdStatus(req.body.id, req.body);
-    }
-
+    var updatedCar = parseInt(userId, 10) === parseInt(car.owner, 10) ? _CarModel2["default"].completeUpdate(req.body.id, req.body) : _CarModel2["default"].updateAdStatus(req.body.id, req.body);
     return res.status(200).send({
       status: 200,
       data: updatedCar
@@ -253,13 +230,6 @@ var Car = {
     });
   },
   deleteAd: function deleteAd(req, res) {
-    if (!req.params.id) {
-      return res.status(400).send({
-        status: 400,
-        message: 'Invalid request'
-      });
-    }
-
     var car = _CarModel2["default"].findSingle(req.params.id);
 
     if (!car) {

@@ -2,6 +2,7 @@ import CarModel from '../models/CarModel';
 import FlagModel from '../models/FlagModel';
 import validateData from '../lib/validateData';
 
+
 const Flag = {
     createFlag(req, res) {
         req.body.reportedBy = req.userId;
@@ -11,13 +12,14 @@ const Flag = {
                 status: 400,
                 message: 'Ensure to indicate the ad id and reason for the report',
             });
+
         }
 
-        const cartoFlag = CarModel.carIsEligible(req.body.carId);
-        if (!cartoFlag) {
+        const carToFlag = CarModel.carIsEligible(req.body.carId);
+        if (!carToFlag) {
             return res.status(404).send({
                 status: 404,
-                message: 'The ad is not longer active. Thank you.',
+                message: 'The ad is no longer active. Thank you.',
             });
         }
         if (req.body.reason.toLowerCase() === 'fake' || req.body.reason.toLowerCase() === 'stolen' || req.body.reason === 'suspicious') {
@@ -29,6 +31,7 @@ const Flag = {
         return res.status(200).send({
             status: 200,
             data: newFlag,
+            message: 'Ok. Flag has been created',
         });
     },
     updateFlag(req, res) {

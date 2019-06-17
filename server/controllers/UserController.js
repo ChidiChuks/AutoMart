@@ -11,7 +11,7 @@ const User = {
      * @returns {object}
      */
     async create(req, res) {
-        const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'password_confirmation'];
+        const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', /*'account_number', 'bank',*/ 'password_confirmation'];
 
         if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
             return res.status(400).send({
@@ -53,9 +53,13 @@ const User = {
             data: {
                 token,
                 id: user.id,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
+                phone: user.phone,
+                // address: user.address,
+                // account_number: user.account_number,
+                // bank: user.bank,
                 isAdmin: user.isAdmin,
             },
         });

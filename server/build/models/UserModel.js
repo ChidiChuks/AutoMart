@@ -38,9 +38,12 @@ function () {
         email: data.email || '',
         first_name: data.first_name || '',
         last_name: data.last_name || '',
-        phone: data.phone || '',
         password: data.password || '',
+        //   address: data.address || '',
         isAdmin: data.isAdmin || false,
+        phone: data.phone || '',
+        //   account_number: data.account_number || '',
+        //   bank: data.bank || '',
         status: 'active'
       };
       this.users.push(newUser);
@@ -90,6 +93,48 @@ function () {
       return this.users.find(function (user) {
         return user.id === parseInt(userid, 10);
       });
+    }
+    /**
+     *@description Returns an active user by specified property
+     * @param {} ppty [id, email, phone]
+     * @param {*} val
+     * @returns {Object} User object;
+     */
+
+  }, {
+    key: "isUserActive",
+    value: function isUserActive(ppty, val) {
+      var user = ppty.toLowerCase() === 'id' ? this.getUser(val) : this.findByProperty(ppty, val);
+
+      if (!user || user.status.toLowerCase() !== 'active') {
+        return false;
+      }
+
+      return user;
+    }
+    /**
+     * @param {Number}
+     * @returns {Object}
+     */
+
+  }, {
+    key: "makeUserAdmin",
+    value: function makeUserAdmin(userId) {
+      var user = this.getUser(userId);
+      user.isAdmin = true;
+      return user;
+    }
+    /**
+     * @description - disable a user using userId
+     * @param {Number} userId
+     */
+
+  }, {
+    key: "disableUser",
+    value: function disableUser(userId) {
+      var user = this.getUser(userId);
+      user.status = 'disabled';
+      return user;
     }
   }]);
 

@@ -5,7 +5,7 @@
     "main": "build/index.js",
     "scripts": {
         "dev": "nodemon --exec babel-node server/index.js",
-        "test": "nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000 || true",
+        "test": "nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000",
         "build": "babel server --out-dir server/build",
         "prebuild": "rimraf server/build",
         "server": "babel-node ./server/",
@@ -45,7 +45,6 @@
         "@babel/preset-env": "7.4.5",
         "@babel/register": "7.4.4",
         "babel-preset-env": "1.7.0",
-        "babel-watch": "7.0.0",
         "braces": "3.0.2",
         "chai": "4.2.0",
         "chai-http": "4.3.0",

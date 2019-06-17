@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 var cars = [{
   id: 1558731607229,
   owner: 1558730737306,
@@ -101,5 +100,4 @@ var cars = [{
   description: 'This is the description ',
   img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560363358/benz_vja9n7.jpg'
 }];
-var _default = cars;
-exports["default"] = _default;
+exports["default"] = cars;

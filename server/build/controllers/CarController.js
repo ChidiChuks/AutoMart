@@ -3,13 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _cloudinary = _interopRequireDefault(require("cloudinary"));
+var _cloudinary = require("cloudinary");
 
-var _dotenv = _interopRequireDefault(require("dotenv"));
+var _cloudinary2 = _interopRequireDefault(_cloudinary);
 
-var _CarModel = _interopRequireDefault(require("../models/CarModel"));
+var _dotenv = require("dotenv");
+
+var _dotenv2 = _interopRequireDefault(_dotenv);
+
+var _CarModel = require("../models/CarModel");
+
+var _CarModel2 = _interopRequireDefault(_CarModel);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -17,9 +22,9 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-_dotenv["default"].config();
+_dotenv2["default"].config();
 
-_cloudinary["default"].v2.config({
+_cloudinary2["default"].v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_API,
   api_secret: process.env.CLOUDINARY_SECRET
@@ -57,7 +62,7 @@ var Car = {
                 body_type: req.body.body_type,
                 description: req.body.description
               };
-              checkInDb = _CarModel["default"].similarUserCar(owner, newCarData);
+              checkInDb = _CarModel2["default"].similarUserCar(owner, newCarData);
 
               if (!checkInDb) {
                 _context.next = 7;
@@ -83,7 +88,7 @@ var Car = {
             case 9:
               _context.prev = 9;
               _context.next = 12;
-              return _cloudinary["default"].uploader.upload(req.file.path, {
+              return _cloudinary2["default"].uploader.upload(req.file.path, {
                 folder: 'automart/',
                 format: 'png'
               });
@@ -91,7 +96,7 @@ var Car = {
             case 12:
               image = _context.sent;
               newCarData.img = image.url;
-              newCar = _CarModel["default"].createCar(newCarData);
+              newCar = _CarModel2["default"].createCar(newCarData);
               return _context.abrupt("return", res.status(201).send({
                 status: 201,
                 data: newCar
@@ -110,7 +115,7 @@ var Car = {
               return _context.stop();
           }
         }
-      }, _callee, null, [[9, 18]]);
+      }, _callee, this, [[9, 18]]);
     }));
 
     function create(_x, _x2) {
@@ -120,7 +125,7 @@ var Car = {
     return create;
   }(),
   getAll: function getAll(req, res) {
-    var cars = _CarModel["default"].getAllCars();
+    var cars = _CarModel2["default"].getAllCars();
 
     if (cars.length < 1) {
       return res.send({
@@ -139,11 +144,11 @@ var Car = {
     var cars;
 
     if (reqParam.toLowerCase() === 'manufacturer') {
-      cars = _CarModel["default"].getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
+      cars = _CarModel2["default"].getUnsoldCarsByProperty(reqParam, req.params.manufacturer);
     } else if (reqParam.toLowerCase() === 'body_type') {
-      cars = _CarModel["default"].getUnsoldCarsByProperty(reqParam, req.params.body_type);
+      cars = _CarModel2["default"].getUnsoldCarsByProperty(reqParam, req.params.body_type);
     } else {
-      cars = _CarModel["default"].getUnsoldCarsByProperty(reqParam, req.params.state);
+      cars = _CarModel2["default"].getUnsoldCarsByProperty(reqParam, req.params.state);
     }
 
     if (cars.length < 1) {
@@ -159,7 +164,8 @@ var Car = {
     });
   },
   getAllUnsoldCars: function getAllUnsoldCars(req, res) {
-    var cars = _CarModel["default"].getAllUnsoldCars();
+    //let minPrice = req.query.min_price;
+    var cars = _CarModel2["default"].getAllUnsoldCars();
 
     if (cars.length < 1) {
       return res.status(404).send({
@@ -181,7 +187,7 @@ var Car = {
       });
     }
 
-    var car = _CarModel["default"].findSingle(req.params.id);
+    var car = _CarModel2["default"].findSingle(req.params.id);
 
     if (!car) {
       return res.status(404).send({
@@ -196,7 +202,7 @@ var Car = {
     });
   },
   updateAdvert: function updateAdvert(req, res) {
-    var car = _CarModel["default"].findSingle(req.body.id);
+    var car = _CarModel2["default"].findSingle(req.body.id);
 
     if (!car) {
       return res.status(404).send({
@@ -218,9 +224,9 @@ var Car = {
     var updatedCar;
 
     if (parseInt(userId, 10) === parseInt(car.owner, 10)) {
-      updatedCar = _CarModel["default"].completeUpdate(req.body.id, req.body);
+      updatedCar = _CarModel2["default"].completeUpdate(req.body.id, req.body);
     } else {
-      updatedCar = _CarModel["default"].updateAdStatus(req.body.id, req.body);
+      updatedCar = _CarModel2["default"].updateAdStatus(req.body.id, req.body);
     }
 
     return res.status(200).send({
@@ -232,7 +238,7 @@ var Car = {
     var min = req.query.min ? req.query.min : 0;
     var max = req.query.max ? req.query.max : 3000000;
 
-    var cars = _CarModel["default"].getCarsWithinPriceRange(min, max);
+    var cars = _CarModel2["default"].getCarsWithinPriceRange(min, max);
 
     if (cars.length < 1) {
       return res.status(404).send({
@@ -254,7 +260,7 @@ var Car = {
       });
     }
 
-    var car = _CarModel["default"].findSingle(req.params.id);
+    var car = _CarModel2["default"].findSingle(req.params.id);
 
     if (!car) {
       return res.status(404).send({
@@ -263,7 +269,7 @@ var Car = {
       });
     }
 
-    var deleteACarAd = _CarModel["default"].deleteCar(car);
+    var deleteACarAd = _CarModel2["default"].deleteCar(car);
 
     if (deleteACarAd.length < 1) {
       return res.status(500).send({
@@ -278,5 +284,4 @@ var Car = {
     });
   }
 };
-var _default = Car;
-exports["default"] = _default;
+exports["default"] = Car;

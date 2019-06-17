@@ -1,16 +1,28 @@
 "use strict";
 
-var _chai = _interopRequireDefault(require("chai"));
+var _chai = require("chai");
 
-var _chaiHttp = _interopRequireDefault(require("chai-http"));
+var _chai2 = _interopRequireDefault(_chai);
 
-var _index = _interopRequireDefault(require("../../index"));
+var _chaiHttp = require("chai-http");
 
-var _UserModel = _interopRequireDefault(require("../../models/UserModel"));
+var _chaiHttp2 = _interopRequireDefault(_chaiHttp);
 
-var _usersData = _interopRequireDefault(require("../usersData"));
+var _index = require("../../index");
 
-var _generateToken = _interopRequireDefault(require("../../lib/generateToken"));
+var _index2 = _interopRequireDefault(_index);
+
+var _UserModel = require("../../models/UserModel");
+
+var _UserModel2 = _interopRequireDefault(_UserModel);
+
+var _usersData = require("../usersData");
+
+var _usersData2 = _interopRequireDefault(_usersData);
+
+var _generateToken = require("../../lib/generateToken");
+
+var _generateToken2 = _interopRequireDefault(_generateToken);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -18,15 +30,15 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-var expect = _chai["default"].expect;
+var expect = _chai2["default"].expect;
 var signupUrl = '/api/v1/auth/signup';
 var loginUrl = '/api/v1/auth/signin';
 
-_chai["default"].use(_chaiHttp["default"]);
+_chai2["default"].use(_chaiHttp2["default"]);
 
 describe('User', function () {
   var usersArray = function usersArray() {
-    _UserModel["default"].users = _usersData["default"];
+    _UserModel2["default"].users = _usersData2["default"];
   };
 
   describe('User create', function () {
@@ -37,7 +49,7 @@ describe('User', function () {
         password: 'password'
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(userDetails).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(userDetails).end(function (err, res) {
         expect(res.status).to.eq(201);
         expect(res.body.data.email).to.eq(userDetails.email);
         done();
@@ -50,7 +62,7 @@ describe('User', function () {
         password: 'power'
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Password does not match');
         done();
@@ -63,7 +75,7 @@ describe('User', function () {
         password: ' '
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Fill all required fields');
         done();
@@ -76,7 +88,7 @@ describe('User', function () {
         password: 'powerful'
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Invalid / empty email supplied');
         done();
@@ -89,7 +101,7 @@ describe('User', function () {
         password: 'passw'
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Password is too short');
         done();
@@ -102,7 +114,7 @@ describe('User', function () {
         password: 'password'
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('Name or email is too long');
         done();
@@ -112,11 +124,11 @@ describe('User', function () {
       usersArray();
       var data = {
         name: 'Chidiebere',
-        email: _usersData["default"][0].email,
+        email: _usersData2["default"][0].email,
         password: 'password'
       };
 
-      _chai["default"].request(_index["default"]).post(signupUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(400);
         expect(res.body.message).to.eq('User with given email already exist');
         done();
@@ -128,7 +140,7 @@ describe('User', function () {
     it('should return error 400 if user did not supply password', function (done) {
       usersArray();
 
-      _chai["default"].request(_index["default"]).post(loginUrl).send({
+      _chai2["default"].request(_index2["default"]).post(loginUrl).send({
         email: 'johndoe@google.dev'
       }).then(function (res) {
         expect(res.status).to.eq(400);
@@ -142,7 +154,7 @@ describe('User', function () {
         password: 'password'
       };
 
-      _chai["default"].request(_index["default"]).post(loginUrl).send(data).then(function (res) {
+      _chai2["default"].request(_index2["default"]).post(loginUrl).send(data).then(function (res) {
         expect(res.status).to.eq(404);
         expect(res.body.message).to.eq('Invalid login credentials');
         done();
@@ -151,11 +163,11 @@ describe('User', function () {
     it('should return error 401 if password is incorrect for given email', function (done) {
       usersArray();
       var data = {
-        email: _usersData["default"][0].email,
+        email: _usersData2["default"][0].email,
         password: 'pasword'
       };
 
-      _chai["default"].request(_index["default"]).post(loginUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(loginUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(401);
         expect(res.body.message).to.eq('Wrong username/password');
         done();
@@ -164,11 +176,11 @@ describe('User', function () {
     it('should return a header with token and credentials if password and email are correct', function () {
       usersArray();
       var data = {
-        email: _usersData["default"][0].email,
+        email: _usersData2["default"][0].email,
         password: 'password'
       };
 
-      _chai["default"].request(_index["default"]).post(loginUrl).send(data).end(function (err, res) {
+      _chai2["default"].request(_index2["default"]).post(loginUrl).send(data).end(function (err, res) {
         expect(res.status).to.eq(200);
         expect(res).to.have.header('x-auth');
         expect(res.body.data).to.have.property('email').eq(data.email);
@@ -179,11 +191,11 @@ describe('User', function () {
   describe('User change password', function () {
     it('should return user with updated password', function (done) {
       usersArray();
-      var user = _usersData["default"][0];
+      var user = _usersData2["default"][0];
       user.isAdmin = false;
-      var token = (0, _generateToken["default"])(user.id, user.isAdmin);
+      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
 
-      _chai["default"].request(_index["default"]).patch('/api/v1/user').set('x-auth', token).send({
+      _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
         currentPassword: 'password',
         newPassword: 'newpassword'
       }).end(function (err, res) {
@@ -195,11 +207,11 @@ describe('User', function () {
     });
     it('should return 400 if current password is wrong', function (done) {
       usersArray();
-      var user = _usersData["default"][0];
+      var user = _usersData2["default"][0];
       user.isAdmin = false;
-      var token = (0, _generateToken["default"])(user.id, user.isAdmin);
+      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
 
-      _chai["default"].request(_index["default"]).patch('/api/v1/user').set('x-auth', token).send({
+      _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
         currentPassword: 'password1',
         newPassword: 'anotherpassword'
       }).end(function (err, res) {
@@ -219,15 +231,15 @@ describe('User', function () {
           switch (_context.prev = _context.next) {
             case 0:
               usersArray();
-              user = _usersData["default"][0];
+              user = _usersData2["default"][0];
               user.isAdmin = false;
               _context.next = 5;
-              return (0, _generateToken["default"])(user.id, user.isAdmin);
+              return (0, _generateToken2["default"])(user.id, user.isAdmin);
 
             case 5:
               token = _context.sent;
 
-              _chai["default"].request(_index["default"]).patch('/api/v1/user').set('x-auth', token).send({
+              _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
                 newPassword: 'newpassword'
               }).then(function (res) {
                 expect(res.status).to.eq(400);
@@ -239,12 +251,12 @@ describe('User', function () {
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, this);
     })));
     it('should return 401 if user is not logged in', function (done) {
       usersArray();
 
-      _chai["default"].request(_index["default"]).patch('/api/v1/user').send({
+      _chai2["default"].request(_index2["default"]).patch('/api/v1/user').send({
         currentPassword: 'password',
         newPassword: 'newpassword'
       }).end(function (err, res) {

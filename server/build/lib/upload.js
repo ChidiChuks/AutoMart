@@ -3,13 +3,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _multer = _interopRequireDefault(require("multer"));
+var _multer = require("multer");
+
+var _multer2 = _interopRequireDefault(_multer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var storage = _multer["default"].diskStorage({
+var storage = _multer2["default"].diskStorage({
   filename: function filename(req, file, cb) {
     cb(null, Date.now() + file.originalname);
   }
@@ -23,12 +24,11 @@ var fileFilter = function fileFilter(req, file, cb) {
   }
 };
 
-var upload = (0, _multer["default"])({
+var upload = (0, _multer2["default"])({
   storage: storage,
   fileFilter: fileFilter,
   limits: {
     fileSize: 500000
   }
 });
-var _default = upload;
-exports["default"] = _default;
+exports["default"] = upload;

@@ -3,17 +3,24 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _UserModel = _interopRequireDefault(require("../models/UserModel"));
+var _UserModel = require("../models/UserModel");
+
+var _UserModel2 = _interopRequireDefault(_UserModel);
 
 var _handlePassword = require("../lib/handlePassword");
 
-var _validateEmail = _interopRequireDefault(require("../lib/validateEmail"));
+var _validateEmail = require("../lib/validateEmail");
 
-var _generateToken = _interopRequireDefault(require("../lib/generateToken"));
+var _validateEmail2 = _interopRequireDefault(_validateEmail);
 
-var _validateData = _interopRequireDefault(require("../lib/validateData"));
+var _generateToken = require("../lib/generateToken");
+
+var _generateToken2 = _interopRequireDefault(_generateToken);
+
+var _validateData = require("../lib/validateData");
+
+var _validateData2 = _interopRequireDefault(_validateData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -38,7 +45,7 @@ var User = {
             case 0:
               requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'password_confirmation'];
 
-              if (!((0, _validateData["default"])(requiredProperties, req.body) || !(0, _validateEmail["default"])(req.body.email))) {
+              if (!((0, _validateData2["default"])(requiredProperties, req.body) || !(0, _validateEmail2["default"])(req.body.email))) {
                 _context.next = 3;
                 break;
               }
@@ -71,8 +78,8 @@ var User = {
               }));
 
             case 7:
-              checkEmailInDb = _UserModel["default"].findByProperty('email', req.body.email);
-              checkPhoneInDb = _UserModel["default"].findByProperty('phone', req.body.phone);
+              checkEmailInDb = _UserModel2["default"].findByProperty('email', req.body.email);
+              checkPhoneInDb = _UserModel2["default"].findByProperty('phone', req.body.phone);
 
               if (!(checkEmailInDb || checkPhoneInDb)) {
                 _context.next = 11;
@@ -90,8 +97,8 @@ var User = {
 
             case 13:
               req.body.password = _context.sent;
-              user = _UserModel["default"].create(req.body);
-              token = (0, _generateToken["default"])(user.id, user.isAdmin);
+              user = _UserModel2["default"].create(req.body);
+              token = (0, _generateToken2["default"])(user.id, user.isAdmin);
               return _context.abrupt("return", res.status(201).header('x-auth', token).send({
                 status: 201,
                 data: {
@@ -109,7 +116,7 @@ var User = {
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, this);
     }));
 
     function create(_x, _x2) {
@@ -119,7 +126,7 @@ var User = {
     return create;
   }(),
   getAll: function getAll(req, res) {
-    var users = _UserModel["default"].getAllUsers();
+    var users = _UserModel2["default"].getAllUsers();
 
     return res.status(200).send({
       status: 200,
@@ -137,7 +144,7 @@ var User = {
             case 0:
               delete req.headers['x-auth'];
 
-              if (!(0, _validateData["default"])(['email', 'password'], req.body)) {
+              if (!(0, _validateData2["default"])(['email', 'password'], req.body)) {
                 _context2.next = 3;
                 break;
               }
@@ -148,7 +155,7 @@ var User = {
               }));
 
             case 3:
-              user = _UserModel["default"].isUserActive('email', req.body.email);
+              user = _UserModel2["default"].isUserActive('email', req.body.email);
 
               if (user) {
                 _context2.next = 6;
@@ -178,7 +185,7 @@ var User = {
               }));
 
             case 11:
-              user.token = (0, _generateToken["default"])(user.id, user.isAdmin);
+              user.token = (0, _generateToken2["default"])(user.id, user.isAdmin);
               return _context2.abrupt("return", res.status(200).header('x-auth', user.token).send({
                 status: 200,
                 data: user
@@ -189,7 +196,7 @@ var User = {
               return _context2.stop();
           }
         }
-      }, _callee2);
+      }, _callee2, this);
     }));
 
     function signIn(_x3, _x4) {
@@ -220,7 +227,7 @@ var User = {
               }));
 
             case 3:
-              user = _UserModel["default"].getUser(userId);
+              user = _UserModel2["default"].getUser(userId);
 
               if (user) {
                 _context3.next = 6;
@@ -255,7 +262,7 @@ var User = {
 
             case 13:
               hashNewPassword = _context3.sent;
-              updatedUserDetails = _UserModel["default"].changePassword(userId, hashNewPassword);
+              updatedUserDetails = _UserModel2["default"].changePassword(userId, hashNewPassword);
               return _context3.abrupt("return", res.send({
                 status: 200,
                 data: updatedUserDetails
@@ -266,7 +273,7 @@ var User = {
               return _context3.stop();
           }
         }
-      }, _callee3);
+      }, _callee3, this);
     }));
 
     function changePassword(_x5, _x6) {
@@ -276,7 +283,7 @@ var User = {
     return changePassword;
   }(),
   makeAdmin: function makeAdmin(req, res) {
-    var user = _UserModel["default"].isUserActive('id', req.params.id);
+    var user = _UserModel2["default"].isUserActive('id', req.params.id);
 
     if (!user) {
       return res.status(412).send({
@@ -285,7 +292,7 @@ var User = {
       });
     }
 
-    var newAdmin = _UserModel["default"].makeUserAdmin(user.id);
+    var newAdmin = _UserModel2["default"].makeUserAdmin(user.id);
 
     return res.status(200).send({
       status: 200,
@@ -310,7 +317,7 @@ var User = {
     } // check that the user is active
 
 
-    var user = _UserModel["default"].isUserActive('id', userId);
+    var user = _UserModel2["default"].isUserActive('id', userId);
 
     if (!user) {
       return res.status(404).send({
@@ -320,7 +327,7 @@ var User = {
     } // disable the user
 
 
-    var disabledUser = _UserModel["default"].disableUser(userId); // return the result
+    var disabledUser = _UserModel2["default"].disableUser(userId); // return the result
 
 
     return res.status(200).send({
@@ -329,5 +336,4 @@ var User = {
     });
   }
 };
-var _default = User;
-exports["default"] = _default;
+exports["default"] = User;

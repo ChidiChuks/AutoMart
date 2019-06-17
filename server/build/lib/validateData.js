@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
 var validateData = function validateData(requiredProperties, data) {
   return requiredProperties.find(function (property) {
@@ -11,5 +10,4 @@ var validateData = function validateData(requiredProperties, data) {
   });
 };
 
-var _default = validateData;
-exports["default"] = _default;
+exports["default"] = validateData;

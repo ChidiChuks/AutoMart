@@ -3,8 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
-var _default = [{
+exports["default"] = [{
   id: 1559972584479,
   carId: 1558943760215,
   created_on: '6/8/2019, 6:43:04 AM',
@@ -23,4 +22,3 @@ var _default = [{
   status: 'pending',
   severity: 'extreme'
 }];
-exports["default"] = _default;

@@ -3,11 +3,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
+var _jsonwebtoken = require("jsonwebtoken");
 
-var _dotenv = _interopRequireDefault(require("dotenv"));
+var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
+
+var _dotenv = require("dotenv");
+
+var _dotenv2 = _interopRequireDefault(_dotenv);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -18,7 +21,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  * @param {function} next - callback function
  * @returns {object}
  */
-_dotenv["default"].config();
+_dotenv2["default"].config();
 
 var auth = function auth(req, res, next) {
   var token = req.header('x-auth');
@@ -31,7 +34,7 @@ var auth = function auth(req, res, next) {
   }
 
   try {
-    var decoded = _jsonwebtoken["default"].verify(token, process.env.JWT_SECRET);
+    var decoded = _jsonwebtoken2["default"].verify(token, process.env.JWT_SECRET);
 
     req.userId = decoded.id;
     req.role = decoded.role;
@@ -44,5 +47,4 @@ var auth = function auth(req, res, next) {
   }
 };
 
-var _default = auth;
-exports["default"] = _default;
+exports["default"] = auth;

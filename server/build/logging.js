@@ -3,31 +3,31 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _winston = _interopRequireDefault(require("winston"));
+var _winston = require("winston");
+
+var _winston2 = _interopRequireDefault(_winston);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-var logger = _winston["default"].createLogger({
+var logger = _winston2["default"].createLogger({
   level: 'info',
-  format: _winston["default"].format.json(),
+  format: _winston2["default"].format.json(),
   defaultMeta: {
     service: 'user-service'
   },
-  transports: [new _winston["default"].transports.File({
+  transports: [new _winston2["default"].transports.File({
     filename: 'error.log',
     level: 'error'
-  }), new _winston["default"].transports.File({
+  }), new _winston2["default"].transports.File({
     filename: 'combined.log'
   })]
 });
 
 if (process.env.NODE_ENV !== 'production') {
-  logger.add(new _winston["default"].transports.Console({
-    format: _winston["default"].format.simple()
+  logger.add(new _winston2["default"].transports.Console({
+    format: _winston2["default"].format.simple()
   }));
 }
 
-var _default = logger;
-exports["default"] = _default;
+exports["default"] = logger;

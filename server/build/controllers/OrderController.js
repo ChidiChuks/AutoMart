@@ -3,15 +3,22 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _CarModel = _interopRequireDefault(require("../models/CarModel"));
+var _CarModel = require("../models/CarModel");
 
-var _UserModel = _interopRequireDefault(require("../models/UserModel"));
+var _CarModel2 = _interopRequireDefault(_CarModel);
 
-var _OrderModel = _interopRequireDefault(require("../models/OrderModel"));
+var _UserModel = require("../models/UserModel");
 
-var _validateData = _interopRequireDefault(require("../lib/validateData"));
+var _UserModel2 = _interopRequireDefault(_UserModel);
+
+var _OrderModel = require("../models/OrderModel");
+
+var _OrderModel2 = _interopRequireDefault(_OrderModel);
+
+var _validateData = require("../lib/validateData");
+
+var _validateData2 = _interopRequireDefault(_validateData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -20,7 +27,7 @@ var Order = {
     req.body.buyerId = req.userId;
     var requiredParams = ['carId', 'priceOffered', 'buyerId'];
 
-    if ((0, _validateData["default"])(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
+    if ((0, _validateData2["default"])(requiredParams, req.body) || req.body.carId.toString().length !== 13) {
       return res.status(400).send({
         status: 400,
         message: 'Select car and state amount you want to pay'
@@ -28,7 +35,7 @@ var Order = {
     } // verify the car and its status
 
 
-    var car = _CarModel["default"].carIsEligible(req.body.carId);
+    var car = _CarModel2["default"].carIsEligible(req.body.carId);
 
     if (!car) {
       return res.status(404).send({
@@ -37,7 +44,7 @@ var Order = {
       });
     }
 
-    var seller = _UserModel["default"].isUserActive('id', car.owner);
+    var seller = _UserModel2["default"].isUserActive('id', car.owner);
 
     if (!seller) {
       return res.status(404).send({
@@ -46,7 +53,7 @@ var Order = {
       });
     }
 
-    var order = _OrderModel["default"].createOrder({
+    var order = _OrderModel2["default"].createOrder({
       buyerId: req.body.buyerId,
       sellerId: car.owner,
       carId: req.body.carId,
@@ -71,7 +78,7 @@ var Order = {
   updatePrice: function updatePrice(req, res) {
     var requiredParams = ['orderId', 'newPrice'];
 
-    if ((0, _validateData["default"])(requiredParams, req.body)) {
+    if ((0, _validateData2["default"])(requiredParams, req.body)) {
       return res.status(400).send({
         status: 400,
         message: 'Ensure to send the order id and new price'
@@ -79,7 +86,7 @@ var Order = {
     } // check that the order exist and status is still pending
 
 
-    var order = _OrderModel["default"].getOrder(req.body.orderId);
+    var order = _OrderModel2["default"].getOrder(req.body.orderId);
 
     if (!order || order.status.toLowerCase() !== 'pending') {
       return res.status(404).send({
@@ -107,7 +114,7 @@ var Order = {
     } // update the price and return the response
 
 
-    var updatedPriceOrder = _OrderModel["default"].updateOrderPrice(req.body.orderId, req.body.newPrice);
+    var updatedPriceOrder = _OrderModel2["default"].updateOrderPrice(req.body.orderId, req.body.newPrice);
 
     return res.status(200).send({
       status: 200,
@@ -117,7 +124,7 @@ var Order = {
   mySoldAds: function mySoldAds(req, res) {
     var userId = req.userId;
 
-    var soldAds = _OrderModel["default"].getSoldAdsByUser(userId);
+    var soldAds = _OrderModel2["default"].getSoldAdsByUser(userId);
 
     if (soldAds.length === 0) {
       return res.status(404).send({
@@ -132,7 +139,7 @@ var Order = {
     });
   },
   getAllOrders: function getAllOrders(req, res) {
-    var orders = _OrderModel["default"].getAllOrders();
+    var orders = _OrderModel2["default"].getAllOrders();
 
     if (orders < 1) {
       return res.send({
@@ -166,7 +173,7 @@ var Order = {
     } // retrieve the order
 
 
-    var order = _OrderModel["default"].getOrder(orderId);
+    var order = _OrderModel2["default"].getOrder(orderId);
 
     if (!order) {
       return res.status(404).send({
@@ -176,9 +183,9 @@ var Order = {
     } // check if seller and buyer are active
 
 
-    var seller = _UserModel["default"].isUserActive('id', order.sellerId);
+    var seller = _UserModel2["default"].isUserActive('id', order.sellerId);
 
-    var buyer = _UserModel["default"].isUserActive('id', order.buyerId);
+    var buyer = _UserModel2["default"].isUserActive('id', order.buyerId);
 
     if (!seller || !buyer) {
       return res.status(406).send({
@@ -195,7 +202,7 @@ var Order = {
       });
     }
 
-    var updatedOrder = _OrderModel["default"].updateOrderStatus(orderId, status);
+    var updatedOrder = _OrderModel2["default"].updateOrderStatus(orderId, status);
 
     return res.status(200).send({
       status: 200,
@@ -203,7 +210,7 @@ var Order = {
     });
   },
   deleteAnOrder: function deleteAnOrder(req, res) {
-    var order = _OrderModel["default"].getOrder(req.params.orderId);
+    var order = _OrderModel2["default"].getOrder(req.params.orderId);
 
     if (!order) {
       return res.status(404).send({
@@ -230,7 +237,7 @@ var Order = {
       });
     }
 
-    var deletedOrder = _OrderModel["default"].deleteOrder(order);
+    var deletedOrder = _OrderModel2["default"].deleteOrder(order);
 
     return res.status(200).send({
       status: 200,
@@ -238,7 +245,7 @@ var Order = {
     });
   },
   getSingleOrder: function getSingleOrder(req, res) {
-    var order = _OrderModel["default"].getOrder(req.params.orderId);
+    var order = _OrderModel2["default"].getOrder(req.params.orderId);
 
     if (!order) {
       return res.status(404).send({
@@ -262,5 +269,4 @@ var Order = {
     });
   }
 };
-var _default = Order;
-exports["default"] = _default;
+exports["default"] = Order;

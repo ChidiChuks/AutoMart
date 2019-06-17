@@ -3,7 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 var users = [{
   id: 1558861688503,
   name: 'John Doe',
@@ -33,5 +32,4 @@ var users = [{
   isAdmin: true,
   status: 'active'
 }];
-var _default = users;
-exports["default"] = _default;
+exports["default"] = users;

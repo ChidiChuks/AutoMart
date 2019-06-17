@@ -3,9 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _carsData = _interopRequireDefault(require("../test/carsData"));
+var _carsData = require("../test/carsData");
+
+var _carsData2 = _interopRequireDefault(_carsData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -21,7 +22,7 @@ function () {
   function Car() {
     _classCallCheck(this, Car);
 
-    this.cars = _carsData["default"];
+    this.cars = _carsData2["default"];
   }
   /**
    * @description - creates a car advert
@@ -194,6 +195,4 @@ function () {
   return Car;
 }();
 
-var _default = new Car();
-
-exports["default"] = _default;
+exports["default"] = new Car();

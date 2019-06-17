@@ -3,9 +3,10 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _usersData = _interopRequireDefault(require("../test/usersData"));
+var _usersData = require("../test/usersData");
+
+var _usersData2 = _interopRequireDefault(_usersData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -21,7 +22,7 @@ function () {
   function UserModel() {
     _classCallCheck(this, UserModel);
 
-    this.users = _usersData["default"];
+    this.users = _usersData2["default"];
   }
   /**
    * @param {Object} data
@@ -34,8 +35,10 @@ function () {
     value: function create(data) {
       var newUser = {
         id: Math.floor(Math.random() * 100000) + 1 + Date.now(),
-        name: data.name || '',
         email: data.email || '',
+        first_name: data.first_name || '',
+        last_name: data.last_name || '',
+        phone: data.phone || '',
         password: data.password || '',
         isAdmin: data.isAdmin || false,
         status: 'active'
@@ -93,6 +96,4 @@ function () {
   return UserModel;
 }();
 
-var _default = new UserModel();
-
-exports["default"] = _default;
+exports["default"] = new UserModel();

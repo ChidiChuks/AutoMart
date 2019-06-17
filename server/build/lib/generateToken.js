@@ -3,11 +3,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports["default"] = void 0;
 
-var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
+var _jsonwebtoken = require("jsonwebtoken");
 
-var _dotenv = _interopRequireDefault(require("dotenv"));
+var _jsonwebtoken2 = _interopRequireDefault(_jsonwebtoken);
+
+var _dotenv = require("dotenv");
+
+var _dotenv2 = _interopRequireDefault(_dotenv);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -17,10 +20,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
  * @param {boolean} userRole
  * @return {string} token
  */
-_dotenv["default"].config();
+_dotenv2["default"].config();
 
 var generateToken = function generateToken(id, userRole) {
-  var token = _jsonwebtoken["default"].sign({
+  var token = _jsonwebtoken2["default"].sign({
     id: id,
     role: userRole
   }, process.env.JWT_SECRET, {
@@ -30,5 +33,4 @@ var generateToken = function generateToken(id, userRole) {
   return token;
 };
 
-var _default = generateToken;
-exports["default"] = _default;
+exports["default"] = generateToken;

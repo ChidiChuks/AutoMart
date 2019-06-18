@@ -251,30 +251,30 @@ describe('Order transaction', () => {
         //             done();
         //         });
         // });
-        it('should return error 404 if order is not found', (done) => {
-            carsData[0].owner = usersData[1].id;
-            CarModel.cars = carsData;
-            UserModel.users = usersData;
-            OrderModel.orders = ordersData;
-            const user = usersData[0];
-            ordersData[0].buyerId = user.id;
+        // it('should return error 404 if order is not found', (done) => {
+        //     carsData[0].owner = usersData[1].id;
+        //     CarModel.cars = carsData;
+        //     UserModel.users = usersData;
+        //     OrderModel.orders = ordersData;
+        //     const user = usersData[0];
+        //     ordersData[0].buyerId = user.id;
 
-            user.isAdmin = false;
-            const newPrice = parseInt(ordersData[0].price, 10);
-            const token = generateToken(user.id, user.isAdmin);
-            const data = {
-                orderId: '6667778889990',
-                newPrice,
-            };
-            chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
-                .end((err, res) => {
-                    // eslint-disable-next-line no-unused-expressions
-                    expect(err).to.be.null;
-                    expect(res.status).to.eq(404);
-                    expect(res.body.message).to.eq('Check that the order is still pending');
-                    done();
-                });
-        });
+        //     user.isAdmin = false;
+        //     const newPrice = parseInt(ordersData[0].price, 10);
+        //     const token = generateToken(user.id, user.isAdmin);
+        //     const data = {
+        //         orderId: '6667778889990',
+        //         newPrice,
+        //     };
+        //     chai.request(server).patch('/api/v1/order').set('x-auth', token).send(data)
+        //         .end((err, res) => {
+        //             // eslint-disable-next-line no-unused-expressions
+        //             expect(err).to.be.null;
+        //             expect(res.status).to.eq(404);
+        //             expect(res.body.message).to.eq('Check that the order is still pending');
+        //             done();
+        //         });
+        // });
         // it('should return error 404 if order is no longer pending', (done) => {
         //     carsData[0].owner = usersData[1].id;
         //     CarModel.cars = carsData;

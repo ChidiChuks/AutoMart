@@ -12,7 +12,6 @@ const Flag = {
                 status: 400,
                 message: 'Ensure to indicate the ad id and reason for the report',
             });
-
         }
 
         const carToFlag = CarModel.carIsEligible(req.body.carId);

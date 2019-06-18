@@ -1,6 +1,6 @@
 # AutoMart
 
-[![Coverage Status](https://coveralls.io/repos/github/ChidiChuks/AutoMart/badge.svg?branch=develop)](https://coveralls.io/github/ChidiChuks/AutoMart?branch=develop)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/test_coverage)](https://codeclimate.com/github/codeclimate/codeclimate/test_coverage) [![Build Status](https://travis-ci.com/ChidiChuks/AutoMart.svg?branch=develop)](https://travis-ci.com/ChidiChuks/AutoMart) [![Maintainability](https://api.codeclimate.com/v1/badges/a99a88d28ad37a79dbf6/maintainability)](https://codeclimate.com/github/codeclimate/codeclimate/maintainability)
 
 An online marketplace for automobiles of diverse makes, model or body type. Auto Mart's users can sell their cars or buy from trusted dealerships or private sellers.
 

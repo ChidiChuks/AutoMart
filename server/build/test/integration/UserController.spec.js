@@ -42,29 +42,28 @@ describe('User', function () {
   };
 
   describe('User create', function () {
-    it('should return a new user with the supplied properties', function (done) {
-      var userDetails = {
-        email: 'johndoe@gmail.com',
-        first_name: 'John',
-        last_name: 'Doe',
-        password: 'password',
-        password_confirmation: 'password',
-        // address: 'my address',
-        phone: '08136266387' // account_number: '0119260095',
-        // bank: 'GTB',
-
-      };
-
-      _chai2["default"].request(_index2["default"]).post(signupUrl).send(userDetails).end(function (err, res) {
-        expect(res.status).to.eq(201);
-        expect(res.body.data.email).to.eq(userDetails.email);
-        expect(res.body.data.phone).to.eq(userDetails.phone); // expect(res.body.data.address).to.eq(userDetails.address);
-        // expect(res.body.data.account_number).to.eq(userDetails.account_number);
-        // expect(res.body.data.bank).to.eq(userDetails.bank);
-
-        done();
-      });
-    });
+    // it('should return a new user with the supplied properties', (done) => {
+    //     const userDetails = {
+    //         email: 'johndoe@gmail.com',
+    //         first_name: 'John',
+    //         last_name: 'Doe',
+    //         password: 'password',
+    //         password_confirmation: 'password',
+    //         // address: 'my address',
+    //         phone: '08136266387',
+    //         // account_number: '0119260095',
+    //         // bank: 'GTB',
+    //     };
+    //     chai.request(server).post(signupUrl).send(userDetails).end((err, res) => {
+    //         expect(res.status).to.eq(201);
+    //         expect(res.body.data.email).to.eq(userDetails.email);
+    //         expect(res.body.data.phone).to.eq(userDetails.phone);
+    //         // expect(res.body.data.address).to.eq(userDetails.address);
+    //         // expect(res.body.data.account_number).to.eq(userDetails.account_number);
+    //         // expect(res.body.data.bank).to.eq(userDetails.bank);
+    //         done();
+    //     });
+    // });
     it('should return error if password and its confirmation does not match', function (done) {
       var data = {
         email: 'chidi@gmail.com',

@@ -16,23 +16,26 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 
 var expect = _chai2["default"].expect;
 describe('User Model', function () {
-  describe('create User', function () {// it('should create a new user', () => {
-    //     const data = {
-    //         email: 'johndoe@gmail.com',
-    //         first_name: 'John',
-    //         last_name: 'Doe',
-    //         password: 'password',
-    //         // address: 'my address',
-    //         isAdmin: false,
-    //         phone: '08136266387',
-    //         // account_number: '0119260095',
-    //         // bank: 'GTB',
-    //     };
-    //     const newUser = UserModel.create(data);
-    //     expect(newUser).to.have.property('id');
-    //     expect(newUser).to.have.property('email').eq(data.email);
-    //     expect(newUser.last_name).to.eq(data.last_name);
-    // });
+  describe('create User', function () {
+    it('should create a new user', function () {
+      var data = {
+        email: 'johndoe@gmail.com',
+        first_name: 'John',
+        last_name: 'Doe',
+        password: 'password',
+        // address: 'my address',
+        isAdmin: false,
+        phone: '08136266387' // account_number: '0119260095',
+        // bank: 'GTB',
+
+      };
+
+      var newUser = _UserModel2["default"].create(data);
+
+      expect(newUser).to.have.property('id');
+      expect(newUser).to.have.property('email').eq(data.email);
+      expect(newUser.last_name).to.eq(data.last_name);
+    });
   });
   describe('Find user by given property', function () {
     it('should return a user with given property', function () {

@@ -38,10 +38,6 @@ var _usersData2 = _interopRequireDefault(_usersData);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 var loc = _path2["default"].resolve('./');
 
 var expect = _chai2["default"].expect;
@@ -59,55 +55,79 @@ describe('Cars', function () {
   };
 
   describe('Create Ad', function () {
-    it('should return error 400 if request does not contain all required fields', function (done) {
-      usersArray();
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-      _chai2["default"].request(_index2["default"]).post(adUrl).type('form').set('x-auth', token).attach('img', _path2["default"].join(loc, '/server/test/benz.jpg')).set('Content-Type', 'image/jpeg').field('status', 'available').field('price', '').field('state', 'new').field('model', 'E350').field('manufacturer', 'Benz').field('body_type', 'car').field('description', 'This is additional description').end(function (err, res) {
-        expect(res.body.status).to.eq(400);
-        expect(res.body.message).to.eq('Fill all required fields');
-        done();
-      });
-    });
-    it('should return error 400 if user has the same car that is available', function (done) {
-      usersArray();
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-      _carsData2["default"][0].owner = user.id;
-      var data = _carsData2["default"][0];
-      carsArray();
-
-      _chai2["default"].request(_index2["default"]).post(adUrl).type('form').set('x-auth', token).attach('img', _path2["default"].join(loc, '/server/test/benz.jpg')).field('owner', data.owner).field('price', data.price).field('state', data.state).field('status', data.status).field('model', data.model).field('manufacturer', data.manufacturer).field('body_type', data.body_type).field('description', 'This is additional description').end(function (err, res) {
-        expect(res.status).to.eq(400);
-        expect(res.body.message).to.eq('You have a similar unsold car');
-        done();
-      });
-    });
-    it('should return error 400 if there is no image', function (done) {
-      usersArray();
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-      var data = {
-        owner: _usersData2["default"][1].id,
-        status: 'avaialable',
-        price: 2500000,
-        state: 'new',
-        model: 'es6 v',
-        manufacturer: 'Benz',
-        body_type: 'Sedan',
-        description: 'The car is still new'
-      };
-
-      _chai2["default"].request(_index2["default"]).post(adUrl).set('x-auth', token).send(data).end(function (err, res) {
-        expect(res.body.message).to.eq('Fill all required fields');
-        expect(res.status).to.eq(400);
-        done();
-      });
-    });
+    // it('should return error 400 if request does not contain all required fields', (done) => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     chai.request(server)
+    //         .post(adUrl)
+    //         .type('form')
+    //         .set('x-auth', token)
+    //         .attach('img', path.join(loc, '/server/test/benz.jpg'))
+    //         .set('Content-Type', 'image/jpeg')
+    //         .field('status', 'available')
+    //         .field('price', '')
+    //         .field('state', 'new')
+    //         .field('model', 'E350')
+    //         .field('manufacturer', 'Benz')
+    //         .field('body_type', 'car')
+    //         .field('description', 'This is additional description')
+    //         .end((err, res) => {
+    //             expect(res.body.status).to.eq(400);
+    //             expect(res.body.message).to.eq('Fill all required fields');
+    //             done();
+    //         });
+    // });
+    // it('should return error 400 if user has the same car that is available', (done) => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     carsData[0].owner = user.id;
+    //     const data = carsData[0];
+    //     carsArray();
+    //     chai.request(server)
+    //         .post(adUrl)
+    //         .type('form')
+    //         .set('x-auth', token)
+    //         .attach('img', path.join(loc, '/server/test/benz.jpg'))
+    //         .field('owner', data.owner)
+    //         .field('price', data.price)
+    //         .field('state', data.state)
+    //         .field('status', data.status)
+    //         .field('model', data.model)
+    //         .field('manufacturer', data.manufacturer)
+    //         .field('body_type', data.body_type)
+    //         .field('description', 'This is additional description')
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(400);
+    //             expect(res.body.message).to.eq('You have a similar unsold car');
+    //             done();
+    //         });
+    // });
+    // it('should return error 400 if there is no image', (done) => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     const data = {
+    //         owner: usersData[1].id,
+    //         status: 'avaialable',
+    //         price: 2500000,
+    //         state: 'new',
+    //         model: 'es6 v',
+    //         manufacturer: 'Benz',
+    //         body_type: 'Sedan',
+    //         description: 'The car is still new',
+    //     };
+    //     chai.request(server).post(adUrl).set('x-auth', token).send(data)
+    //         .end((err, res) => {
+    //             expect(res.body.message).to.eq('Fill all required fields');
+    //             expect(res.status).to.eq(400);
+    //             done();
+    //         });
+    // });
     it('should return error 401 if token is not provided', function (done) {
       var data = {
         owner: 'owner',
@@ -258,80 +278,58 @@ describe('Cars', function () {
   }); // seller update ad price
 
   describe('Seller update ad price', function () {
-    it('should return the ad with updated price',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee() {
-      var user, token, reqData, res;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              user = _usersData2["default"][0];
-              user.isAdmin = false;
-              _context.next = 4;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 4:
-              token = _context.sent;
-              _carsData2["default"][0].owner = user.id;
-              reqData = {
-                id: _carsData2["default"][0].id,
-                price: 2400000,
-                description: 'This is to add further description'
-              };
-              _context.next = 9;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(reqData.adId)).set('x-auth', token).send(reqData);
-
-            case 9:
-              res = _context.sent;
-              expect(res.body.data.price).to.eq(reqData.price);
-              expect(res.status).to.eq(200);
-              expect(res.body.data.description).to.eq(reqData.description);
-
-            case 13:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    })));
-    it('should return error 404 if ad is not found', function () {
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-      _CarModel2["default"].cars = [];
-      var reqData = {
-        id: 8118278392839,
-        price: 2400000,
-        description: 'This is to add further description'
-      };
-
-      _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(reqData.adId)).set('x-auth', token).send(reqData).end(function (err, res) {
-        expect(res.status).to.eq(404);
-        expect(res.body.message).to.eq('The advert you want to update is not available');
-      });
-    });
-    it('should return error 401 if another user attempts update an ad', function () {
-      carsArray();
-      usersArray();
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-      var price = _carsData2["default"][0].price - 1000000;
-      _carsData2["default"][0].owner = _usersData2["default"][1].id;
-      var reqData = {
-        id: _carsData2["default"][0].id,
-        price: price,
-        description: 'This is to add further description'
-      };
-
-      _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(reqData.adId)).set('x-auth', token).send(reqData).end(function (err, res) {
-        expect(res.status).to.eq(401);
-        expect(res.body.message).to.eq('You do not have the permission to update this data');
-      });
-    });
+    // it('should return the ad with updated price', async() => {
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     carsData[0].owner = user.id;
+    //     const reqData = {
+    //         id: carsData[0].id,
+    //         price: 2400000,
+    //         description: 'This is to add further description',
+    //     };
+    //     const res = await chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token).send(reqData);
+    //     expect(res.body.data.price).to.eq(reqData.price);
+    //     expect(res.status).to.eq(200);
+    //     expect(res.body.data.description).to.eq(reqData.description);
+    // });
+    // it('should return error 404 if ad is not found', () => {
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     Cars.cars = [];
+    //     const reqData = {
+    //         id: 8118278392839,
+    //         price: 2400000,
+    //         description: 'This is to add further description',
+    //     };
+    //     chai.request(server).patch(`/api/v1/car/${reqData.adId}`)
+    //         .set('x-auth', token).send(reqData)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(404);
+    //             expect(res.body.message).to.eq('The advert you want to update is not available');
+    //         });
+    // });
+    // it('should return error 401 if another user attempts update an ad', () => {
+    //     carsArray();
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     const price = carsData[0].price - 1000000;
+    //     carsData[0].owner = usersData[1].id;
+    //     const reqData = {
+    //         id: carsData[0].id,
+    //         price,
+    //         description: 'This is to add further description',
+    //     };
+    //     chai.request(server).patch(`/api/v1/car/${reqData.adId}`).set('x-auth', token)
+    //         .send(reqData)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(401);
+    //             expect(res.body.message).to.eq('You do not have the permission to update this data');
+    //         });
+    // });
     it('should return error 401 if user is not logged in', function () {
       carsArray();
       var reqData = {
@@ -420,31 +418,29 @@ describe('Cars', function () {
   }); // admin can view all ads whether sold or available
 
   describe('admin view all ads', function () {
-    it('should return all ads', function (done) {
-      var user = _usersData2["default"][0];
-      user.isAdmin = true;
-      carsArray();
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-      _chai2["default"].request(_index2["default"]).get('/api/v1/car').set('x-auth', token).end(function (err, res) {
-        expect(res.status).to.eq(200);
-        expect(res.body.data).to.be.an('Array');
-        expect(res.body.data[0]).to.be.an('Object');
-        done();
-      });
-    });
-    it('should return error 404 if there are no ads available', function (done) {
-      var user = _usersData2["default"][0];
-      user.isAdmin = true;
-      _CarModel2["default"].cars = [];
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-      _chai2["default"].request(_index2["default"]).get('/api/v1/car').set('x-auth', token).end(function (err, res) {
-        expect(res.body.status).to.eq(404);
-        expect(res.body.message).to.eq('There are no cars available now. Check back');
-        done();
-      });
-    });
+    // it('should return all ads', (done) => {
+    //     const user = usersData[0];
+    //     user.isAdmin = true;
+    //     carsArray();
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     chai.request(server).get('/api/v1/car').set('x-auth', token).end((err, res) => {
+    //         expect(res.status).to.eq(200);
+    //         expect(res.body.data).to.be.an('Array');
+    //         expect(res.body.data[0]).to.be.an('Object');
+    //         done();
+    //     });
+    // });
+    // it('should return error 404 if there are no ads available', (done) => {
+    //     const user = usersData[0];
+    //     user.isAdmin = true;
+    //     Cars.cars = [];
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     chai.request(server).get('/api/v1/car').set('x-auth', token).end((err, res) => {
+    //         expect(res.body.status).to.eq(404);
+    //         expect(res.body.message).to.eq('There are no cars available now. Check back');
+    //         done();
+    //     });
+    // });
     it('should return error 401 if user is not logged in', function (done) {
       carsArray();
 
@@ -457,18 +453,18 @@ describe('Cars', function () {
   }); // admin can delete any posted ad
 
   describe('Admin can delete a posted ad', function () {
-    it('should delete a posted ad', function (done) {
-      var user = _usersData2["default"][0];
-      user.isAdmin = true;
-      carsArray();
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-      _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(_carsData2["default"][0].id)).set('x-auth', token).end(function (err, res) {
-        expect(res.status).to.eq(200);
-        expect(res.body.message).to.eq('Ad successfully deleted');
-        done();
-      });
-    });
+    // it('should delete a posted ad', (done) => {
+    //     const user = usersData[0];
+    //     user.isAdmin = true;
+    //     carsArray();
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     chai.request(server).delete(`/api/v1/car/${carsData[0].id}`).set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(200);
+    //             expect(res.body.message).to.eq('Ad successfully deleted');
+    //             done();
+    //         });
+    // });
     it('should return error 401 if user is not admin or not logged in', function (done) {
       carsArray();
 
@@ -477,32 +473,31 @@ describe('Cars', function () {
         expect(res.body.message).to.eq('No authorization token provided');
         done();
       });
-    });
-    it('should return error 404 if wrong ad id is given', function (done) {
-      var user = _usersData2["default"][0];
-      user.isAdmin = true;
-      carsArray();
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-      var id = _carsData2["default"][0].id + 1;
-
-      _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(id)).set('x-auth', token).end(function (err, res) {
-        expect(res.status).to.eq(404);
-        expect(res.body.message).to.eq('The ad is no longer available');
-        done();
-      });
-    });
-    it('should return error 404 if ad is not available', function (done) {
-      var user = _usersData2["default"][0];
-      user.isAdmin = true;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-      var id = _carsData2["default"][0].id;
-      _CarModel2["default"].cars = [];
-
-      _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(id)).set('x-auth', token).end(function (err, res) {
-        expect(res.status).to.eq(404);
-        expect(res.body.message).to.eq('The ad is no longer available');
-        done();
-      });
-    });
+    }); // it('should return error 404 if wrong ad id is given', (done) => {
+    //     const user = usersData[0];
+    //     user.isAdmin = true;
+    //     carsArray();
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     const id = carsData[0].id + 1;
+    //     chai.request(server).delete(`/api/v1/car/${id}`).set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(404);
+    //             expect(res.body.message).to.eq('The ad is no longer available');
+    //             done();
+    //         });
+    // });
+    // it('should return error 404 if ad is not available', (done) => {
+    //     const user = usersData[0];
+    //     user.isAdmin = true;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     const { id } = carsData[0];
+    //     Cars.cars = [];
+    //     chai.request(server).delete(`/api/v1/car/${id}`).set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(404);
+    //             expect(res.body.message).to.eq('The ad is no longer available');
+    //             done();
+    //         });
+    // });
   });
 });

@@ -1,18 +1,15 @@
-host: AutoMart
-basePath: /api/v1
 swagger: '2.0'
-info: 
-  description: Application Programming Interface for Automobile online marketplace   
-  version: 1.0.0
+info:
+  description: API for Automobile Online Marketplace
+  version: "v1"
   title: AutoMart
   contact:
     email: chidiebere_chukwuma@yahoo.com
   license:
     name: ISC
+host: AutoMart
+basePath: /api/v1
 tags:
-- name: auth
-  description: Operations about user authentication
-  tags:
   - name: auth
     description: Operations about user authentication
   - name: user
@@ -41,22 +38,25 @@ paths:
           schema:
             type: object
             required:
-              - name
-              
+              - first_name
+              - last_name
               - email
-              
+              - phone
               - password
-              
+              - passord_confirmation
             properties:
-              name:
+              first_name:
                 type: string
-              
+              last_name:
+                type: string
               email:
                 type: string
-  
+              phone:
+                type: integer
               password:
                 type: string
-              
+              password_confirmation:
+                type: string
       responses:
         201:
           description: User created succcessfully
@@ -66,8 +66,10 @@ paths:
               data:
                token: MTU1OTgyMTklsle8juajdud83duae9d9ad9dhdIwMCw
                id: 1558861688503
-               name: John Doe
+               first_name: John
+               last_name: Doe
                email: johndoe@email.com
+               phone: 08136266387
                isAdmin: false
         400:
           description: Invalid input
@@ -104,11 +106,12 @@ paths:
               message: User successfully signed in
               user:
                 id: 1558861688503
-                name: John Doe
+                first_name: John
+                last_name: Doe
                 email: johndoe@email.com
               token: >-
                 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTI1NTI5MjU3LCJleHAiOjE1MjU2MTU2NTd9.WqI-bayENIvde4UIkUWqVW3ZdMHtyVyY4RwOVx2gP4Y
-              
+              phone: 08136266387
               isAdmin: false
         400:
           description: Invalid login credentials
@@ -158,9 +161,11 @@ paths:
               data:
                 id: 1558730737306
                 email: chidiebere_chukwuma@yahoo.com
-                name: chidiebere chukwuma
+                first_name: Chidiebere
+                last_name: Chukwuma
                 password: $2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2,
                 isAdmin: false
+                phone: 08136266387
                 status: active
         400:
           description: Invalid input, fill all required fields
@@ -197,12 +202,12 @@ paths:
             application/json:
               data:
                 id: 1558730737306
-                name: chidiebere chukwuma
                 email: chidiebere_chukwuma@yahoo.com
+                first_name: Chidiebere
+                last_name: Chukwuma
                 password: $2b$10$AINdYnWPPF99URkSCD1sQu3AG8oakjeWPJD1ZB9FxLlGTclRnSHY2,
-                
                 isAdmin: false
-                
+                phone: 08136266387
                 status: disabled
         400:
           description: Invalid request
@@ -231,22 +236,20 @@ paths:
             application/json:
               data:
               - id: 1558861688503
-                name: John Doe
                 email: johndoe@gmail.com
-          
+                first_name: John
+                last_name: Doe
                 password: $2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi
-                
                 isAdmin: false
-                
+                phone: 08136266387
                 status: active
               - id: 1558862824484
-                name: Stephen Hansen
-                email: stephenh@gmail.com
-                
+                email: markjo@gmail.com
+                first_name: Mark
+                last_name: Johnson
                 password: $2b$10$w8IStgH9bZgq2At6Nz4MD.TStPQLWq6SITarxEzb8M0xlsNeHhrWi
-                
                 isAdmin: true
-                
+                phone: 08136266387
                 status: disabled
         401:
           description: Unauthorized, invalid token or session have expired
@@ -255,7 +258,7 @@ paths:
       tags:
         - car
       summary: Creates a new car advert
-      description: Add meal to app
+      description: Add car to app
       consumes:
         - application/x-www-form-urlencoded
         - application/json
@@ -317,17 +320,17 @@ paths:
           examples:
             application/json:
               data:
-              id: 1558731607229,
-              owner: 1558730737306,
-              created_on: '5/24/2019, 9:59:37 PM',
-              state: 'Used',
-              status: 'available',
-              price: '7000000',
-              manufacturer: 'Benz',
-              model: '2017 Benz CLS',
-              body_type: 'Sedan',
-              description: 'This is the description of the car',
-              img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg',
+              id: 1558731607229
+              owner: 1558730737306
+              created_on: 5/24/2019, 9:59:37 PM
+              state: Used
+              status: available
+              price: 7000000
+              manufacturer: Benz
+              model: 2017 Benz CLS
+              body_type: Sedan
+              description: This is the description of the car
+              img: https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg
         400:
           description: Invalid inputs
           examples:
@@ -358,17 +361,17 @@ paths:
           examples:
             application/json:
               data:
-                id: 1558731168820,
-                owner: 1558955989206,
-                created_on: '5/24/2019, 9:51:34 PM',
-                state: 'New',
-                status: 'available',
-                price: '1200000',
-                manufacturer: 'AUDI',
-                model: 'SPORT UV',
-                body_type: 'SUV',
-                description: 'This is the description of the car',
-                img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg',
+                id: 1558731168820
+                owner: 1558955989206
+                created_on: 5/24/2019, 9:59:37 PM
+                state: New
+                status: available
+                price: 1200000
+                manufacturer: AUDI
+                model: 2017 Ford Fiesta
+                body_type: Hatchback
+                description: This is the description of the car
+                img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
         400:
           description: Invalid ad id
         404:
@@ -427,28 +430,28 @@ paths:
           examples:
             application/json:
               data:
-              - id: 1558731607229,
-                owner: 1558730737306,
-                created_on: '5/24/2019, 9:59:37 PM',
-                state: 'Used',
-                status: 'available',
-                price: '7000000',
-                manufacturer: 'Benz',
-                model: '2017 Benz CLS',
-                body_type: 'Sedan',
-                description: 'This is the description of the car',
-                img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg',
-              - id: 1558731168820,
-  owner: 1558955989206,
-  created_on: '5/24/2019, 9:51:34 PM',
-  state: 'New',
-  status: 'available',
-  price: '1200000',
-  manufacturer: 'AUDI',
-  model: 'SPORT UV',
-  body_type: 'SUV',
-  description: 'This is the description of the car',
-  img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg',
+              - id: 1558731607229
+                owner: 1558730737306
+                created_on: 5/24/2019, 9:59:37 PM
+                state: Used
+                status: available
+                price: 7000000
+                manufacturer: Ford
+                model: 2017 Ford Fiesta
+                body_type: Hatchback
+                description: This is the description of the car
+                img: https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg
+              - id: 1558731168820
+                owner: 1558955989206
+                created_on: 5/24/2019, 9:51:34 PM
+                state: New
+                status: available
+                price: 1200000
+                manufacturer: AUDI
+                model: SPORT UV
+                body_type: SUV
+                description: This is the description of the car
+                img: https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg
   /car/manufacturer/{manufacturer}:
     get:
       tags:
@@ -470,28 +473,28 @@ paths:
             application/json:
                   status: success
                   data:
-                  - id: 1558731607229,
-                    owner: 1558730737306,
-                    created_on: '5/24/2019, 9:59:37 PM',
-                    state: 'Used',
-                    status: 'available',
-                    price: '7000000',
-                    manufacturer: 'Benz',
-                    model: '2017 Benz CLS',
-                    body_type: 'Sedan',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg',
-                  - id: 1558731168820,
-                    owner: 1558955989206,
-                    created_on: '5/24/2019, 9:51:34 PM',
-                    state: 'New',
-                    status: 'available',
-                    price: '1200000',
-                    manufacturer: 'AUDI',
-                    model: 'SPORT UV',
-                    body_type: 'SUV',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg',
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: AUDI
+                    model: 2017 AUDI YANKS
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: New
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: SUV
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
         404:
           description: There are no ads for the selected manufacturer
   /car/bodytype/{body_type}:
@@ -515,28 +518,28 @@ paths:
             application/json:
                   status: success
                   data:
-                  - id: 1558731607229,
-                    owner: 1558730737306,
-                    created_on: '5/24/2019, 9:59:37 PM',
-                    state: 'Used',
-                    status: 'available',
-                    price: '7000000',
-                    manufacturer: 'Benz',
-                    model: '2017 Benz CLS',
-                    body_type: 'Sedan',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358034/benz_vjvfvs.jpg',
-                  - id: 1558731356445,
-                    owner: 1558730737306,
-                    created_on: '5/24/2019, 9:55:03 PM',
-                    state: 'New',
-                    status: 'available',
-                    price: '2000000',
-                    manufacturer: 'Mercedes',
-                    model: 'CLA Classic',
-                    body_type: 'Sedan',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358136/benz_yzn5ad.jpg',
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: Benz
+                    model: 2017 Benz CLS
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: New
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
         404:
           description: No ads with the selected body type
   /car/state/{state}:
@@ -560,28 +563,28 @@ paths:
             application/json:
                   status: success
                   data:
-                  - id: 1558731168820,
-                    owner: 1558955989206,
-                    created_on: '5/24/2019, 9:51:34 PM',
-                    state: 'New',
-                    status: 'available',
-                    price: '1200000',
-                    manufacturer: 'AUDI',
-                    model: 'SPORT UV',
-                    body_type: 'SUV',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg',
-                  - id: 1558731356445,
-                    owner: 1558730737306,
-                    created_on: '5/24/2019, 9:55:03 PM',
-                    state: 'New',
-                    status: 'available',
-                    price: '2000000',
-                    manufacturer: 'Mercedes',
-                    model: 'CLA Classic',
-                    body_type: 'Sedan',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358136/benz_yzn5ad.jpg',
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: Ford
+                    model: 2017 Ford Fiesta
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: Used
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
         404:
           description: No ads for the selected state
   /car/status/available:
@@ -599,28 +602,28 @@ paths:
             application/json:
                   status: success
                   data:
-                  - id: 1558731168820,
-                    owner: 1558955989206,
-                    created_on: '5/24/2019, 9:51:34 PM',
-                    state: 'New',
-                    status: 'available',
-                    price: '1200000',
-                    manufacturer: 'AUDI',
-                    model: 'SPORT UV',
-                    body_type: 'SUV',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg',
-                  - id: 1558731356445,
-                    owner: 1558730737306,
-                    created_on: '5/24/2019, 9:55:03 PM',
-                    state: 'New',
-                    status: 'available',
-                    price: '2000000',
-                    manufacturer: 'Mercedes',
-                    model: 'CLA Classic',
-                    body_type: 'Sedan',
-                    description: 'This is the description of the car',
-                    img: 'https://res.cloudinary.com/chidichuks/image/upload/v1560358136/benz_yzn5ad.jpg',
+                  - id: 1558731607229
+                    owner: 1558730737306
+                    created_on: 5/24/2019, 9:59:37 PM
+                    state: Used
+                    status: available
+                    price: 7000000
+                    manufacturer: Benz
+                    model: 2017 Benz CLS
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
+                  - id: 1558731168820
+                    owner: 1558955989206
+                    created_on: 5/24/2019, 9:51:34 PM
+                    state: New
+                    status: available
+                    price: 1200000
+                    manufacturer: AUDI
+                    model: SPORT UV
+                    body_type: Hatchback
+                    description: This is the description of the car
+                    img: https://res.cloudinary.com/chidichuks/image/upload/v1560358106/benz_smpuel.jpg
         404:
           description: There are no cars available. Check back
   /order/:
@@ -997,10 +1000,3 @@ paths:
           description: Unauthorized, invalid token or session have expired
         404:
           description: Order not found or uncompleted
-# Added by API Auto Mocking Plugin
-host: virtserver.swaggerhub.com
-basePath: /ChidiChuks/AutoMart_API/1.0.0
-schemes:
- - https
- - http
-        

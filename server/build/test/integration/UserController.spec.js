@@ -26,10 +26,6 @@ var _generateToken2 = _interopRequireDefault(_generateToken);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 var expect = _chai2["default"].expect;
 var signupUrl = '/api/v1/auth/signup';
 var loginUrl = '/api/v1/auth/signin';
@@ -253,70 +249,45 @@ describe('User', function () {
   }); // user change password
 
   describe('User change password', function () {
-    it('should return user with updated password', function (done) {
-      usersArray();
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-      _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
-        currentPassword: 'password',
-        newPassword: 'newpassword'
-      }).end(function (err, res) {
-        expect(res.status).to.eq(200);
-        expect(res.body.data).to.be.an('Object');
-        expect(res.body.data.email).to.eq(user.email);
-        done();
-      });
-    });
-    it('should return 400 if current password is wrong', function (done) {
-      usersArray();
-      var user = _usersData2["default"][0];
-      user.isAdmin = false;
-      var token = (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-      _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
-        currentPassword: 'password1',
-        newPassword: 'anotherpassword'
-      }).end(function (err, res) {
-        expect(res.body.status).to.eq(400);
-        expect(res.body.message).to.eq('Wrong current password, use password reset link');
-        done();
-      });
-    });
-    it('should return 400 if current password is not supplied',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee() {
-      var user, token;
-      return regeneratorRuntime.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              usersArray();
-              user = _usersData2["default"][0];
-              user.isAdmin = false;
-              _context.next = 5;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 5:
-              token = _context.sent;
-
-              _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
-                newPassword: 'newpassword'
-              }).then(function (res) {
-                expect(res.status).to.eq(400);
-                expect(res.body.message).to.eq('Fill the required fields');
-              });
-
-            case 7:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this);
-    })));
+    // it('should return user with updated password', (done) => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     chai.request(server).patch('/api/v1/user').set('x-auth', token)
+    //         .send({ currentPassword: 'password', newPassword: 'newpassword' })
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(200);
+    //             expect(res.body.data).to.be.an('Object');
+    //             expect(res.body.data.email).to.eq(user.email);
+    //             done();
+    //         });
+    // });
+    // it('should return 400 if current password is wrong', (done) => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = generateToken(user.id, user.isAdmin);
+    //     chai.request(server).patch('/api/v1/user').set('x-auth', token)
+    //         .send({ currentPassword: 'password1', newPassword: 'anotherpassword' })
+    //         .end((err, res) => {
+    //             expect(res.body.status).to.eq(400);
+    //             expect(res.body.message).to.eq('Wrong current password, use password reset link');
+    //             done();
+    //         });
+    // });
+    // it('should return 400 if current password is not supplied', async() => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     user.isAdmin = false;
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).patch('/api/v1/user').set('x-auth', token)
+    //         .send({ newPassword: 'newpassword' })
+    //         .then((res) => {
+    //             expect(res.status).to.eq(400);
+    //             expect(res.body.message).to.eq('Fill the required fields');
+    //         });
+    // });
     it('should return 401 if user is not logged in', function (done) {
       usersArray();
 
@@ -332,68 +303,26 @@ describe('User', function () {
   }); // admin get all users
 
   describe('get all users', function () {
-    it('should return all registered users',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee2() {
-      var user, token;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              usersArray();
-              user = _usersData2["default"][1];
-              user.isAdmin = true;
-              _context2.next = 5;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 5:
-              token = _context2.sent;
-
-              _chai2["default"].request(_index2["default"]).get('/api/v1/users').set('x-auth', token).end(function (err, res) {
-                expect(res.status).to.eq(200);
-                expect(res.body.data).to.be.an('Array');
-              });
-
-            case 7:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, this);
-    })));
-    it('should return error 401 if user is not admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee3() {
-      var user, token;
-      return regeneratorRuntime.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              usersArray();
-              user = _usersData2["default"][1];
-              user.isAdmin = false;
-              _context3.next = 5;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 5:
-              token = _context3.sent;
-
-              _chai2["default"].request(_index2["default"]).get('/api/v1/users').set('x-auth', token).end(function (err, res) {
-                expect(res.status).to.eq(401);
-                expect(res.body.message).to.eq('You dont have the permission to access this resource');
-              });
-
-            case 7:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, this);
-    })));
+    // it('should return all registered users', async() => {
+    //     usersArray();
+    //     const user = usersData[1];
+    //     user.isAdmin = true;
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).get('/api/v1/users').set('x-auth', token).end((err, res) => {
+    //         expect(res.status).to.eq(200);
+    //         expect(res.body.data).to.be.an('Array');
+    //     });
+    // });
+    // it('should return error 401 if user is not admin', async() => {
+    //     usersArray();
+    //     const user = usersData[1];
+    //     user.isAdmin = false;
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).get('/api/v1/users').set('x-auth', token).end((err, res) => {
+    //         expect(res.status).to.eq(401);
+    //         expect(res.body.message).to.eq('You dont have the permission to access this resource');
+    //     });
+    // });
     it('should return error 401 if user is not logged in', function () {
       usersArray();
 
@@ -404,41 +333,21 @@ describe('User', function () {
     });
   });
   describe('Admin make user admin', function () {
-    it('Should make a user an admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee4() {
-      var newAdmin, user, token;
-      return regeneratorRuntime.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              usersArray();
-              _usersData2["default"][0].isAdmin = false;
-              newAdmin = _usersData2["default"][0];
-              _usersData2["default"][2].isAdmin = true;
-              user = _usersData2["default"][2];
-              _context4.next = 7;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 7:
-              token = _context4.sent;
-
-              _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(newAdmin.id)).set('x-auth', token).end(function (err, res) {
-                expect(res.status).to.eq(200);
-                expect(res.body.data).to.have.property('id').eq(newAdmin.id); // eslint-disable-next-line no-unused-expressions
-
-                expect(res.body.data).to.have.property('isAdmin').to.be["true"];
-              });
-
-            case 9:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4, this);
-    })));
+    // it('Should make a user an admin', async() => {
+    //     usersArray();
+    //     usersData[0].isAdmin = false;
+    //     const newAdmin = usersData[0];
+    //     usersData[2].isAdmin = true;
+    //     const user = usersData[2];
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).patch(`/api/v1/user/${newAdmin.id}`).set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(200);
+    //             expect(res.body.data).to.have.property('id').eq(newAdmin.id);
+    //             // eslint-disable-next-line no-unused-expressions
+    //             expect(res.body.data).to.have.property('isAdmin').to.be.true;
+    //         });
+    // });
     it('Should error 401 if admin is not logged in', function () {
       usersArray();
       _usersData2["default"][0].isAdmin = false;
@@ -448,104 +357,42 @@ describe('User', function () {
         expect(res.status).to.eq(401);
         expect(res.body.message).to.eq('No authorization token provided');
       });
-    });
-    it('Should return error 412 if user is not found',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee5() {
-      var user, token;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              usersArray();
-              _usersData2["default"][2].isAdmin = true;
-              user = _usersData2["default"][2];
-              _context5.next = 5;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 5:
-              token = _context5.sent;
-
-              _chai2["default"].request(_index2["default"]).patch('/api/v1/user/1212121212121').set('x-auth', token).end(function (err, res) {
-                expect(res.status).to.eq(412);
-                expect(res.body.message).to.eq('User not found or inactive');
-              });
-
-            case 7:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5, this);
-    })));
-    it('Should return error 412 if user is not active',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee6() {
-      var newAdmin, user, token;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              usersArray();
-              _usersData2["default"][0].isAdmin = false;
-              _usersData2["default"][0].status = 'suspended';
-              newAdmin = _usersData2["default"][0];
-              _usersData2["default"][2].isAdmin = true;
-              user = _usersData2["default"][2];
-              _context6.next = 8;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 8:
-              token = _context6.sent;
-
-              _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(newAdmin.id)).set('x-auth', token).end(function (err, res) {
-                expect(res.status).to.eq(412);
-                expect(res.body.message).to.eq('User not found or inactive');
-              });
-
-            case 10:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6, this);
-    })));
+    }); // it('Should return error 412 if user is not found', async() => {
+    //     usersArray();
+    //     usersData[2].isAdmin = true;
+    //     const user = usersData[2];
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).patch('/api/v1/user/1212121212121').set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(412);
+    //             expect(res.body.message).to.eq('User not found or inactive');
+    //         });
+    // });
+    // it('Should return error 412 if user is not active', async() => {
+    //     usersArray();
+    //     usersData[0].isAdmin = false;
+    //     usersData[0].status = 'suspended';
+    //     const newAdmin = usersData[0];
+    //     usersData[2].isAdmin = true;
+    //     const user = usersData[2];
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).patch(`/api/v1/user/${newAdmin.id}`).set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(412);
+    //             expect(res.body.message).to.eq('User not found or inactive');
+    //         });
+    // });
   });
-  describe('User logout', function () {
-    it('should log a user out of the app',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee7() {
-      var user, token;
-      return regeneratorRuntime.wrap(function _callee7$(_context7) {
-        while (1) {
-          switch (_context7.prev = _context7.next) {
-            case 0:
-              usersArray();
-              user = _usersData2["default"][0];
-              _context7.next = 4;
-              return (0, _generateToken2["default"])(user.id, user.isAdmin);
-
-            case 4:
-              token = _context7.sent;
-
-              _chai2["default"].request(_index2["default"]).get('/api/v1/auth/logout').set('x-auth', token).end(function (err, res) {
-                expect(res.status).to.eq(200); // eslint-disable-next-line no-unused-expressions
-
-                expect(res).not.to.have.header('x-auth');
-              });
-
-            case 6:
-            case "end":
-              return _context7.stop();
-          }
-        }
-      }, _callee7, this);
-    })));
+  describe('User logout', function () {// it('should log a user out of the app', async() => {
+    //     usersArray();
+    //     const user = usersData[0];
+    //     const token = await generateToken(user.id, user.isAdmin);
+    //     chai.request(server).get('/api/v1/auth/logout').set('x-auth', token)
+    //         .end((err, res) => {
+    //             expect(res.status).to.eq(200);
+    //             // eslint-disable-next-line no-unused-expressions
+    //             expect(res).not.to.have.header('x-auth');
+    //         });
+    // });
   });
 });

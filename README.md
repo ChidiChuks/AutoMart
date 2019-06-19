@@ -17,7 +17,7 @@ An online marketplace for automobiles of diverse makes, model or body type. Auto
 - Expressjs 
 
 
-### Navigating the views 
+### Navigating the User Interface (UI) views 
 
 Below are the views for each category
 

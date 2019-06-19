@@ -473,6 +473,7 @@ describe('Cars', () => {
         //             expect(res.status).to.eq(404);
         //             expect(res.body.message).to.eq('The ad is no longer available');
         //             done();
+
         //         });
         // });
     });

@@ -23,6 +23,7 @@
     "bugs": {
         "url": "https://github.com/ChidiChuks/AutoMart/issues"
     },
+
     "homepage": "https://github.com/ChidiChuks/AutoMart#readme",
     "dependencies": {
         "@babel/polyfill": "7.4.4",

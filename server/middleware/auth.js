@@ -11,24 +11,25 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const auth = (req, res, next) => {
-  const token = req.header('x-auth');
-  if (!token) {
-    return res.status(401).send({
-      status: 401,
-      message: 'No authorization token provided',
-    });
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id;
-    req.role = decoded.role;
-    return next();
-  } catch (err) {
-    return res.status(401).send({
-      status: 401,
-      message: 'Unauthorized, invalid token or session have expired',
-    });
-  }
+    const token = req.header('x-auth');
+    if (!token) {
+        return res.status(401).send({
+            status: 401,
+            message: 'No authorization token provided',
+        });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id;
+        req.role = decoded.role;
+        return next();
+    } catch (err) {
+        return res.status(401).send({
+            status: 401,
+            message: 'Unauthorized, invalid token or session have expired',
+        });
+    }
 };
 
 export default auth;

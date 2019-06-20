@@ -169,6 +169,7 @@ const Car = {
                 message: 'The ad is no longer available',
             });
         }
+
         const deleteACarAd = CarModel.deleteCar(car);
         if (deleteACarAd.length < 1) {
             return res.status(500).send({

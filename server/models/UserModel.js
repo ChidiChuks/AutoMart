@@ -23,6 +23,7 @@ class UserModel {
             //   bank: data.bank || '',
             status: 'active',
         };
+
         this.users.push(newUser);
         return newUser;
     }

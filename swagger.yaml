@@ -1,4 +1,5 @@
 swagger: '2.0'
+
 info:
   description: API for Automobile Online Marketplace
   version: "v1"

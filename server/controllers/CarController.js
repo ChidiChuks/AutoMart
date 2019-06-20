@@ -163,6 +163,7 @@ const Car = {
         });
     },
 
+
     deleteAd(req, res) {
         const car = CarModel.findSingle(req.params.id);
         if (!car) {

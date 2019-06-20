@@ -59,6 +59,7 @@ const Car = {
             data: cars,
         });
     },
+
     getCarsByProperty(req, res) {
         const reqParam = Object.keys(req.params)[0];
         let cars;

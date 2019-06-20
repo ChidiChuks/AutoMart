@@ -5,6 +5,7 @@ class UserModel {
         this.users = usersdata;
     }
 
+
     /**
      * @param {Object} data
      * @returns {Object}

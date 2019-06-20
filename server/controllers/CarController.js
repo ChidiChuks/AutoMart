@@ -143,6 +143,7 @@ const Car = {
         });
     },
 
+
     getCarsWithinPriceRange(req, res) {
         const min = req.query.min ? req.query.min : 0;
         const max = req.query.max ? req.query.max : 3000000;

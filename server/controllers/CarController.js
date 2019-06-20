@@ -84,6 +84,7 @@ const Car = {
         });
     },
 
+
     getAllUnsoldCars(req, res) {
         const cars = CarModel.getAllUnsoldCars();
         if (cars.length < 1) {

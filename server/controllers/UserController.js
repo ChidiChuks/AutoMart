@@ -111,6 +111,7 @@ const User = {
                 message: 'Fill the required fields',
             });
         }
+
         const user = UserModel.getUser(userId);
         if (!user) {
             return res.status(404).send({

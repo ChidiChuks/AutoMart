@@ -83,6 +83,7 @@ const Car = {
             data: cars,
         });
     },
+
     getAllUnsoldCars(req, res) {
         const cars = CarModel.getAllUnsoldCars();
         if (cars.length < 1) {

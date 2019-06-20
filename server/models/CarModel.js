@@ -32,7 +32,6 @@ class Car {
         return this.cars;
     }
 
-
     /**
      * @description - select cars owned by the user
      * @param {string} owner

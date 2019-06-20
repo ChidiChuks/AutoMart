@@ -4,6 +4,7 @@ import validateData from '../lib/validateData';
 
 
 const Flag = {
+
     createFlag(req, res) {
         req.body.reportedBy = req.userId;
         const flagsReqs = ['carId', 'reason', 'reportedBy'];

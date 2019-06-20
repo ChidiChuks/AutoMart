@@ -54,6 +54,7 @@ Below are the views for each category
 
 [View the Heroku Url - https://pacific-wildwood-38736.herokuapp.com/api/v1](https://pacific-wildwood-38736.herokuapp.com/api/v1)
 
+
 #### API Documentation
 
 View the detailed API documentation [here - https://app.swaggerhub.com/apis/ChidiChuks/API_Documentation_for_AutoMart/v1](https://app.swaggerhub.com/apis/ChidiChuks/API_Documentation_for_AutoMart/v1)

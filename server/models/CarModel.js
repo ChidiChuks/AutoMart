@@ -58,11 +58,13 @@ class Car {
         return result;
     }
 
+
     /**
      * @description - return a single ad
      * @param {integer} adId
      * @returns {object}
      */
+
     findSingle(id) {
         return this.cars.find(car => parseInt(car.id, 10) === parseInt(id, 10));
     }

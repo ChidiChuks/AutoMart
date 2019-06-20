@@ -4,7 +4,6 @@ import routes from './routes/index';
 import 'dotenv/config';
 import logger from './logging';
 
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

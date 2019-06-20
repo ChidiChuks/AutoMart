@@ -59,6 +59,7 @@ const Car = {
             data: cars,
         });
     },
+
     getCarsByProperty(req, res) {
         const reqParam = Object.keys(req.params)[0];
         let cars;
@@ -83,6 +84,8 @@ const Car = {
             data: cars,
         });
     },
+
+
     getAllUnsoldCars(req, res) {
         const cars = CarModel.getAllUnsoldCars();
         if (cars.length < 1) {
@@ -142,6 +145,7 @@ const Car = {
         });
     },
 
+
     getCarsWithinPriceRange(req, res) {
         const min = req.query.min ? req.query.min : 0;
         const max = req.query.max ? req.query.max : 3000000;
@@ -161,6 +165,7 @@ const Car = {
         });
     },
 
+
     deleteAd(req, res) {
         const car = CarModel.findSingle(req.params.id);
         if (!car) {
@@ -169,6 +174,7 @@ const Car = {
                 message: 'The ad is no longer available',
             });
         }
+
         const deleteACarAd = CarModel.deleteCar(car);
         if (deleteACarAd.length < 1) {
             return res.status(500).send({

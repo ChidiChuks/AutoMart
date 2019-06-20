@@ -111,6 +111,7 @@ const User = {
                 message: 'Fill the required fields',
             });
         }
+
         const user = UserModel.getUser(userId);
         if (!user) {
             return res.status(404).send({
@@ -171,6 +172,7 @@ const User = {
                 message: 'User not found or inactive',
             });
         }
+
         // disable the user
         const disabledUser = UserModel.disableUser(userId);
         // return the result

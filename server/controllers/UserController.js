@@ -172,6 +172,7 @@ const User = {
                 message: 'User not found or inactive',
             });
         }
+
         // disable the user
         const disabledUser = UserModel.disableUser(userId);
         // return the result

@@ -303,64 +303,40 @@ describe('Cars', function () {
           }
         }
       }, _callee6, this);
-    })));
-    it('should return error 400 if there is no image',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee7() {
-      var token, data, res;
-      return regeneratorRuntime.wrap(function _callee7$(_context7) {
-        while (1) {
-          switch (_context7.prev = _context7.next) {
-            case 0:
-              _context7.next = 2;
-              return genToken();
+    }))); // it('should return error 400 if there is no image', async() => {
+    //     const token = await genToken();
+    //     const data = newAdValues();
+    //     data.img = '';
+    //     const res = await chai.request(server).post(adUrl).set('x-auth', token).send(data);
+    //     expect(res.body.message).to.eq('Fill all required fields');
+    //     expect(res.status).to.eq(400);
+    // });
 
-            case 2:
-              token = _context7.sent;
-              data = newAdValues();
-              data.img = '';
-              _context7.next = 7;
-              return _chai2["default"].request(_index2["default"]).post(adUrl).set('x-auth', token).send(data);
-
-            case 7:
-              res = _context7.sent;
-              expect(res.body.message).to.eq('Fill all required fields');
-              expect(res.status).to.eq(400);
-
-            case 10:
-            case "end":
-              return _context7.stop();
-          }
-        }
-      }, _callee7, this);
-    })));
     it('should return error 401 if token is not provided',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee8() {
+    regeneratorRuntime.mark(function _callee7() {
       var data, res;
-      return regeneratorRuntime.wrap(function _callee8$(_context8) {
+      return regeneratorRuntime.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context8.prev = _context8.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
               data = newAdValues();
-              _context8.next = 3;
+              _context7.next = 3;
               return _chai2["default"].request(_index2["default"]).post(adUrl).send(data);
 
             case 3:
-              res = _context8.sent;
+              res = _context7.sent;
               expect(res.status).to.eq(401);
               expect(res.body.message).to.eq('No authorization token provided');
 
             case 6:
             case "end":
-              return _context8.stop();
+              return _context7.stop();
           }
         }
-      }, _callee8, this);
+      }, _callee7, this);
     })));
   }); // unsold cars according to manufacturer
 
@@ -369,28 +345,79 @@ describe('Cars', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee9() {
+    regeneratorRuntime.mark(function _callee8() {
       var res;
+      return regeneratorRuntime.wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.next = 2;
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/manufacturer/FIAT');
+
+            case 2:
+              res = _context8.sent;
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('There are no cars for the selected manufacturer');
+
+            case 5:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8, this);
+    })));
+    it('should return a custom error if no vehicle is found for the manufacturer',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee9() {
+      var data, newAd, res;
       return regeneratorRuntime.wrap(function _callee9$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
             case 0:
               _context9.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/manufacturer/FIAT');
+              return userId();
 
             case 2:
-              res = _context9.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('There are no cars for the selected manufacturer');
+              data = _context9.sent;
+              _context9.next = 5;
+              return newAdValues();
 
             case 5:
+              newAd = _context9.sent;
+              _context9.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+
+            case 8:
+              _context9.next = 10;
+              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/manufacturer/".concat(newAd.manufacturer));
+
+            case 10:
+              res = _context9.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data).to.be.an('Array');
+
+            case 13:
             case "end":
               return _context9.stop();
           }
         }
       }, _callee9, this);
     })));
-    it('should return a custom error if no vehicle is found for the manufacturer',
+  }); // unsold cars by body type
+
+  describe('view available cars by body type', function () {
+    //     it('should return all unsold cars by body type', async() => {
+    //         const data = await userId();
+    //         const newAd = await newAdValues();
+    //         await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+    //   '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+    //         const res = await chai.request(server).get(`/api/v1/car/bodytype/${newAd.body_type}`);
+    //         expect(res.status).to.eq(200);
+    //         expect(res.body).to.have.property('data').to.be.an('Array');
+    //     });
+    it('should return error 404 if cars of given body type are not found',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -415,12 +442,12 @@ describe('Cars', function () {
 
             case 8:
               _context10.next = 10;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/manufacturer/".concat(newAd.manufacturer));
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/bodytype/SEMI');
 
             case 10:
               res = _context10.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('Array');
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('There are no cars for the selected body_type');
 
             case 13:
             case "end":
@@ -429,10 +456,10 @@ describe('Cars', function () {
         }
       }, _callee10, this);
     })));
-  }); // unsold cars by body type
+  }); // view available cars by state (used, new)
 
-  describe('view available cars by body type', function () {
-    it('should return all unsold cars by body type',
+  describe('view available cars by state', function () {
+    it('should return all available cars by state',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -457,63 +484,50 @@ describe('Cars', function () {
 
             case 8:
               _context11.next = 10;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/bodytype/".concat(newAd.body_type));
+              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/state/".concat(newAd.state));
 
             case 10:
               res = _context11.sent;
               expect(res.status).to.eq(200);
-              expect(res.body).to.have.property('data').to.be.an('Array');
+              expect(res.body).to.have.property('data').to.be.an('ARRAY');
+              expect(res.body.data[0]).to.have.property('state').eq(newAd.state);
 
-            case 13:
+            case 14:
             case "end":
               return _context11.stop();
           }
         }
       }, _callee11, this);
     })));
-    it('should return error 404 if cars of given body type are not found',
+    it('should return error 404 if cars are not found for selected state',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee12() {
-      var data, newAd, res;
+      var res;
       return regeneratorRuntime.wrap(function _callee12$(_context12) {
         while (1) {
           switch (_context12.prev = _context12.next) {
             case 0:
               _context12.next = 2;
-              return userId();
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/state/not');
 
             case 2:
-              data = _context12.sent;
-              _context12.next = 5;
-              return newAdValues();
-
-            case 5:
-              newAd = _context12.sent;
-              _context12.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context12.next = 10;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/bodytype/SEMI');
-
-            case 10:
               res = _context12.sent;
               expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('There are no cars for the selected body_type');
+              expect(res.body.message).to.eq('There are no cars for the selected state');
 
-            case 13:
+            case 5:
             case "end":
               return _context12.stop();
           }
         }
       }, _callee12, this);
     })));
-  }); // view available cars by state (used, new)
+  }); // view all unsold cars
 
-  describe('view available cars by state', function () {
-    it('should return all available cars by state',
+  describe('view all available cars', function () {
+    it('should return all unsold cars',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -538,89 +552,101 @@ describe('Cars', function () {
 
             case 8:
               _context13.next = 10;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/state/".concat(newAd.state));
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/cars');
 
             case 10:
               res = _context13.sent;
               expect(res.status).to.eq(200);
               expect(res.body).to.have.property('data').to.be.an('ARRAY');
-              expect(res.body.data[0]).to.have.property('state').eq(newAd.state);
 
-            case 14:
+            case 13:
             case "end":
               return _context13.stop();
           }
         }
       }, _callee13, this);
-    })));
-    it('should return error 404 if cars are not found for selected state',
+    }))); // it('should return 404 when there are no unsold cars', async() => {
+    //     await db.query('UPDATE cars SET status=\'sold\'');
+    //     const res = await chai.request(server).get('/api/v1/cars');
+    //     expect(res.status).to.eq(404);
+    //     expect(res.body.message).to.eq('There are no cars available now. Check back');
+    // });
+  }); // get ad by id
+
+  describe('Get ad by id', function () {
+    it('should return a single ad details',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee14() {
-      var res;
+      var data, newAd, _ref16, rows, id, res;
+
       return regeneratorRuntime.wrap(function _callee14$(_context14) {
         while (1) {
           switch (_context14.prev = _context14.next) {
             case 0:
               _context14.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/state/not');
+              return userId();
 
             case 2:
-              res = _context14.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('There are no cars for the selected state');
+              data = _context14.sent;
+              _context14.next = 5;
+              return newAdValues();
 
             case 5:
+              newAd = _context14.sent;
+              _context14.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+
+            case 8:
+              _context14.next = 10;
+              return _db2["default"].query('SELECT id FROM cars limit 1');
+
+            case 10:
+              _ref16 = _context14.sent;
+              rows = _ref16.rows;
+              id = rows[0].id;
+              _context14.next = 15;
+              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/".concat(id));
+
+            case 15:
+              res = _context14.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data.id).to.eq(id);
+
+            case 18:
             case "end":
               return _context14.stop();
           }
         }
       }, _callee14, this);
     })));
-  }); // view all unsold cars
-
-  describe('view all available cars', function () {
-    it('should return all unsold cars',
+    it('should return error 400 with custom message if supplied id is not valid',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee15() {
-      var data, newAd, res;
+      var res;
       return regeneratorRuntime.wrap(function _callee15$(_context15) {
         while (1) {
           switch (_context15.prev = _context15.next) {
             case 0:
               _context15.next = 2;
-              return userId();
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/12345678901');
 
             case 2:
-              data = _context15.sent;
-              _context15.next = 5;
-              return newAdValues();
+              res = _context15.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Invalid ad id');
 
             case 5:
-              newAd = _context15.sent;
-              _context15.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context15.next = 10;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/cars');
-
-            case 10:
-              res = _context15.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body).to.have.property('data').to.be.an('ARRAY');
-
-            case 13:
             case "end":
               return _context15.stop();
           }
         }
       }, _callee15, this);
     })));
-    it('should return 404 when there are no unsold cars',
+    it('should return error 404 with custom message if ad is not found',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -631,33 +657,29 @@ describe('Cars', function () {
           switch (_context16.prev = _context16.next) {
             case 0:
               _context16.next = 2;
-              return _db2["default"].query('UPDATE cars SET status=\'sold\'');
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/9293837414384');
 
             case 2:
-              _context16.next = 4;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/cars');
-
-            case 4:
               res = _context16.sent;
               expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('There are no cars available now. Check back');
+              expect(res.body.message).to.eq('The ad you are looking for is no longer available');
 
-            case 7:
+            case 5:
             case "end":
               return _context16.stop();
           }
         }
       }, _callee16, this);
     })));
-  }); // get ad by id
+  }); // seller update ad price
 
-  describe('Get ad by id', function () {
-    it('should return a single ad details',
+  describe('Seller update ad price, status and description', function () {
+    it('should return the ad with updated price',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee17() {
-      var data, newAd, _ref19, rows, id, res;
+      var data, newAd, _ref20, rows, id, token, res;
 
       return regeneratorRuntime.wrap(function _callee17$(_context17) {
         while (1) {
@@ -681,83 +703,147 @@ describe('Cars', function () {
               return _db2["default"].query('SELECT id FROM cars limit 1');
 
             case 10:
-              _ref19 = _context17.sent;
-              rows = _ref19.rows;
+              _ref20 = _context17.sent;
+              rows = _ref20.rows;
               id = rows[0].id;
               _context17.next = 15;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/".concat(id));
+              return genToken();
 
             case 15:
-              res = _context17.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data.id).to.eq(id);
+              token = _context17.sent;
+              _context17.next = 18;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).set('x-auth', token).send(updateInfo);
 
             case 18:
+              res = _context17.sent;
+              expect(res.body.data.price).to.eq(updateInfo.price);
+              expect(res.status).to.eq(200);
+              expect(res.body.data.description).to.eq(updateInfo.description);
+
+            case 22:
             case "end":
               return _context17.stop();
           }
         }
       }, _callee17, this);
     })));
-    it('should return error 400 with custom message if supplied id is not valid',
+    it('should return error 404 if ad is not found',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee18() {
-      var res;
+      var data, newAd, token, res;
       return regeneratorRuntime.wrap(function _callee18$(_context18) {
         while (1) {
           switch (_context18.prev = _context18.next) {
             case 0:
               _context18.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/12345678901');
+              return userId();
 
             case 2:
-              res = _context18.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Invalid ad id');
+              data = _context18.sent;
+              _context18.next = 5;
+              return newAdValues();
 
             case 5:
+              newAd = _context18.sent;
+              _context18.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+
+            case 8:
+              _context18.next = 10;
+              return genToken();
+
+            case 10:
+              token = _context18.sent;
+              _context18.next = 13;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(Date.now())).set('x-auth', token).send(updateInfo);
+
+            case 13:
+              res = _context18.sent;
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('The advert you want to update is not available');
+
+            case 16:
             case "end":
               return _context18.stop();
           }
         }
       }, _callee18, this);
     })));
-    it('should return error 404 with custom message if ad is not found',
+    it('should return error 401 if it is not the ad owner',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee19() {
-      var res;
+      var data, newAd, _ref23, rows, id, newUser, usersObj, userid, token, res;
+
       return regeneratorRuntime.wrap(function _callee19$(_context19) {
         while (1) {
           switch (_context19.prev = _context19.next) {
             case 0:
               _context19.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/9293837414384');
+              return userId();
 
             case 2:
-              res = _context19.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('The ad you are looking for is no longer available');
+              data = _context19.sent;
+              _context19.next = 5;
+              return newAdValues();
 
             case 5:
+              newAd = _context19.sent;
+              _context19.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+
+            case 8:
+              _context19.next = 10;
+              return _db2["default"].query('SELECT id FROM cars limit 1');
+
+            case 10:
+              _ref23 = _context19.sent;
+              rows = _ref23.rows;
+              id = rows[0].id;
+              _context19.next = 15;
+              return dataValues();
+
+            case 15:
+              newUser = _context19.sent;
+              _context19.next = 18;
+              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(newUser);
+
+            case 18:
+              _context19.next = 20;
+              return _db2["default"].query('SELECT id FROM users LIMIT 2');
+
+            case 20:
+              usersObj = _context19.sent;
+              userid = usersObj.rows[1].id;
+              _context19.next = 24;
+              return (0, _generateToken2["default"])(userid, false);
+
+            case 24:
+              token = _context19.sent;
+              _context19.next = 27;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).set('x-auth', token).send(updateInfo);
+
+            case 27:
+              res = _context19.sent;
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('You do not have the permission to update this data');
+
+            case 30:
             case "end":
               return _context19.stop();
           }
         }
       }, _callee19, this);
     })));
-  }); // seller update ad price
-
-  describe('Seller update ad price, status and description', function () {
-    it('should return the ad with updated price',
+    it('should return error 401 if user is not logged in',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee20() {
-      var data, newAd, _ref23, rows, id, token, res;
+      var data, newAd, _ref25, rows, id, res;
 
       return regeneratorRuntime.wrap(function _callee20$(_context20) {
         while (1) {
@@ -774,43 +860,41 @@ describe('Cars', function () {
             case 5:
               newAd = _context20.sent;
               _context20.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
 
             case 8:
               _context20.next = 10;
               return _db2["default"].query('SELECT id FROM cars limit 1');
 
             case 10:
-              _ref23 = _context20.sent;
-              rows = _ref23.rows;
+              _ref25 = _context20.sent;
+              rows = _ref25.rows;
               id = rows[0].id;
               _context20.next = 15;
-              return genToken();
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).send(updateInfo);
 
             case 15:
-              token = _context20.sent;
-              _context20.next = 18;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).set('x-auth', token).send(updateInfo);
+              res = _context20.sent;
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('No authorization token provided');
 
             case 18:
-              res = _context20.sent;
-              expect(res.body.data.price).to.eq(updateInfo.price);
-              expect(res.status).to.eq(200);
-              expect(res.body.data.description).to.eq(updateInfo.description);
-
-            case 22:
             case "end":
               return _context20.stop();
           }
         }
       }, _callee20, this);
     })));
-    it('should return error 404 if ad is not found',
+  }); // get single ad
+
+  describe('User can view single ad', function () {
+    it('should return full details of an ad',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee21() {
-      var data, newAd, token, res;
+      var data, newAd, _ref27, rows, id, res;
+
       return regeneratorRuntime.wrap(function _callee21$(_context21) {
         while (1) {
           switch (_context21.prev = _context21.next) {
@@ -826,153 +910,91 @@ describe('Cars', function () {
             case 5:
               newAd = _context21.sent;
               _context21.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
 
             case 8:
               _context21.next = 10;
-              return genToken();
+              return _db2["default"].query('SELECT id FROM cars limit 1');
 
             case 10:
-              token = _context21.sent;
-              _context21.next = 13;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(Date.now())).set('x-auth', token).send(updateInfo);
+              _ref27 = _context21.sent;
+              rows = _ref27.rows;
+              id = rows[0].id;
+              _context21.next = 15;
+              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/".concat(id));
 
-            case 13:
+            case 15:
               res = _context21.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('The advert you want to update is not available');
+              expect(res.status).to.eq(200);
+              expect(res.body).to.have.property('data');
+              expect(res.body.data.id).to.eq(id);
 
-            case 16:
+            case 19:
             case "end":
               return _context21.stop();
           }
         }
       }, _callee21, this);
     })));
-    it('should return error 401 if it is not the ad owner',
+    it('should return error 404 if ad is not found',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee22() {
-      var data, newAd, _ref26, rows, id, newUser, usersObj, userid, token, res;
-
+      var res;
       return regeneratorRuntime.wrap(function _callee22$(_context22) {
         while (1) {
           switch (_context22.prev = _context22.next) {
             case 0:
               _context22.next = 2;
-              return userId();
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/1212121212223');
 
             case 2:
-              data = _context22.sent;
-              _context22.next = 5;
-              return newAdValues();
+              res = _context22.sent;
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('The ad you are looking for is no longer available');
 
             case 5:
-              newAd = _context22.sent;
-              _context22.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context22.next = 10;
-              return _db2["default"].query('SELECT id FROM cars limit 1');
-
-            case 10:
-              _ref26 = _context22.sent;
-              rows = _ref26.rows;
-              id = rows[0].id;
-              _context22.next = 15;
-              return dataValues();
-
-            case 15:
-              newUser = _context22.sent;
-              _context22.next = 18;
-              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(newUser);
-
-            case 18:
-              _context22.next = 20;
-              return _db2["default"].query('SELECT id FROM users LIMIT 2');
-
-            case 20:
-              usersObj = _context22.sent;
-              userid = usersObj.rows[1].id;
-              _context22.next = 24;
-              return (0, _generateToken2["default"])(userid, false);
-
-            case 24:
-              token = _context22.sent;
-              _context22.next = 27;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).set('x-auth', token).send(updateInfo);
-
-            case 27:
-              res = _context22.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('You do not have the permission to update this data');
-
-            case 30:
             case "end":
               return _context22.stop();
           }
         }
       }, _callee22, this);
     })));
-    it('should return error 401 if user is not logged in',
+    it('should return error 400 if invalid ad id is supplied',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee23() {
-      var data, newAd, _ref28, rows, id, res;
-
+      var res;
       return regeneratorRuntime.wrap(function _callee23$(_context23) {
         while (1) {
           switch (_context23.prev = _context23.next) {
             case 0:
               _context23.next = 2;
-              return userId();
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/155873165645');
 
             case 2:
-              data = _context23.sent;
-              _context23.next = 5;
-              return newAdValues();
+              res = _context23.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Invalid ad id');
 
             case 5:
-              newAd = _context23.sent;
-              _context23.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context23.next = 10;
-              return _db2["default"].query('SELECT id FROM cars limit 1');
-
-            case 10:
-              _ref28 = _context23.sent;
-              rows = _ref28.rows;
-              id = rows[0].id;
-              _context23.next = 15;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).send(updateInfo);
-
-            case 15:
-              res = _context23.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('No authorization token provided');
-
-            case 18:
             case "end":
               return _context23.stop();
           }
         }
       }, _callee23, this);
     })));
-  }); // get single ad
+  }); // get ads within a price range
 
-  describe('User can view single ad', function () {
-    it('should return full details of an ad',
+  describe('Get ads within a price range', function () {
+    it('should return an array of ads within a price range',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee24() {
-      var data, newAd, _ref30, rows, id, res;
-
+      var data, newAd, res;
       return regeneratorRuntime.wrap(function _callee24$(_context24) {
         while (1) {
           switch (_context24.prev = _context24.next) {
@@ -992,126 +1014,132 @@ describe('Cars', function () {
 
             case 8:
               _context24.next = 10;
-              return _db2["default"].query('SELECT id FROM cars limit 1');
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?min=5000000&max=8000000');
 
             case 10:
-              _ref30 = _context24.sent;
-              rows = _ref30.rows;
-              id = rows[0].id;
-              _context24.next = 15;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/car/".concat(id));
-
-            case 15:
               res = _context24.sent;
               expect(res.status).to.eq(200);
-              expect(res.body).to.have.property('data');
-              expect(res.body.data.id).to.eq(id);
+              expect(res.body.data).to.be.an('ARRAY');
 
-            case 19:
+            case 13:
             case "end":
               return _context24.stop();
           }
         }
       }, _callee24, this);
     })));
-    it('should return error 404 if ad is not found',
+    it('Minimum should default to 0 if not supplied',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee25() {
-      var res;
+      var data, newAd, res;
       return regeneratorRuntime.wrap(function _callee25$(_context25) {
         while (1) {
           switch (_context25.prev = _context25.next) {
             case 0:
               _context25.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/1212121212223');
+              return userId();
 
             case 2:
-              res = _context25.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('The ad you are looking for is no longer available');
+              data = _context25.sent;
+              _context25.next = 5;
+              return newAdValues();
 
             case 5:
+              newAd = _context25.sent;
+              _context25.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+
+            case 8:
+              _context25.next = 10;
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?max=8000000');
+
+            case 10:
+              res = _context25.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data).to.be.an('ARRAY');
+
+            case 13:
             case "end":
               return _context25.stop();
           }
         }
       }, _callee25, this);
     })));
-    it('should return error 400 if invalid ad id is supplied',
+    it('Maximum should default to 30000000 if not supplied',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee26() {
-      var res;
+      var data, newAd, res;
       return regeneratorRuntime.wrap(function _callee26$(_context26) {
         while (1) {
           switch (_context26.prev = _context26.next) {
             case 0:
               _context26.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/155873165645');
+              return userId();
 
             case 2:
-              res = _context26.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Invalid ad id');
+              data = _context26.sent;
+              _context26.next = 5;
+              return newAdValues();
 
             case 5:
+              newAd = _context26.sent;
+              _context26.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+
+            case 8:
+              _context26.next = 10;
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?min=2000000');
+
+            case 10:
+              res = _context26.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data).to.be.an('ARRAY');
+
+            case 13:
             case "end":
               return _context26.stop();
           }
         }
       }, _callee26, this);
     })));
-  }); // get ads within a price range
-
-  describe('Get ads within a price range', function () {
-    it('should return an array of ads within a price range',
+    it('Should return error 404 if no ads are found in the given range',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee27() {
-      var data, newAd, res;
+      var res;
       return regeneratorRuntime.wrap(function _callee27$(_context27) {
         while (1) {
           switch (_context27.prev = _context27.next) {
             case 0:
               _context27.next = 2;
-              return userId();
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?min=12000000&max=24000000');
 
             case 2:
-              data = _context27.sent;
-              _context27.next = 5;
-              return newAdValues();
+              res = _context27.sent;
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('There are no cars within the selected range');
 
             case 5:
-              newAd = _context27.sent;
-              _context27.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context27.next = 10;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?min=5000000&max=8000000');
-
-            case 10:
-              res = _context27.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('ARRAY');
-
-            case 13:
             case "end":
               return _context27.stop();
           }
         }
       }, _callee27, this);
     })));
-    it('Minimum should default to 0 if not supplied',
+  }); // admin can view all ads whether sold or available
+
+  describe('admin view all ads', function () {
+    it('should return all ads',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee28() {
-      var data, newAd, res;
+      var data, newAd, token, res;
       return regeneratorRuntime.wrap(function _callee28$(_context28) {
         while (1) {
           switch (_context28.prev = _context28.next) {
@@ -1130,27 +1158,29 @@ describe('Cars', function () {
               return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
 
             case 8:
-              _context28.next = 10;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?max=8000000');
+              token = (0, _generateToken2["default"])(data.id, true);
+              _context28.next = 11;
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car').set('x-auth', token);
 
-            case 10:
+            case 11:
               res = _context28.sent;
               expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('ARRAY');
+              expect(res.body.data).to.be.an('Array');
+              expect(res.body.data[0]).to.be.an('Object');
 
-            case 13:
+            case 15:
             case "end":
               return _context28.stop();
           }
         }
       }, _callee28, this);
     })));
-    it('Maximum should default to 30000000 if not supplied',
+    it('should return error 404 if there are no ads available',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee29() {
-      var data, newAd, res;
+      var data, token, res;
       return regeneratorRuntime.wrap(function _callee29$(_context29) {
         while (1) {
           switch (_context29.prev = _context29.next) {
@@ -1161,30 +1191,34 @@ describe('Cars', function () {
             case 2:
               data = _context29.sent;
               _context29.next = 5;
-              return newAdValues();
+              return _db2["default"].query('DELETE FROM flags');
 
             case 5:
-              newAd = _context29.sent;
-              _context29.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+              _context29.next = 7;
+              return _db2["default"].query('DELETE FROM orders');
 
-            case 8:
-              _context29.next = 10;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?min=2000000');
+            case 7:
+              _context29.next = 9;
+              return _db2["default"].query('DELETE FROM cars');
 
-            case 10:
+            case 9:
+              token = (0, _generateToken2["default"])(data.id, true);
+              _context29.next = 12;
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car').set('x-auth', token);
+
+            case 12:
               res = _context29.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('ARRAY');
+              expect(res.body.status).to.eq(404);
+              expect(res.body.message).to.eq('There are no cars available now. Check back');
 
-            case 13:
+            case 15:
             case "end":
               return _context29.stop();
           }
         }
       }, _callee29, this);
     })));
-    it('Should return error 404 if no ads are found in the given range',
+    it('should return error 401 if user is not logged in',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -1195,12 +1229,12 @@ describe('Cars', function () {
           switch (_context30.prev = _context30.next) {
             case 0:
               _context30.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car/price/?min=12000000&max=24000000');
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car');
 
             case 2:
               res = _context30.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('There are no cars within the selected range');
+              expect(res.body.status).to.eq(401);
+              expect(res.body.message).to.eq('No authorization token provided');
 
             case 5:
             case "end":
@@ -1209,15 +1243,16 @@ describe('Cars', function () {
         }
       }, _callee30, this);
     })));
-  }); // admin can view all ads whether sold or available
+  }); // admin can delete any posted ad
 
-  describe('admin view all ads', function () {
-    it('should return all ads',
+  describe('Admin can delete a posted ad', function () {
+    it('should delete a posted ad',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee31() {
-      var data, newAd, token, res;
+      var user, newAd, _ref38, rows, token, res;
+
       return regeneratorRuntime.wrap(function _callee31$(_context31) {
         while (1) {
           switch (_context31.prev = _context31.next) {
@@ -1226,39 +1261,45 @@ describe('Cars', function () {
               return userId();
 
             case 2:
-              data = _context31.sent;
+              user = _context31.sent;
               _context31.next = 5;
               return newAdValues();
 
             case 5:
               newAd = _context31.sent;
               _context31.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(user.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
 
             case 8:
-              token = (0, _generateToken2["default"])(data.id, true);
-              _context31.next = 11;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car').set('x-auth', token);
+              _context31.next = 10;
+              return _db2["default"].query('SELECT id FROM cars LIMIT 1');
 
-            case 11:
-              res = _context31.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('Array');
-              expect(res.body.data[0]).to.be.an('Object');
+            case 10:
+              _ref38 = _context31.sent;
+              rows = _ref38.rows;
+              token = (0, _generateToken2["default"])(user.id, true);
+              _context31.next = 15;
+              return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(rows[0].id)).set('x-auth', token);
 
             case 15:
+              res = _context31.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data.id).to.eq(rows[0].id);
+
+            case 18:
             case "end":
               return _context31.stop();
           }
         }
       }, _callee31, this);
     })));
-    it('should return error 404 if there are no ads available',
+    it('should return error 401 if user is not admin or not logged in',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee32() {
-      var data, token, res;
+      var data, newAd, _ref40, rows, res;
+
       return regeneratorRuntime.wrap(function _callee32$(_context32) {
         while (1) {
           switch (_context32.prev = _context32.next) {
@@ -1269,68 +1310,72 @@ describe('Cars', function () {
             case 2:
               data = _context32.sent;
               _context32.next = 5;
-              return _db2["default"].query('DELETE FROM flags');
+              return newAdValues();
 
             case 5:
-              _context32.next = 7;
-              return _db2["default"].query('DELETE FROM orders');
+              newAd = _context32.sent;
+              _context32.next = 8;
+              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
 
-            case 7:
-              _context32.next = 9;
-              return _db2["default"].query('DELETE FROM cars');
+            case 8:
+              _context32.next = 10;
+              return _db2["default"].query('SELECT id FROM cars LIMIT 1');
 
-            case 9:
-              token = (0, _generateToken2["default"])(data.id, true);
-              _context32.next = 12;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car').set('x-auth', token);
+            case 10:
+              _ref40 = _context32.sent;
+              rows = _ref40.rows;
+              _context32.next = 14;
+              return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(rows[0].id));
 
-            case 12:
+            case 14:
               res = _context32.sent;
-              expect(res.body.status).to.eq(404);
-              expect(res.body.message).to.eq('There are no cars available now. Check back');
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('No authorization token provided');
 
-            case 15:
+            case 17:
             case "end":
               return _context32.stop();
           }
         }
       }, _callee32, this);
     })));
-    it('should return error 401 if user is not logged in',
+    it('should return error 400 if wrong ad id is given',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee33() {
-      var res;
+      var user, token, res;
       return regeneratorRuntime.wrap(function _callee33$(_context33) {
         while (1) {
           switch (_context33.prev = _context33.next) {
             case 0:
               _context33.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car');
+              return userId();
 
             case 2:
-              res = _context33.sent;
-              expect(res.body.status).to.eq(401);
-              expect(res.body.message).to.eq('No authorization token provided');
+              user = _context33.sent;
+              token = (0, _generateToken2["default"])(user.id, true);
+              _context33.next = 6;
+              return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/car/123456789012').set('x-auth', token);
 
-            case 5:
+            case 6:
+              res = _context33.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Select the ad to delete');
+
+            case 9:
             case "end":
               return _context33.stop();
           }
         }
       }, _callee33, this);
     })));
-  }); // admin can delete any posted ad
-
-  describe('Admin can delete a posted ad', function () {
-    it('should delete a posted ad',
+    it('should return error 404 if ad is not available',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee34() {
-      var user, newAd, _ref41, rows, token, res;
-
+      var user, token, res;
       return regeneratorRuntime.wrap(function _callee34$(_context34) {
         while (1) {
           switch (_context34.prev = _context34.next) {
@@ -1340,144 +1385,21 @@ describe('Cars', function () {
 
             case 2:
               user = _context34.sent;
-              _context34.next = 5;
-              return newAdValues();
-
-            case 5:
-              newAd = _context34.sent;
-              _context34.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(user.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context34.next = 10;
-              return _db2["default"].query('SELECT id FROM cars LIMIT 1');
-
-            case 10:
-              _ref41 = _context34.sent;
-              rows = _ref41.rows;
               token = (0, _generateToken2["default"])(user.id, true);
-              _context34.next = 15;
-              return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(rows[0].id)).set('x-auth', token);
-
-            case 15:
-              res = _context34.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data.id).to.eq(rows[0].id);
-
-            case 18:
-            case "end":
-              return _context34.stop();
-          }
-        }
-      }, _callee34, this);
-    })));
-    it('should return error 401 if user is not admin or not logged in',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee35() {
-      var data, newAd, _ref43, rows, res;
-
-      return regeneratorRuntime.wrap(function _callee35$(_context35) {
-        while (1) {
-          switch (_context35.prev = _context35.next) {
-            case 0:
-              _context35.next = 2;
-              return userId();
-
-            case 2:
-              data = _context35.sent;
-              _context35.next = 5;
-              return newAdValues();
-
-            case 5:
-              newAd = _context35.sent;
-              _context35.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context35.next = 10;
-              return _db2["default"].query('SELECT id FROM cars LIMIT 1');
-
-            case 10:
-              _ref43 = _context35.sent;
-              rows = _ref43.rows;
-              _context35.next = 14;
-              return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/car/".concat(rows[0].id));
-
-            case 14:
-              res = _context35.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('No authorization token provided');
-
-            case 17:
-            case "end":
-              return _context35.stop();
-          }
-        }
-      }, _callee35, this);
-    })));
-    it('should return error 400 if wrong ad id is given',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee36() {
-      var user, token, res;
-      return regeneratorRuntime.wrap(function _callee36$(_context36) {
-        while (1) {
-          switch (_context36.prev = _context36.next) {
-            case 0:
-              _context36.next = 2;
-              return userId();
-
-            case 2:
-              user = _context36.sent;
-              token = (0, _generateToken2["default"])(user.id, true);
-              _context36.next = 6;
-              return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/car/123456789012').set('x-auth', token);
-
-            case 6:
-              res = _context36.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Select the ad to delete');
-
-            case 9:
-            case "end":
-              return _context36.stop();
-          }
-        }
-      }, _callee36, this);
-    })));
-    it('should return error 404 if ad is not available',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee37() {
-      var user, token, res;
-      return regeneratorRuntime.wrap(function _callee37$(_context37) {
-        while (1) {
-          switch (_context37.prev = _context37.next) {
-            case 0:
-              _context37.next = 2;
-              return userId();
-
-            case 2:
-              user = _context37.sent;
-              token = (0, _generateToken2["default"])(user.id, true);
-              _context37.next = 6;
+              _context34.next = 6;
               return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/car/1783782738238').set('x-auth', token);
 
             case 6:
-              res = _context37.sent;
+              res = _context34.sent;
               expect(res.status).to.eq(404);
               expect(res.body.message).to.eq('Selected ad not available');
 
             case 9:
             case "end":
-              return _context37.stop();
+              return _context34.stop();
           }
         }
-      }, _callee37, this);
+      }, _callee34, this);
     })));
   });
 });

@@ -132,25 +132,25 @@ describe('Order transaction', () => {
 
     // seller update order price
     describe('Buyer update order price while order it is not pending or cancelled', () => {
-        it('should update the order price ', async() => {
-            const newUser = await dataValues();
-            await chai.request(server).post('/api/v1/auth/signup').send(newUser);
-            const orderInfo = await db.query('SELECT id, buyerid, sellerid, priceoffered, status FROM orders LIMIT 1');
-            const { id } = orderInfo.rows[0];
-            const { buyerid } = orderInfo.rows[0];
-            await db.query(`UPDATE orders SET status='rejected' WHERE id=${id}`);
-            const token = await generateToken(buyerid, false);
-            const newData = {
-                orderId: id,
-                newPrice: 7100000,
-            };
+        // it('should update the order price ', async() => {
+        //     const newUser = await dataValues();
+        //     await chai.request(server).post('/api/v1/auth/signup').send(newUser);
+        //     const orderInfo = await db.query('SELECT id, buyerid, sellerid, priceoffered, status FROM orders LIMIT 1');
+        //     const { id } = orderInfo.rows[0];
+        //     const { buyerid } = orderInfo.rows[0];
+        //     await db.query(`UPDATE orders SET status='rejected' WHERE id=${id}`);
+        //     const token = await generateToken(buyerid, false);
+        //     const newData = {
+        //         orderId: id,
+        //         newPrice: 7100000,
+        //     };
 
-            const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
-            expect(res.status).to.eq(200);
-            expect(res.body.data.id).to.eq(id);
-            expect(res.body.data.buyerid).to.eq(buyerid);
-            expect(parseFloat(res.body.data.priceoffered)).to.eq(newData.newPrice);
-        });
+        //     const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
+        //     expect(res.status).to.eq(200);
+        //     expect(res.body.data.id).to.eq(id);
+        //     expect(res.body.data.buyerid).to.eq(buyerid);
+        //     expect(parseFloat(res.body.data.priceoffered)).to.eq(newData.newPrice);
+        // });
         it('should return error 400 if newprice is not stated ', async() => {
             const newUser = await dataValues();
             await chai.request(server).post('/api/v1/auth/signup').send(newUser);

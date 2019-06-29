@@ -8,7 +8,9 @@ var _morgan = require("morgan");
 
 var _morgan2 = _interopRequireDefault(_morgan);
 
-require("dotenv/config");
+var _dotenv = require("dotenv");
+
+var _dotenv2 = _interopRequireDefault(_dotenv);
 
 var _index = require("./routes/index");
 
@@ -20,7 +22,8 @@ var _logger2 = _interopRequireDefault(_logger);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-dotenv.config();
+_dotenv2["default"].config();
+
 var app = (0, _express2["default"])();
 app.use(_express2["default"].json());
 app.use(_express2["default"].urlencoded({

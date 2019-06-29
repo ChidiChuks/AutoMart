@@ -49,7 +49,7 @@ var Car = {
               requiredFields = ['owner', 'state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
               req.body.owner = req.userId;
 
-              if (!((0, _validateData2["default"])(requiredFields, req.body) || !req.file)) {
+              if (!(0, _validateData2["default"])(requiredFields, req.body)) {
                 _context.next = 4;
                 break;
               }
@@ -58,9 +58,9 @@ var Car = {
 
             case 4:
               // eslint-disable-next-line max-len
-              carsByUser = 'SELECT id FROM cars WHERE owner=$1 AND state=$2 AND status=\'available\' AND manufacturer=$3 AND model=$4 AND body_type=$5'; // eslint-disable-next-line no-multi-str
+              carsByUser = "SELECT id FROM cars WHERE owner=$1 AND state=$2 AND status='available' AND manufacturer=$3 AND model=$4 AND body_type=$5"; // eslint-disable-next-line no-multi-str
 
-              createQuery = 'INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
+              createQuery = 'INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type, status) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
               _context.prev = 6;
               // eslint-disable-next-line max-len
               values = [req.body.owner, req.body.state, req.body.manufacturer, req.body.model, req.body.body_type];
@@ -81,13 +81,13 @@ var Car = {
             case 14:
               _context.next = 16;
               return _cloudinary2["default"].uploader.upload(req.file.path, {
-                folder: 'automart/',
-                format: 'png'
+                folder: 'AutoMart/',
+                format: 'jpg'
               });
 
             case 16:
               image = _context.sent;
-              carPpties = [Date.now(), req.body.price, req.body.description, image.url].concat(values);
+              carPpties = [Date.now(), req.body.price, req.body.description, image.url].concat(values, ['available']);
               _context.next = 20;
               return _db2["default"].query(createQuery, carPpties);
 
@@ -230,7 +230,7 @@ var Car = {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status=\'available\'';
+              query = "SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status='available'";
               _context4.prev = 1;
               _context4.next = 4;
               return _db2["default"].query(query);

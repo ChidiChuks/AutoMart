@@ -9,3 +9,14 @@ after_success:
 cache:
   directories:
   - node_modules
+
+services:
+  - postgresql
+
+addons:
+  postgresql: "10.6"
+
+apt:
+    packages:
+    - postgresql-10
+    - postgresql-client-10

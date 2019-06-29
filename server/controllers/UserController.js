@@ -1,8 +1,8 @@
-import UserModel from '../models/UserModel';
 import { comparePassword, hashPassword } from '../lib/handlePassword';
 import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
+import db from '../services/db';
 
 const User = {
     /*
@@ -11,174 +11,171 @@ const User = {
      * @returns {object}
      */
     async create(req, res) {
-        const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', /*'account_number', 'bank',*/ 'password_confirmation'];
+        const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'password_confirmation'];
 
         if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Fill all required fields with a valid email address',
-            });
+            return User.errorResponse(res, 400, 'Fill all required fields with a valid email address');
         }
         if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Password and confirmation does not match',
-            });
+            return User.errorResponse(res, 400, 'Password and confirmation does not match');
         }
 
         if (req.body.password.length < 6 || req.body.email.length >= 30 ||
             req.body.first_name.length >= 30 || req.body.last_name.length >= 30) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Ensure password is atleast 6 characters, name and email not more than 30 characters',
-            });
-        }
-        const checkEmailInDb = UserModel.findByProperty('email', req.body.email);
-        const checkPhoneInDb = UserModel.findByProperty('phone', req.body.phone);
-
-        if (checkEmailInDb || checkPhoneInDb) {
-            return res.status(400).send({
-                status: 400,
-                message: 'User with given email or phone already exist',
-            });
+            return User.errorResponse(res, 400, 'Ensure password is atleast 6 characters, name and email not more than 30 characters');
         }
 
         req.body.password = await hashPassword(req.body.password);
 
-        const user = UserModel.create(req.body);
-        const token = generateToken(user.id, user.isAdmin);
+        const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
+        const values = [
+            Date.now(),
+            req.body.email,
+            req.body.first_name,
+            req.body.last_name,
+            req.body.password,
+            req.body.address,
+            req.body.phone,
+        ];
 
-        return res.status(201).header('x-auth', token).send({
-            status: 201,
-            data: {
-                token,
-                id: user.id,
-                first_name: user.first_name,
-                last_name: user.last_name,
-                email: user.email,
-                phone: user.phone,
-                // address: user.address,
-                // account_number: user.account_number,
-                // bank: user.bank,
-                isAdmin: user.isAdmin,
-            },
-        });
+        try {
+            const { rows } = await db.query(query, values);
+
+            const {
+                // eslint-disable-next-line camelcase
+                id,
+                email,
+                first_name,
+                last_name,
+                address,
+                isadmin,
+                phone,
+                status,
+            } = rows[0];
+
+            const token = generateToken(id, isadmin);
+
+            return res.status(201).set('x-auth', token).send({
+                status: 201,
+                data: {
+                    token,
+                    id,
+                    email,
+                    first_name,
+                    last_name,
+                    address,
+                    isadmin,
+                    phone,
+                    status,
+                },
+            });
+        } catch (error) {
+            return (error.routine === '_bt_check_unique') ? User.errorResponse(res, 400, 'User with given email or phone already exist') :
+                User.errorResponse(res, 400, error);
+        }
     },
 
-    getAll(req, res) {
-        const users = UserModel.getAllUsers();
-        return res.status(200).send({
-            status: 200,
-            data: users,
-        });
+    async getAll(req, res) {
+        // const users = UserModel.getAllUsers();
+        const selectAllUsers = 'SELECT (id, email, first_name, last_name, address, isAdmin, phone, status) FROM users LIMIT 50';
+        try {
+            const { rows } = await db.query(selectAllUsers);
+            return User.successResponse(res, 200, rows);
+        } catch (error) {
+            return User.errorResponse(res, 400, error.details);
+        }
     },
 
     async signIn(req, res) {
         delete req.headers['x-auth'];
-        if (validateData(['email', 'password'], req.body)) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Invalid login credentials',
-            });
-        }
-        const user = UserModel.isUserActive('email', req.body.email);
-        if (!user) {
-            return res.status(404).send({
-                status: 404,
-                message: 'Invalid login credentials',
-            });
-        }
-        const validPassword = await comparePassword(req.body.password, user.password);
-        if (!validPassword) {
-            return res.status(401).send({
-                status: 401,
-                message: 'Wrong username/password',
-            });
+        if (validateData(['email', 'password'], req.body) || !validEmail(req.body.email)) {
+            return User.errorResponse(res, 400, 'Invalid login credentials');
         }
 
-        user.token = generateToken(user.id, user.isAdmin);
-        return res.status(200).header('x-auth', user.token).send({
-            status: 200,
-            data: user,
-        });
+        const query = `SELECT * FROM users WHERE email='${req.body.email}'`;
+        try {
+            const { rows } = await db.query(query);
+            if (rows.length < 1) {
+                return User.errorResponse(res, 404, 'Wrong username/password');
+            }
+            const user = rows[0];
+            const validPassword = await comparePassword(req.body.password, user.password);
+            if (!validPassword) {
+                return User.errorResponse(res, 401, 'Wrong username/password');
+            }
+            user.token = generateToken(user.id, user.isadmin);
+            return res.status(200).header('x-auth', user.token).send({
+                status: 200,
+                data: user,
+            });
+        } catch (error) {
+            return User.errorResponse(res, 404, error);
+        }
     },
 
     async changePassword(req, res) {
         const { userId } = req;
         if (!req.body.currentPassword || !req.body.newPassword) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Fill the required fields',
-            });
+            return User.errorResponse(res, 400, 'Fill the required fields');
         }
 
-        const user = UserModel.getUser(userId);
-        if (!user) {
-            return res.status(404).send({
-                message: 'User not found',
-                status: 404,
-            });
-        }
-        const confirmPassword = await comparePassword(req.body.currentPassword, user.password);
-        if (!confirmPassword) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Wrong current password, use password reset link',
-            });
-        }
-        const hashNewPassword = await hashPassword(req.body.newPassword);
-        const updatedUserDetails = UserModel.changePassword(userId, hashNewPassword);
+        const query = `SELECT password FROM users WHERE id=${userId}`;
+        try {
+            const { rows } = await db.query(query);
+            const confirmPassword = await comparePassword(req.body.currentPassword, rows[0].password);
+            if (!confirmPassword) {
+                return User.errorResponse(res, 400, 'Wrong current password, use password reset link');
+            }
 
-        return res.send({
-            status: 200,
-            data: updatedUserDetails,
-        });
-    },
-    makeAdmin(req, res) {
-        const user = UserModel.isUserActive('id', req.params.id);
-        if (!user) {
-            return res.status(412).send({
-                status: 412,
-                message: 'User not found or inactive',
-            });
+            const hashNewPassword = await hashPassword(req.body.newPassword);
+
+            const updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
+            const result = await db.query(updateQuery, [hashNewPassword, userId]);
+            return User.successResponse(res, 200, result.rows[0]);
+        } catch (error) {
+            return User.errorResponse(res, 500, error);
         }
-        const newAdmin = UserModel.makeUserAdmin(user.id);
-        return res.status(200).send({
-            status: 200,
-            data: newAdmin,
-        });
     },
+    async makeAdmin(req, res) {
+        if (!req.params.id) {
+            return User.errorResponse(res, 400, 'Request does not contain required fields');
+        }
+
+        const makeAdminQuery = 'UPDATE users SET isadmin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
+        try {
+            const { rows } = await db.query(makeAdminQuery, [true, req.params.id, 'active']);
+            return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive') :
+                User.successResponse(res, 200, rows[0]);
+        } catch (error) {
+            return User.errorResponse(res, 500, error);
+        }
+    },
+
     logout(req, res) {
-        return res.status(200).send({
-            status: 200,
-            message: 'You have been logged out successfully',
+        return User.errorResponse(res, 200, 'You have been logged out successfully');
+    },
+    async disableUser(req, res) {
+        const { userId } = req.params;
+        const disableQuery = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
+        try {
+            const { rows } = await db.query(disableQuery, ['disabled', userId, 'active']);
+            return (rows.length < 1) ? User.errorResponse(res, 404, 'User not found or inactive') :
+                User.successResponse(res, 200, rows[0]);
+        } catch (error) {
+            return User.errorResponse(res, 404, error);
+        }
+    },
+
+    errorResponse(res, statuscode, message) {
+        return res.status(statuscode).send({
+            status: statuscode,
+            message,
         });
     },
-    disableUser(req, res) {
-        // the userid is in the params
-        const userId = req.params.userid;
-        if (!userId) {
-            return res.status(400).send({
-                status: 400,
-                message: 'Invalid request',
-            });
-        }
-
-        // check that the user is active
-        const user = UserModel.isUserActive('id', userId);
-        if (!user) {
-            return res.status(404).send({
-                status: 404,
-                message: 'User not found or inactive',
-            });
-        }
-
-        // disable the user
-        const disabledUser = UserModel.disableUser(userId);
-        // return the result
-        return res.status(200).send({
-            status: 200,
-            data: disabledUser,
+    successResponse(res, statuscode, data) {
+        return res.status(statuscode).send({
+            status: statuscode,
+            data,
         });
     },
 };

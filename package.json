@@ -17,6 +17,7 @@
         "start": "node server/build/index.js",
         "lint": "eslint server",
         "start:dev": "nodemon --exec babel-node server/index",
+        "pretest": "npm run createdb",
         "test": "nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000"
     },
     "repository": {

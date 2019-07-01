@@ -20,3 +20,18 @@ apt:
     packages:
     - postgresql-10
     - postgresql-client-10
+
+before_script:
+  - psql -c 'create database test;' -U postgres
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
+scripts:
+  - npm test
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+
+after_success: 
+  - npm run coverage

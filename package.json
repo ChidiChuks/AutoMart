@@ -11,11 +11,12 @@
         "createdb": "node db.js createAllTables && node db.js createAllTables",
         "predev": "SET NODE_ENV=development",
         "dev": "SET NODE_ENV=development && nodemon --exec babel-node server/index.js",
+        "lint": "eslint server",
         "prebuild": "rimraf server/build",
         "prestart": "npm run createdb",
+        "pretest": "SET NODE_ENV=test && npm run build",
         "server": "babel-node ./server/",
         "start": "node server/build/index.js",
-        "lint": "eslint server",
         "start:dev": "nodemon --exec babel-node server/index",
         "test": "nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000"
     },

@@ -7,7 +7,7 @@ dotenv.config();
 var connection = function connection() {
   switch (process.env.NODE_ENV) {
     case 'test':
-      return process.env.PG_URL_TEST;
+      return process.env.PG_URL;
 
     case 'development':
       return process.env.PG_URL;

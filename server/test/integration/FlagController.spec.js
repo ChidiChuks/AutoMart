@@ -46,10 +46,10 @@ describe('Flags controller', () => {
     });
 
     before(async() => {
-        await db.query('CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, account_number BIGINT NOT NULL, bank VARCHAR(20) NOT NULL, status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
-        await db.query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
-        await db.query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
-        await db.query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
+        await db.query(`CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, account_number BIGINT NOT NULL, bank VARCHAR(20) NOT NULL, status VARCHAR(10) NOT NULL DEFAULT 'active', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
+        await db.query(`CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT 'available', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )`);
+        await db.query(`CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT 'pending', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
+        await db.query(`CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT 'pending', severity VARCHAR(20) NOT NULL DEFAULT 'minor') `);
         const data = await dataValues();
         await chai.request(server).post('/api/v1/auth/signup').send(data);
     });
@@ -66,8 +66,10 @@ describe('Flags controller', () => {
         it('should create a flag on an ad', async() => {
             const data = await userId();
             const newAd = await newAdValues();
-            await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+            await db.query(`
+                                INSERT INTO cars(id, price, description, img, owner, state, manufacturer, model, body_type) VALUES('${Date.now()}', 8000000, '${newAd.description}',
+                                    '${newAd.img}', $ { data.id }, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')
+                                `);
 
             const { rows } = await db.query('SELECT id FROM cars');
             const carId = rows[rows.length - 1].id;
@@ -87,8 +89,10 @@ describe('Flags controller', () => {
         it('should return error 400 if reason is not stated', async() => {
             const data = await userId();
             const newAd = await newAdValues();
-            await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+            await db.query(`
+                                INSERT INTO cars(id, price, description, img, owner, state, manufacturer, model, body_type) VALUES('${Date.now()}', 8000000, '${newAd.description}',
+                                    '${newAd.img}', $ { data.id }, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')
+                                `);
 
             const { rows } = await db.query('SELECT id FROM cars');
             const carId = rows[rows.length - 1].id;
@@ -117,8 +121,10 @@ describe('Flags controller', () => {
         it('should return error 406 if users report has already been received', async() => {
             const data = await userId();
             const newAd = await newAdValues();
-            await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+            await db.query(`
+                                INSERT INTO cars(id, price, description, img, owner, state, manufacturer, model, body_type) VALUES('${Date.now()}', 8000000, '${newAd.description}',
+                                    '${newAd.img}', $ { data.id }, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')
+                                `);
 
             const { rows } = await db.query('SELECT id FROM cars');
             const carId = rows[rows.length - 1].id;
@@ -137,8 +143,10 @@ describe('Flags controller', () => {
         it('should create an extreme flag if car is flag as stolen or fake or suspicious', async() => {
             const data = await userId();
             const newAd = await newAdValues();
-            await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+            await db.query(`
+                                INSERT INTO cars(id, price, description, img, owner, state, manufacturer, model, body_type) VALUES('${Date.now()}', 8000000, '${newAd.description}',
+                                    '${newAd.img}', $ { data.id }, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')
+                                `);
 
             const { rows } = await db.query('SELECT id FROM cars');
             const carId = rows[rows.length - 1].id;
@@ -160,7 +168,8 @@ describe('Flags controller', () => {
 
             const user = await userId();
             const token = await generateToken(user.id, true);
-            const res = await chai.request(server).patch(`/api/v1/flag/${flagid}`).set('x-auth', token);
+            const res = await chai.request(server).patch(` / api / v1 / flag / $ { flagid }
+                                `).set('x-auth', token);
             expect(res.status).to.eq(200);
             expect(res.body.data.id).to.eq(flagid);
             expect(res.body.data.status).to.eq('resolved');
@@ -169,7 +178,8 @@ describe('Flags controller', () => {
             const { rows } = await db.query('SELECT id FROM flags WHERE status=\'pending\'');
             const flagid = rows[rows.length - 1].id;
 
-            const res = await chai.request(server).patch(`/api/v1/flag/${flagid}`);
+            const res = await chai.request(server).patch(` / api / v1 / flag / $ { flagid }
+                                `);
             expect(res.status).to.eq(401);
             expect(res.body.message).to.eq('No authorization token provided');
         });
@@ -179,7 +189,8 @@ describe('Flags controller', () => {
             const user = await userId();
             const token = generateToken(user.id, false);
 
-            const res = await chai.request(server).patch(`/api/v1/flag/${id}`).set('x-auth', token);
+            const res = await chai.request(server).patch(` / api / v1 / flag / $ { id }
+                                `).set('x-auth', token);
             expect(res.status).to.eq(401);
             expect(res.body.message).to.eq('You dont have the permission to access this resource');
         });
@@ -227,7 +238,8 @@ describe('Flags controller', () => {
             const { id } = rows[rows.length - 1];
             const user = await userId();
             const token = generateToken(user.id, true);
-            const res = await chai.request(server).delete(`/api/v1/flags/${id}`).set('x-auth', token);
+            const res = await chai.request(server).delete(` / api / v1 / flags / $ { id }
+                                `).set('x-auth', token);
             expect(res.status).to.eq(200);
             expect(res.body.data.id).to.eq(id);
         });

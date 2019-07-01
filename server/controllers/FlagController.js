@@ -1,5 +1,6 @@
 import validateData from '../lib/validateData';
 import db from '../services/db';
+import '@babel/polyfill';
 
 const Flag = {
     async createFlag(req, res) {

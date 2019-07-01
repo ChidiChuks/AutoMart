@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const connection = require('./server/services/config');
+require("@babel/polyfill");
 
 const pool = new Pool({ connectionString: connection });
 pool.on('connect', () => {

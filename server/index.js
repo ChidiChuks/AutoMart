@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import routes from './routes/index';
 import winston from './logger';
+import '@babel/polyfill';
 
 dotenv.config();
 const app = express();

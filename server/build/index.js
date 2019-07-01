@@ -20,6 +20,8 @@ var _logger = require("./logger");
 
 var _logger2 = _interopRequireDefault(_logger);
 
+require("@babel/polyfill");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 _dotenv2["default"].config();

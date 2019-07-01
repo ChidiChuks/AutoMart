@@ -3,6 +3,7 @@ import chaiHttp from 'chai-http';
 import server from '../../index';
 import db from '../../services/db';
 import generateToken from '../../lib/generateToken';
+import '@babel/polyfill';
 
 const { expect } = chai;
 const signupUrl = '/api/v1/auth/signup';

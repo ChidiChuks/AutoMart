@@ -3,6 +3,7 @@ import validEmail from '../lib/validateEmail';
 import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
 import db from '../services/db';
+import '@babel/polyfill';
 
 const User = {
     /*

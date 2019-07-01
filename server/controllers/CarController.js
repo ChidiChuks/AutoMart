@@ -2,6 +2,7 @@ import cloudinary from 'cloudinary';
 import dotenv from 'dotenv';
 import validatenewCar from '../lib/validateData';
 import db from '../services/db';
+import '@babel/polyfill';
 
 dotenv.config();
 cloudinary.v2.config({

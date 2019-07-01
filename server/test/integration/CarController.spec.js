@@ -4,6 +4,7 @@ import path from 'path';
 import server from '../../index';
 import db from '../../services/db';
 import generateToken from '../../lib/generateToken';
+import '@babel/polyfill';
 
 
 const loc = path.resolve('./');

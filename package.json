@@ -17,7 +17,7 @@
         "server": "babel-node ./server/",
         "start": "node server/build/index.js",
         "start:dev": "nodemon --exec babel-node server/index",
-        "test": "nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000"
+        "test": "npm run build && nyc mocha --require @babel/register server/test/**/**.spec.js --exit --timeout 500000"
     },
     "repository": {
         "type": "git",

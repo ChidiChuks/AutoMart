@@ -20,8 +20,6 @@ var _generateToken = require("../../lib/generateToken");
 
 var _generateToken2 = _interopRequireDefault(_generateToken);
 
-require("@babel/polyfill");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -99,7 +97,7 @@ describe('Order transaction', function () {
 
   var dataValues = function dataValues() {
     return {
-      email: "".concat(Math.random().toString(36).substring(2, 15), "@yahoo.com"),
+      email: "".concat(Math.random().toString(36).substring(2, 15), "@gmail.com"),
       first_name: "Fi".concat(Math.random().toString(36).substring(2, 15)),
       last_name: "La".concat(Math.random().toString(36).substring(2, 15)),
       password: 'password',
@@ -111,8 +109,8 @@ describe('Order transaction', function () {
     };
   };
 
-  var carManufacturers = ['Benz', 'BMW', 'Audi', 'Toyota', 'Nissan'];
-  var models = ['CL550', 'GK', 'E360', '4 Runner', 'Avalon', 'Altima', 'Maxima'];
+  var carManufacturers = ['BMW', 'Audi', 'Mercedes', 'Toyota', 'Nissan'];
+  var models = ['M5', 'Audi i8', 'E360', '4 Runner', 'Avalon', 'Altima', 'Maxima'];
   var bodyt = ['Sedan', 'Station Wagon', 'SUV', 'TRUCK', 'BUS'];
 
   var newAdValues = function newAdValues() {
@@ -138,19 +136,19 @@ describe('Order transaction', function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.next = 2;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, status VARCHAR(10) NOT NULL DEFAULT 'active', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
 
           case 2:
             _context3.next = 4;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT 'available', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
 
           case 4:
             _context3.next = 6;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT 'pending', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
 
           case 6:
             _context3.next = 8;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT 'pending', severity VARCHAR(20) NOT NULL DEFAULT 'minor') ");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
 
           case 8:
             _context3.next = 10;
@@ -178,19 +176,19 @@ describe('Order transaction', function () {
         switch (_context4.prev = _context4.next) {
           case 0:
             _context4.next = 2;
-            return _db2["default"].query("DELETE FROM flags");
+            return _db2["default"].query('DELETE FROM flags');
 
           case 2:
             _context4.next = 4;
-            return _db2["default"].query("DELETE FROM orders");
+            return _db2["default"].query('DELETE FROM orders');
 
           case 4:
             _context4.next = 6;
-            return _db2["default"].query("DELETE FROM cars");
+            return _db2["default"].query('DELETE FROM cars');
 
           case 6:
             _context4.next = 8;
-            return _db2["default"].query("DELETE FROM users");
+            return _db2["default"].query('DELETE FROM users');
 
           case 8:
           case "end":
@@ -373,25 +371,7 @@ describe('Order transaction', function () {
   }); // seller update order price
 
   describe('Buyer update order price while order it is not pending or cancelled', function () {
-    // it('should update the order price ', async() => {
-    //     const newUser = await dataValues();
-    //     await chai.request(server).post('/api/v1/auth/signup').send(newUser);
-    //     const orderInfo = await db.query('SELECT id, buyerid, sellerid, priceoffered, status FROM orders LIMIT 1');
-    //     const { id } = orderInfo.rows[0];
-    //     const { buyerid } = orderInfo.rows[0];
-    //     await db.query(`UPDATE orders SET status='rejected' WHERE id=${id}`);
-    //     const token = await generateToken(buyerid, false);
-    //     const newData = {
-    //         orderId: id,
-    //         newPrice: 7100000,
-    //     };
-    //     const res = await chai.request(server).patch('/api/v1/order').set('x-auth', token).send(newData);
-    //     expect(res.status).to.eq(200);
-    //     expect(res.body.data.id).to.eq(id);
-    //     expect(res.body.data.buyerid).to.eq(buyerid);
-    //     expect(parseFloat(res.body.data.priceoffered)).to.eq(newData.newPrice);
-    // });
-    it('should return error 400 if newprice is not stated ',
+    it('should update the order price ',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -428,24 +408,26 @@ describe('Order transaction', function () {
               token = _context9.sent;
               newData = {
                 orderId: id,
-                newPrice: ''
+                newPrice: 7100000
               };
               _context9.next = 18;
               return _chai2["default"].request(_index2["default"]).patch('/api/v1/order').set('x-auth', token).send(newData);
 
             case 18:
               res = _context9.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Ensure to send the order id and new price');
+              expect(res.status).to.eq(200);
+              expect(res.body.data.id).to.eq(id);
+              expect(res.body.data.buyerid).to.eq(buyerid);
+              expect(parseFloat(res.body.data.priceoffered)).to.eq(newData.newPrice);
 
-            case 21:
+            case 23:
             case "end":
               return _context9.stop();
           }
         }
       }, _callee9, this);
     })));
-    it('should return error 400 if order id is not supplied ',
+    it('should return error 400 if newprice is not stated ',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -481,8 +463,8 @@ describe('Order transaction', function () {
             case 14:
               token = _context10.sent;
               newData = {
-                orderId: '',
-                newPrice: 7100000
+                orderId: id,
+                newPrice: ''
               };
               _context10.next = 18;
               return _chai2["default"].request(_index2["default"]).patch('/api/v1/order').set('x-auth', token).send(newData);
@@ -499,7 +481,7 @@ describe('Order transaction', function () {
         }
       }, _callee10, this);
     })));
-    it('should return error 400 if order status is pending or cancelled',
+    it('should return error 400 if order id is not supplied ',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -526,7 +508,7 @@ describe('Order transaction', function () {
               id = orderInfo.rows[0].id;
               buyerid = orderInfo.rows[0].buyerid;
               _context11.next = 12;
-              return _db2["default"].query("UPDATE orders SET status='pending' WHERE id=".concat(id));
+              return _db2["default"].query("UPDATE orders SET status='rejected' WHERE id=".concat(id));
 
             case 12:
               _context11.next = 14;
@@ -535,7 +517,7 @@ describe('Order transaction', function () {
             case 14:
               token = _context11.sent;
               newData = {
-                orderId: id,
+                orderId: '',
                 newPrice: 7100000
               };
               _context11.next = 18;
@@ -544,7 +526,7 @@ describe('Order transaction', function () {
             case 18:
               res = _context11.sent;
               expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Check that the order id is valid and not cancelled and your new price is different');
+              expect(res.body.message).to.eq('Ensure to send the order id and new price');
 
             case 21:
             case "end":
@@ -553,15 +535,12 @@ describe('Order transaction', function () {
         }
       }, _callee11, this);
     })));
-  }); // User retrieves his/her orders
-
-  describe('User get his/her ads', function () {
-    it('should return an array of the users ads',
+    it('should return error 400 if order status is pending or cancelled',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee12() {
-      var newUser, orderInfo, sellerid, token, res;
+      var newUser, orderInfo, id, buyerid, token, newData, res;
       return regeneratorRuntime.wrap(function _callee12$(_context12) {
         while (1) {
           switch (_context12.prev = _context12.next) {
@@ -576,31 +555,88 @@ describe('Order transaction', function () {
 
             case 5:
               _context12.next = 7;
-              return _db2["default"].query('SELECT sellerid FROM orders LIMIT 1');
+              return _db2["default"].query('SELECT id, buyerid, sellerid, priceoffered, status FROM orders LIMIT 1');
 
             case 7:
               orderInfo = _context12.sent;
+              id = orderInfo.rows[0].id;
+              buyerid = orderInfo.rows[0].buyerid;
+              _context12.next = 12;
+              return _db2["default"].query("UPDATE orders SET status='pending' WHERE id=".concat(id));
+
+            case 12:
+              _context12.next = 14;
+              return (0, _generateToken2["default"])(buyerid, false);
+
+            case 14:
+              token = _context12.sent;
+              newData = {
+                orderId: id,
+                newPrice: 7100000
+              };
+              _context12.next = 18;
+              return _chai2["default"].request(_index2["default"]).patch('/api/v1/order').set('x-auth', token).send(newData);
+
+            case 18:
+              res = _context12.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Check that the order id is valid and not cancelled and your new price is different');
+
+            case 21:
+            case "end":
+              return _context12.stop();
+          }
+        }
+      }, _callee12, this);
+    })));
+  }); // User retrieves his/her orders
+
+  describe('User get his/her ads', function () {
+    it('should return an array of the users ads',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee13() {
+      var newUser, orderInfo, sellerid, token, res;
+      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              _context13.next = 2;
+              return dataValues();
+
+            case 2:
+              newUser = _context13.sent;
+              _context13.next = 5;
+              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
+
+            case 5:
+              _context13.next = 7;
+              return _db2["default"].query('SELECT sellerid FROM orders LIMIT 1');
+
+            case 7:
+              orderInfo = _context13.sent;
               sellerid = orderInfo.rows[0].sellerid;
-              _context12.next = 11;
+              _context13.next = 11;
               return (0, _generateToken2["default"])(sellerid, false);
 
             case 11:
-              token = _context12.sent;
-              _context12.next = 14;
+              token = _context13.sent;
+              _context13.next = 14;
               return _chai2["default"].request(_index2["default"]).get('/api/v1/orders/me').set('x-auth', token);
 
             case 14:
-              res = _context12.sent;
+              res = _context13.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data).to.be.an('Array');
               expect(res.body.data[0]).to.have.property('sellerid').eq(sellerid);
 
             case 18:
             case "end":
-              return _context12.stop();
+              return _context13.stop();
           }
         }
-      }, _callee12, this);
+      }, _callee13, this);
     })));
     it('should return error 401 if user is not logged in', function (done) {
       _chai2["default"].request(_index2["default"]).get('/api/v1/orders/me').end(function (err, res) {
@@ -616,44 +652,44 @@ describe('Order transaction', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee13() {
-      var newUser, _ref16, rows, length, token, res;
+    regeneratorRuntime.mark(function _callee14() {
+      var newUser, _ref17, rows, length, token, res;
 
-      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+      return regeneratorRuntime.wrap(function _callee14$(_context14) {
         while (1) {
-          switch (_context13.prev = _context13.next) {
+          switch (_context14.prev = _context14.next) {
             case 0:
-              _context13.next = 2;
+              _context14.next = 2;
               return dataValues();
 
             case 2:
-              newUser = _context13.sent;
-              _context13.next = 5;
+              newUser = _context14.sent;
+              _context14.next = 5;
               return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
 
             case 5:
-              _context13.next = 7;
+              _context14.next = 7;
               return _db2["default"].query('SELECT id FROM users ');
 
             case 7:
-              _ref16 = _context13.sent;
-              rows = _ref16.rows;
+              _ref17 = _context14.sent;
+              rows = _ref17.rows;
               length = rows.length;
               token = (0, _generateToken2["default"])(rows[length - 1].id, true);
-              _context13.next = 13;
+              _context14.next = 13;
               return _chai2["default"].request(_index2["default"]).get('/api/v1/orders').set('x-auth', token);
 
             case 13:
-              res = _context13.sent;
+              res = _context14.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data).to.be.an('Array');
 
             case 16:
             case "end":
-              return _context13.stop();
+              return _context14.stop();
           }
         }
-      }, _callee13, this);
+      }, _callee14, this);
     }))); // it('should return error 404 if there are no orders', async () => {
     //   const newUser = await dataValues();
     //   await chai.request(server).post('/api/v1/auth/signup').send(newUser);
@@ -676,54 +712,8 @@ describe('Order transaction', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee14() {
-      var newUser, _ref18, rows, length, token, res;
-
-      return regeneratorRuntime.wrap(function _callee14$(_context14) {
-        while (1) {
-          switch (_context14.prev = _context14.next) {
-            case 0:
-              _context14.next = 2;
-              return dataValues();
-
-            case 2:
-              newUser = _context14.sent;
-              _context14.next = 5;
-              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
-
-            case 5:
-              _context14.next = 7;
-              return _db2["default"].query('SELECT id FROM users ');
-
-            case 7:
-              _ref18 = _context14.sent;
-              rows = _ref18.rows;
-              length = rows.length;
-              token = (0, _generateToken2["default"])(rows[length - 1].id, false);
-              _context14.next = 13;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/orders').set('x-auth', token);
-
-            case 13:
-              res = _context14.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('You dont have the permission to access this resource');
-
-            case 16:
-            case "end":
-              return _context14.stop();
-          }
-        }
-      }, _callee14, this);
-    })));
-  }); // view a single order
-
-  describe('View a single order', function () {
-    it('should return order if it is admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
     regeneratorRuntime.mark(function _callee15() {
-      var newUser, _ref20, rows, length, token, orderInfo, id, res;
+      var newUser, _ref19, rows, length, token, res;
 
       return regeneratorRuntime.wrap(function _callee15$(_context15) {
         while (1) {
@@ -742,87 +732,96 @@ describe('Order transaction', function () {
               return _db2["default"].query('SELECT id FROM users ');
 
             case 7:
-              _ref20 = _context15.sent;
-              rows = _ref20.rows;
+              _ref19 = _context15.sent;
+              rows = _ref19.rows;
               length = rows.length;
-              token = (0, _generateToken2["default"])(rows[length - 1].id, true);
+              token = (0, _generateToken2["default"])(rows[length - 1].id, false);
               _context15.next = 13;
-              return _db2["default"].query('SELECT id FROM orders LIMIT 1');
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/orders').set('x-auth', token);
 
             case 13:
-              orderInfo = _context15.sent;
-              id = orderInfo.rows[0].id;
-              _context15.next = 17;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/orders/".concat(id)).set('x-auth', token);
-
-            case 17:
               res = _context15.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data.id).to.eq(id);
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('You dont have the permission to access this resource');
 
-            case 20:
+            case 16:
             case "end":
               return _context15.stop();
           }
         }
       }, _callee15, this);
     })));
-    it('should return order if it is the seller',
+  }); // view a single order
+
+  describe('View a single order', function () {
+    it('should return order if it is admin',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee16() {
-      var orderInfo, id, sellerid, token, res;
+      var newUser, _ref21, rows, length, token, orderInfo, id, res;
+
       return regeneratorRuntime.wrap(function _callee16$(_context16) {
         while (1) {
           switch (_context16.prev = _context16.next) {
             case 0:
               _context16.next = 2;
-              return _db2["default"].query('SELECT id, sellerid FROM orders LIMIT 1');
+              return dataValues();
 
             case 2:
-              orderInfo = _context16.sent;
-              id = orderInfo.rows[0].id;
-              sellerid = orderInfo.rows[0].sellerid;
+              newUser = _context16.sent;
+              _context16.next = 5;
+              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
+
+            case 5:
               _context16.next = 7;
-              return (0, _generateToken2["default"])(sellerid, false);
+              return _db2["default"].query('SELECT id FROM users ');
 
             case 7:
-              token = _context16.sent;
-              _context16.next = 10;
+              _ref21 = _context16.sent;
+              rows = _ref21.rows;
+              length = rows.length;
+              token = (0, _generateToken2["default"])(rows[length - 1].id, true);
+              _context16.next = 13;
+              return _db2["default"].query('SELECT id FROM orders LIMIT 1');
+
+            case 13:
+              orderInfo = _context16.sent;
+              id = orderInfo.rows[0].id;
+              _context16.next = 17;
               return _chai2["default"].request(_index2["default"]).get("/api/v1/orders/".concat(id)).set('x-auth', token);
 
-            case 10:
+            case 17:
               res = _context16.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data.id).to.eq(id);
 
-            case 13:
+            case 20:
             case "end":
               return _context16.stop();
           }
         }
       }, _callee16, this);
     })));
-    it('should return order if it is the buyer',
+    it('should return order if it is the seller',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee17() {
-      var orderInfo, id, buyerid, token, res;
+      var orderInfo, id, sellerid, token, res;
       return regeneratorRuntime.wrap(function _callee17$(_context17) {
         while (1) {
           switch (_context17.prev = _context17.next) {
             case 0:
               _context17.next = 2;
-              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
+              return _db2["default"].query('SELECT id, sellerid FROM orders LIMIT 1');
 
             case 2:
               orderInfo = _context17.sent;
               id = orderInfo.rows[0].id;
-              buyerid = orderInfo.rows[0].buyerid;
+              sellerid = orderInfo.rows[0].sellerid;
               _context17.next = 7;
-              return (0, _generateToken2["default"])(buyerid, false);
+              return (0, _generateToken2["default"])(sellerid, false);
 
             case 7:
               token = _context17.sent;
@@ -840,6 +839,43 @@ describe('Order transaction', function () {
           }
         }
       }, _callee17, this);
+    })));
+    it('should return order if it is the buyer',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee18() {
+      var orderInfo, id, buyerid, token, res;
+      return regeneratorRuntime.wrap(function _callee18$(_context18) {
+        while (1) {
+          switch (_context18.prev = _context18.next) {
+            case 0:
+              _context18.next = 2;
+              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
+
+            case 2:
+              orderInfo = _context18.sent;
+              id = orderInfo.rows[0].id;
+              buyerid = orderInfo.rows[0].buyerid;
+              _context18.next = 7;
+              return (0, _generateToken2["default"])(buyerid, false);
+
+            case 7:
+              token = _context18.sent;
+              _context18.next = 10;
+              return _chai2["default"].request(_index2["default"]).get("/api/v1/orders/".concat(id)).set('x-auth', token);
+
+            case 10:
+              res = _context18.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data.id).to.eq(id);
+
+            case 13:
+            case "end":
+              return _context18.stop();
+          }
+        }
+      }, _callee18, this);
     }))); // it('should return error 404 if order is not found', async () => {
     //   const orderInfo = await db.query('SELECT id, buyerid FROM orders LIMIT 1');
     //   const { buyerid } = orderInfo.rows[0];
@@ -854,64 +890,9 @@ describe('Order transaction', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee18() {
-      var newUser, orderInfo, id, _ref24, rows, len, token, res;
-
-      return regeneratorRuntime.wrap(function _callee18$(_context18) {
-        while (1) {
-          switch (_context18.prev = _context18.next) {
-            case 0:
-              _context18.next = 2;
-              return dataValues();
-
-            case 2:
-              newUser = _context18.sent;
-              _context18.next = 5;
-              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
-
-            case 5:
-              _context18.next = 7;
-              return _db2["default"].query('SELECT id FROM orders LIMIT 1');
-
-            case 7:
-              orderInfo = _context18.sent;
-              id = orderInfo.rows[0].id;
-              _context18.next = 11;
-              return _db2["default"].query('SELECT id from users');
-
-            case 11:
-              _ref24 = _context18.sent;
-              rows = _ref24.rows;
-              len = rows.length - 1;
-              _context18.next = 16;
-              return (0, _generateToken2["default"])(rows[len].id, false);
-
-            case 16:
-              token = _context18.sent;
-              _context18.next = 19;
-              return _chai2["default"].request(_index2["default"]).get("/api/v1/orders/".concat(id)).set('x-auth', token);
-
-            case 19:
-              res = _context18.sent;
-              expect(res.status).to.eq(403);
-              expect(res.body.message).to.eq('You dont have the permission to view this resource');
-
-            case 22:
-            case "end":
-              return _context18.stop();
-          }
-        }
-      }, _callee18, this);
-    })));
-  }); // update order status
-
-  describe('Seller and Buyer update order status', function () {
-    it('should update order status by seller when it is pending',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
     regeneratorRuntime.mark(function _callee19() {
-      var newUser, orderInfo, id, sellerid, token, res;
+      var newUser, orderInfo, id, _ref25, rows, len, token, res;
+
       return regeneratorRuntime.wrap(function _callee19$(_context19) {
         while (1) {
           switch (_context19.prev = _context19.next) {
@@ -926,45 +907,47 @@ describe('Order transaction', function () {
 
             case 5:
               _context19.next = 7;
-              return _db2["default"].query('SELECT id, sellerid FROM orders LIMIT 1');
+              return _db2["default"].query('SELECT id FROM orders LIMIT 1');
 
             case 7:
               orderInfo = _context19.sent;
               id = orderInfo.rows[0].id;
               _context19.next = 11;
-              return _db2["default"].query("UPDATE orders SET status='pending' WHERE id=".concat(id));
+              return _db2["default"].query('SELECT id from users');
 
             case 11:
-              sellerid = orderInfo.rows[0].sellerid;
-              _context19.next = 14;
-              return (0, _generateToken2["default"])(sellerid, false);
+              _ref25 = _context19.sent;
+              rows = _ref25.rows;
+              len = rows.length - 1;
+              _context19.next = 16;
+              return (0, _generateToken2["default"])(rows[len].id, false);
 
-            case 14:
+            case 16:
               token = _context19.sent;
-              _context19.next = 17;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
-                status: 'accepted'
-              });
+              _context19.next = 19;
+              return _chai2["default"].request(_index2["default"]).get("/api/v1/orders/".concat(id)).set('x-auth', token);
 
-            case 17:
+            case 19:
               res = _context19.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data.id).to.eq(id);
-              expect(res.body.data.status).to.eq('accepted');
+              expect(res.status).to.eq(403);
+              expect(res.body.message).to.eq('You dont have the permission to view this resource');
 
-            case 21:
+            case 22:
             case "end":
               return _context19.stop();
           }
         }
       }, _callee19, this);
     })));
-    it('should update order status by buyer if the status is accepted',
+  }); // update order status
+
+  describe('Seller and Buyer update order status', function () {
+    it('should update order status by seller when it is pending',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee20() {
-      var newUser, orderInfo, id, buyerid, token, res;
+      var newUser, orderInfo, id, sellerid, token, res;
       return regeneratorRuntime.wrap(function _callee20$(_context20) {
         while (1) {
           switch (_context20.prev = _context20.next) {
@@ -979,31 +962,31 @@ describe('Order transaction', function () {
 
             case 5:
               _context20.next = 7;
-              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
+              return _db2["default"].query('SELECT id, sellerid FROM orders LIMIT 1');
 
             case 7:
               orderInfo = _context20.sent;
               id = orderInfo.rows[0].id;
               _context20.next = 11;
-              return _db2["default"].query("UPDATE orders SET status='accepted' WHERE id=".concat(id));
+              return _db2["default"].query("UPDATE orders SET status='pending' WHERE id=".concat(id));
 
             case 11:
-              buyerid = orderInfo.rows[0].buyerid;
+              sellerid = orderInfo.rows[0].sellerid;
               _context20.next = 14;
-              return (0, _generateToken2["default"])(buyerid, false);
+              return (0, _generateToken2["default"])(sellerid, false);
 
             case 14:
               token = _context20.sent;
               _context20.next = 17;
               return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
-                status: 'completed'
+                status: 'accepted'
               });
 
             case 17:
               res = _context20.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data.id).to.eq(id);
-              expect(res.body.data.status).to.eq('completed');
+              expect(res.body.data.status).to.eq('accepted');
 
             case 21:
             case "end":
@@ -1012,105 +995,104 @@ describe('Order transaction', function () {
         }
       }, _callee20, this);
     })));
-    it('should return error 404 if order is not found',
+    it('should update order status by buyer if the status is accepted',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee21() {
-      var orderInfo, id, buyerid, token, res;
+      var newUser, orderInfo, id, buyerid, token, res;
       return regeneratorRuntime.wrap(function _callee21$(_context21) {
         while (1) {
           switch (_context21.prev = _context21.next) {
             case 0:
               _context21.next = 2;
-              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
+              return dataValues();
 
             case 2:
-              orderInfo = _context21.sent;
-              id = orderInfo.rows[0].id;
-              buyerid = orderInfo.rows[0].buyerid;
+              newUser = _context21.sent;
+              _context21.next = 5;
+              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
+
+            case 5:
               _context21.next = 7;
-              return (0, _generateToken2["default"])(buyerid, false);
+              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
 
             case 7:
+              orderInfo = _context21.sent;
+              id = orderInfo.rows[0].id;
+              _context21.next = 11;
+              return _db2["default"].query("UPDATE orders SET status='accepted' WHERE id=".concat(id));
+
+            case 11:
+              buyerid = orderInfo.rows[0].buyerid;
+              _context21.next = 14;
+              return (0, _generateToken2["default"])(buyerid, false);
+
+            case 14:
               token = _context21.sent;
-              _context21.next = 10;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id + 1)).set('x-auth', token).send({
+              _context21.next = 17;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
                 status: 'completed'
               });
 
-            case 10:
+            case 17:
               res = _context21.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('The order is not available');
+              expect(res.status).to.eq(200);
+              expect(res.body.data.id).to.eq(id);
+              expect(res.body.data.status).to.eq('completed');
 
-            case 13:
+            case 21:
             case "end":
               return _context21.stop();
           }
         }
       }, _callee21, this);
     })));
-    it('should return error 406 if seller or buyer is inactive',
+    it('should return error 404 if order is not found',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee22() {
-      var newUser, orderInfo, id, buyerid, sellerid, token, res;
+      var orderInfo, id, buyerid, token, res;
       return regeneratorRuntime.wrap(function _callee22$(_context22) {
         while (1) {
           switch (_context22.prev = _context22.next) {
             case 0:
               _context22.next = 2;
-              return dataValues();
+              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
 
             case 2:
-              newUser = _context22.sent;
-              _context22.next = 5;
-              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
-
-            case 5:
-              _context22.next = 7;
-              return _db2["default"].query('SELECT id, buyerid, sellerid FROM orders LIMIT 1');
-
-            case 7:
               orderInfo = _context22.sent;
               id = orderInfo.rows[0].id;
               buyerid = orderInfo.rows[0].buyerid;
-              sellerid = orderInfo.rows[0].sellerid;
-              _context22.next = 13;
-              return _db2["default"].query("UPDATE users SET status='suspended' WHERE id=".concat(sellerid));
-
-            case 13:
-              _context22.next = 15;
+              _context22.next = 7;
               return (0, _generateToken2["default"])(buyerid, false);
 
-            case 15:
+            case 7:
               token = _context22.sent;
-              _context22.next = 18;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
+              _context22.next = 10;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id + 1)).set('x-auth', token).send({
                 status: 'completed'
               });
 
-            case 18:
+            case 10:
               res = _context22.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('You cannot update the status of this order at its state');
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('The order is not available');
 
-            case 21:
+            case 13:
             case "end":
               return _context22.stop();
           }
         }
       }, _callee22, this);
     })));
-    it('should return error 403 if another user/admin attempts to update the order status',
+    it('should return error 406 if seller or buyer is inactive',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee23() {
-      var newUser, orderInfo, id, _ref30, rows, len, token, res;
-
+      var newUser, orderInfo, id, buyerid, sellerid, token, res;
       return regeneratorRuntime.wrap(function _callee23$(_context23) {
         while (1) {
           switch (_context23.prev = _context23.next) {
@@ -1125,112 +1107,123 @@ describe('Order transaction', function () {
 
             case 5:
               _context23.next = 7;
-              return _db2["default"].query('SELECT id FROM orders LIMIT 1');
+              return _db2["default"].query('SELECT id, buyerid, sellerid FROM orders LIMIT 1');
 
             case 7:
               orderInfo = _context23.sent;
               id = orderInfo.rows[0].id;
-              _context23.next = 11;
-              return _db2["default"].query('SELECT id FROM users');
+              buyerid = orderInfo.rows[0].buyerid;
+              sellerid = orderInfo.rows[0].sellerid;
+              _context23.next = 13;
+              return _db2["default"].query("UPDATE users SET status='suspended' WHERE id=".concat(sellerid));
 
-            case 11:
-              _ref30 = _context23.sent;
-              rows = _ref30.rows;
-              len = rows.length - 1;
-              _context23.next = 16;
-              return (0, _generateToken2["default"])(len, true);
+            case 13:
+              _context23.next = 15;
+              return (0, _generateToken2["default"])(buyerid, false);
 
-            case 16:
+            case 15:
               token = _context23.sent;
-              _context23.next = 19;
+              _context23.next = 18;
               return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
                 status: 'completed'
               });
 
-            case 19:
+            case 18:
               res = _context23.sent;
-              expect(res.status).to.eq(403);
-              expect(res.body.message).to.eq('You dont have the permission to modify this resource');
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('You cannot update the status of this order at its state');
 
-            case 22:
+            case 21:
             case "end":
               return _context23.stop();
           }
         }
       }, _callee23, this);
     })));
-    it('should return error 400 if buyer wants to update a pending order',
+    it('should return error 403 if another user/admin attempts to update the order status',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee24() {
-      var orderInfo, id, buyerid, token, res;
+      var newUser, orderInfo, id, _ref31, rows, len, token, res;
+
       return regeneratorRuntime.wrap(function _callee24$(_context24) {
         while (1) {
           switch (_context24.prev = _context24.next) {
             case 0:
               _context24.next = 2;
-              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
+              return dataValues();
 
             case 2:
+              newUser = _context24.sent;
+              _context24.next = 5;
+              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
+
+            case 5:
+              _context24.next = 7;
+              return _db2["default"].query('SELECT id FROM orders LIMIT 1');
+
+            case 7:
               orderInfo = _context24.sent;
               id = orderInfo.rows[0].id;
-              _context24.next = 6;
-              return _db2["default"].query("UPDATE orders SET status='pending' WHERE id=".concat(id));
+              _context24.next = 11;
+              return _db2["default"].query('SELECT id FROM users');
 
-            case 6:
-              buyerid = orderInfo.rows[0].buyerid;
-              _context24.next = 9;
-              return (0, _generateToken2["default"])(buyerid, false);
+            case 11:
+              _ref31 = _context24.sent;
+              rows = _ref31.rows;
+              len = rows.length - 1;
+              _context24.next = 16;
+              return (0, _generateToken2["default"])(len, true);
 
-            case 9:
+            case 16:
               token = _context24.sent;
-              _context24.next = 12;
+              _context24.next = 19;
               return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
                 status: 'completed'
               });
 
-            case 12:
+            case 19:
               res = _context24.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('You cannot update the status of this order at its state');
+              expect(res.status).to.eq(403);
+              expect(res.body.message).to.eq('You dont have the permission to modify this resource');
 
-            case 15:
+            case 22:
             case "end":
               return _context24.stop();
           }
         }
       }, _callee24, this);
     })));
-    it('should return error 400 if seller wants to update a cancelled order',
+    it('should return error 400 if buyer wants to update a pending order',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee25() {
-      var orderInfo, id, sellerid, token, res;
+      var orderInfo, id, buyerid, token, res;
       return regeneratorRuntime.wrap(function _callee25$(_context25) {
         while (1) {
           switch (_context25.prev = _context25.next) {
             case 0:
               _context25.next = 2;
-              return _db2["default"].query('SELECT id, sellerid FROM orders LIMIT 1');
+              return _db2["default"].query('SELECT id, buyerid FROM orders LIMIT 1');
 
             case 2:
               orderInfo = _context25.sent;
               id = orderInfo.rows[0].id;
               _context25.next = 6;
-              return _db2["default"].query("UPDATE orders SET status='cancelled' WHERE id=".concat(id));
+              return _db2["default"].query("UPDATE orders SET status='pending' WHERE id=".concat(id));
 
             case 6:
-              sellerid = orderInfo.rows[0].sellerid;
+              buyerid = orderInfo.rows[0].buyerid;
               _context25.next = 9;
-              return (0, _generateToken2["default"])(sellerid, false);
+              return (0, _generateToken2["default"])(buyerid, false);
 
             case 9:
               token = _context25.sent;
               _context25.next = 12;
               return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
-                status: 'accepted'
+                status: 'completed'
               });
 
             case 12:
@@ -1245,10 +1238,7 @@ describe('Order transaction', function () {
         }
       }, _callee25, this);
     })));
-  }); // delete an order -  seller and admin can delete a cancelled order
-
-  describe('deletes a cancelled order', function () {
-    it('should return error 404 if seller attempts to delete an uncancelled order',
+    it('should return error 400 if seller wants to update a cancelled order',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -1265,7 +1255,7 @@ describe('Order transaction', function () {
               orderInfo = _context26.sent;
               id = orderInfo.rows[0].id;
               _context26.next = 6;
-              return _db2["default"].query("UPDATE orders SET status='rejected' WHERE id=".concat(id));
+              return _db2["default"].query("UPDATE orders SET status='cancelled' WHERE id=".concat(id));
 
             case 6:
               sellerid = orderInfo.rows[0].sellerid;
@@ -1275,12 +1265,14 @@ describe('Order transaction', function () {
             case 9:
               token = _context26.sent;
               _context26.next = 12;
-              return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/orders/".concat(id)).set('x-auth', token);
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/orders/".concat(id)).set('x-auth', token).send({
+                status: 'accepted'
+              });
 
             case 12:
               res = _context26.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('The order does not exist');
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('You cannot update the status of this order at its state');
 
             case 15:
             case "end":
@@ -1289,43 +1281,87 @@ describe('Order transaction', function () {
         }
       }, _callee26, this);
     })));
-    it('should return error 404 if order is not found',
+  }); // delete an order -  seller and admin can delete a cancelled order
+
+  describe('deletes a cancelled order', function () {
+    it('should return error 404 if seller attempts to delete an uncancelled order',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee27() {
-      var _ref35, rows, len, token, res;
-
+      var orderInfo, id, sellerid, token, res;
       return regeneratorRuntime.wrap(function _callee27$(_context27) {
         while (1) {
           switch (_context27.prev = _context27.next) {
             case 0:
               _context27.next = 2;
-              return _db2["default"].query('SELECT id from users');
+              return _db2["default"].query('SELECT id, sellerid FROM orders LIMIT 1');
 
             case 2:
-              _ref35 = _context27.sent;
-              rows = _ref35.rows;
-              len = rows.length - 1;
-              _context27.next = 7;
-              return (0, _generateToken2["default"])(rows[len].id, true);
+              orderInfo = _context27.sent;
+              id = orderInfo.rows[0].id;
+              _context27.next = 6;
+              return _db2["default"].query("UPDATE orders SET status='rejected' WHERE id=".concat(id));
 
-            case 7:
+            case 6:
+              sellerid = orderInfo.rows[0].sellerid;
+              _context27.next = 9;
+              return (0, _generateToken2["default"])(sellerid, false);
+
+            case 9:
               token = _context27.sent;
-              _context27.next = 10;
-              return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/orders/1678787878781').set('x-auth', token);
+              _context27.next = 12;
+              return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/orders/".concat(id)).set('x-auth', token);
 
-            case 10:
+            case 12:
               res = _context27.sent;
               expect(res.status).to.eq(404);
               expect(res.body.message).to.eq('The order does not exist');
 
-            case 13:
+            case 15:
             case "end":
               return _context27.stop();
           }
         }
       }, _callee27, this);
+    })));
+    it('should return error 404 if order is not found',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee28() {
+      var _ref36, rows, len, token, res;
+
+      return regeneratorRuntime.wrap(function _callee28$(_context28) {
+        while (1) {
+          switch (_context28.prev = _context28.next) {
+            case 0:
+              _context28.next = 2;
+              return _db2["default"].query('SELECT id from users');
+
+            case 2:
+              _ref36 = _context28.sent;
+              rows = _ref36.rows;
+              len = rows.length - 1;
+              _context28.next = 7;
+              return (0, _generateToken2["default"])(rows[len].id, true);
+
+            case 7:
+              token = _context28.sent;
+              _context28.next = 10;
+              return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/orders/1678787878781').set('x-auth', token);
+
+            case 10:
+              res = _context28.sent;
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('The order does not exist');
+
+            case 13:
+            case "end":
+              return _context28.stop();
+          }
+        }
+      }, _callee28, this);
     }))); // it('should return error 404 if a logged in user attempts to delete the order', async () => {
     //   const orderInfo = await db.query('SELECT id, sellerid FROM orders LIMIT 1');
     //   const { id } = orderInfo.rows[0];
@@ -1358,54 +1394,54 @@ describe('Order transaction', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee28() {
-      var token, cars, newOrderData, orderInfo, id, _ref37, rows, tk, res;
+    regeneratorRuntime.mark(function _callee29() {
+      var token, cars, newOrderData, orderInfo, id, _ref38, rows, tk, res;
 
-      return regeneratorRuntime.wrap(function _callee28$(_context28) {
+      return regeneratorRuntime.wrap(function _callee29$(_context29) {
         while (1) {
-          switch (_context28.prev = _context28.next) {
+          switch (_context29.prev = _context29.next) {
             case 0:
               token = genToken();
-              _context28.next = 3;
+              _context29.next = 3;
               return _db2["default"].query('SELECT id FROM cars');
 
             case 3:
-              cars = _context28.sent;
+              cars = _context29.sent;
               newOrderData = {
                 carId: cars.rows[0].id,
                 priceOffered: 45000000
               };
-              _context28.next = 7;
+              _context29.next = 7;
               return _chai2["default"].request(_index2["default"]).post('/api/v1/order').set('x-auth', token).send(newOrderData);
 
             case 7:
-              _context28.next = 9;
+              _context29.next = 9;
               return _db2["default"].query('SELECT id FROM orders LIMIT 1');
 
             case 9:
-              orderInfo = _context28.sent;
+              orderInfo = _context29.sent;
               id = orderInfo.rows[0].id;
-              _context28.next = 13;
+              _context29.next = 13;
               return _db2["default"].query('SELECT id FROM users LIMIT 1');
 
             case 13:
-              _ref37 = _context28.sent;
-              rows = _ref37.rows;
+              _ref38 = _context29.sent;
+              rows = _ref38.rows;
               tk = (0, _generateToken2["default"])(rows[0].id, true);
-              _context28.next = 18;
+              _context29.next = 18;
               return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/orders/".concat(id)).set('x-auth', tk);
 
             case 18:
-              res = _context28.sent;
+              res = _context29.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data.id).to.eq(id);
 
             case 21:
             case "end":
-              return _context28.stop();
+              return _context29.stop();
           }
         }
-      }, _callee28, this);
+      }, _callee29, this);
     })));
   }); // describe('User retrieves his/her ads', () => {
   //   it('should return error 404 if user has not sold on the platform', async () => {

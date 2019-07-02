@@ -1,11 +1,9 @@
 language: node_js
 
-sudo: required
-
-dist: trusty
+sudo: false
 
 node_js:
-- "10"
+- node
 
 after_success: 
   - npm run coverage
@@ -16,13 +14,11 @@ cache:
   directories:
   - node_modules
 
+services:
+  - postgresql
+
 addons:
   postgresql: "10.6"
-
-apt:
-    packages:
-    - postgresql-10
-    - postgresql-client-10
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter

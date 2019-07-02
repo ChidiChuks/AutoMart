@@ -51,7 +51,7 @@ var Car = {
               requiredFields = ['owner', 'state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
               req.body.owner = req.userId;
 
-              if (!(0, _validateData2["default"])(requiredFields, req.body)) {
+              if (!(0, _validateData2["default"])(requiredFields, req.body || !req.file)) {
                 _context.next = 4;
                 break;
               }

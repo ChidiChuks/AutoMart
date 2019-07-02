@@ -20,8 +20,6 @@ var _generateToken = require("../../lib/generateToken");
 
 var _generateToken2 = _interopRequireDefault(_generateToken);
 
-require("@babel/polyfill");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -99,7 +97,7 @@ describe('Flags controller', function () {
 
   var dataValues = function dataValues() {
     return {
-      email: "".concat(Math.random().toString(36).substring(2, 15), "@yahoo.com"),
+      email: "".concat(Math.random().toString(36).substring(2, 15), "@gmail.com"),
       first_name: "Fi".concat(Math.random().toString(36).substring(2, 15)),
       last_name: "La".concat(Math.random().toString(36).substring(2, 15)),
       password: 'password',
@@ -112,7 +110,7 @@ describe('Flags controller', function () {
   };
 
   var carManufacturers = ['BMW', 'Audi', 'Mercedes', 'Toyota', 'Nissan'];
-  var models = ['CL550', 'GK', 'E360', '4 Runner', 'Avalon', 'Altima', 'Maxima'];
+  var models = ['M5', 'Audi i8', 'E360', '4 Runner', 'Avalon', 'Altima', 'Maxima'];
   var bodyt = ['Sedan', 'Station Wagon', 'SUV', 'TRUCK', 'BUS'];
 
   var newAdValues = function newAdValues() {
@@ -138,19 +136,19 @@ describe('Flags controller', function () {
         switch (_context3.prev = _context3.next) {
           case 0:
             _context3.next = 2;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, status VARCHAR(10) NOT NULL DEFAULT 'active', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
 
           case 2:
             _context3.next = 4;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT 'available', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
 
           case 4:
             _context3.next = 6;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT 'pending', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
 
           case 6:
             _context3.next = 8;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT 'pending', severity VARCHAR(20) NOT NULL DEFAULT 'minor') ");
+            return _db2["default"].query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
 
           case 8:
             _context3.next = 10;
@@ -178,19 +176,19 @@ describe('Flags controller', function () {
         switch (_context4.prev = _context4.next) {
           case 0:
             _context4.next = 2;
-            return _db2["default"].query("DELETE FROM flags");
+            return _db2["default"].query('DELETE FROM flags');
 
           case 2:
             _context4.next = 4;
-            return _db2["default"].query("DELETE FROM orders");
+            return _db2["default"].query('DELETE FROM orders');
 
           case 4:
             _context4.next = 6;
-            return _db2["default"].query("DELETE FROM cars");
+            return _db2["default"].query('DELETE FROM cars');
 
           case 6:
             _context4.next = 8;
-            return _db2["default"].query("DELETE FROM users");
+            return _db2["default"].query('DELETE FROM users');
 
           case 8:
           case "end":
@@ -811,11 +809,36 @@ describe('Flags controller', function () {
         }
       }, _callee19, this);
     })));
-  }); // it('should return error 404 if flag is not found', async() => {
-  //     const user = await userId();
-  //     const token = generateToken(user.id, true);
-  //     const res = await chai.request(server).delete('/api/v1/flags/1271278338293').set('x-auth', token);
-  //     expect(res.status).to.eq(404);
-  //     expect(res.body.message).to.eq('Flag not found');
-  // });
+  });
+  it('should return error 404 if flag is not found',
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee20() {
+    var user, token, res;
+    return regeneratorRuntime.wrap(function _callee20$(_context20) {
+      while (1) {
+        switch (_context20.prev = _context20.next) {
+          case 0:
+            _context20.next = 2;
+            return userId();
+
+          case 2:
+            user = _context20.sent;
+            token = (0, _generateToken2["default"])(user.id, true);
+            _context20.next = 6;
+            return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/flags/1271278338293').set('x-auth', token);
+
+          case 6:
+            res = _context20.sent;
+            expect(res.status).to.eq(404);
+            expect(res.body.message).to.eq('Flag not found');
+
+          case 9:
+          case "end":
+            return _context20.stop();
+        }
+      }
+    }, _callee20, this);
+  })));
 });

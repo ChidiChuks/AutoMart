@@ -20,8 +20,6 @@ var _generateToken = require("../../lib/generateToken");
 
 var _generateToken2 = _interopRequireDefault(_generateToken);
 
-require("@babel/polyfill");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -148,59 +146,52 @@ describe('User', function () {
     return function adminToken() {
       return _ref4.apply(this, arguments);
     };
-  }();
+  }(); // before(async () => {
+  // eslint-disable-next-line max-len
+  //   await db.query('CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, status VARCHAR(10) NOT NULL DEFAULT \'active\', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
+  // eslint-disable-next-line max-len
+  //   await db.query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
+  // eslint-disable-next-line max-len
+  //   await db.query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
+  // eslint-disable-next-line max-len
+  //   await db.query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
+  //   const data = await dataValues();
+  //   await chai.request(server).post(signupUrl).send(data);
+  //   await chai.request(server).post(signupUrl).send(data);
+  // });
 
-  before(
+
+  after(
   /*#__PURE__*/
   _asyncToGenerator(
   /*#__PURE__*/
   regeneratorRuntime.mark(function _callee4() {
-    var data;
     return regeneratorRuntime.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
             _context4.next = 2;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, status VARCHAR(10) NOT NULL DEFAULT 'active', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+            return _db2["default"].query('DELETE FROM flags');
 
           case 2:
             _context4.next = 4;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT 'available', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )");
+            return _db2["default"].query('DELETE FROM orders');
 
           case 4:
             _context4.next = 6;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT 'pending', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+            return _db2["default"].query('DELETE FROM cars');
 
           case 6:
             _context4.next = 8;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT 'pending', severity VARCHAR(20) NOT NULL DEFAULT 'minor') ");
+            return _db2["default"].query('DELETE FROM users');
 
           case 8:
-            _context4.next = 10;
-            return dataValues();
-
-          case 10:
-            data = _context4.sent;
-            _context4.next = 13;
-            return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
-
-          case 13:
-            _context4.next = 15;
-            return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
-
-          case 15:
           case "end":
             return _context4.stop();
         }
       }
     }, _callee4, this);
-  }))); // after(async() => {
-  //     await db.query("DELETE FROM flags");
-  //     await db.query("DELETE FROM orders");
-  //     await db.query("DELETE FROM cars");
-  //     await db.query("DELETE FROM users");
-  // });
-
+  })));
   describe('User create', function () {
     it('should return a new user with the supplied properties',
     /*#__PURE__*/
@@ -356,7 +347,7 @@ describe('User', function () {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee10() {
-      var _ref13, rows, data, res;
+      var _ref13, rows, data;
 
       return regeneratorRuntime.wrap(function _callee10$(_context10) {
         while (1) {
@@ -370,15 +361,13 @@ describe('User', function () {
               rows = _ref13.rows;
               data = dataValues();
               data.email = "".concat(rows[0].email);
-              _context10.next = 8;
-              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
 
-            case 8:
-              res = _context10.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('User with given email or phone already exist');
+              _chai2["default"].request(_index2["default"]).post(signupUrl).send(data).then(function (res) {
+                expect(res.status).to.eq(400);
+                expect(res.body.message).to.eq('User with given email or phone already exist');
+              });
 
-            case 11:
+            case 7:
             case "end":
               return _context10.stop();
           }
@@ -689,25 +678,30 @@ describe('User', function () {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee20() {
-      var token, res;
+      var userDetails, token, res;
       return regeneratorRuntime.wrap(function _callee20$(_context20) {
         while (1) {
           switch (_context20.prev = _context20.next) {
             case 0:
-              _context20.next = 2;
+              userDetails = dataValues();
+              _context20.next = 3;
+              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(userDetails);
+
+            case 3:
+              _context20.next = 5;
               return adminToken();
 
-            case 2:
+            case 5:
               token = _context20.sent;
-              _context20.next = 5;
+              _context20.next = 8;
               return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
 
-            case 5:
+            case 8:
               res = _context20.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data).to.be.an('Array');
 
-            case 8:
+            case 11:
             case "end":
               return _context20.stop();
           }

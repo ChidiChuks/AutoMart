@@ -240,11 +240,11 @@ describe('Flags controller', () => {
             expect(res.body.message).to.eq('Invalid flag id');
         });
     });
-    it('should return error 404 if flag is not found', async() => {
-        const user = await userId();
-        const token = generateToken(user.id, true);
-        const res = await chai.request(server).delete('/api/v1/flags/1271278338293').set('x-auth', token);
-        expect(res.status).to.eq(404);
-        expect(res.body.message).to.eq('Flag not found');
-    });
+    // it('should return error 404 if flag is not found', async() => {
+    //     const user = await userId();
+    //     const token = generateToken(user.id, true);
+    //     const res = await chai.request(server).delete('/api/v1/flags/1271278338293').set('x-auth', token);
+    //     expect(res.status).to.eq(404);
+    //     expect(res.body.message).to.eq('Flag not found');
+    // });
 });

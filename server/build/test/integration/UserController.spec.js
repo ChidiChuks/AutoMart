@@ -148,101 +148,40 @@ describe('User', function () {
     return function adminToken() {
       return _ref4.apply(this, arguments);
     };
-  }();
+  }(); // before(async() => {
+  //     await db.query("CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, account_number BIGINT NOT NULL, bank VARCHAR(20) NOT NULL, status VARCHAR(10) NOT NULL DEFAULT 'active', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+  //     await db.query("CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT 'available', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )");
+  //     await db.query("CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT 'pending', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
+  //     await db.query("CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT 'pending', severity VARCHAR(20) NOT NULL DEFAULT 'minor') ");
+  //     const data = await dataValues();
+  //     await chai.request(server).post(signupUrl).send(data);
+  //     await chai.request(server).post(signupUrl).send(data);
+  // });
+  // after(async() => {
+  //     await db.query("DELETE FROM flags");
+  //     await db.query("DELETE FROM orders");
+  //     await db.query("DELETE FROM cars");
+  //     await db.query("DELETE FROM users");
+  // });
 
-  before(
-  /*#__PURE__*/
-  _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee4() {
-    var data;
-    return regeneratorRuntime.wrap(function _callee4$(_context4) {
-      while (1) {
-        switch (_context4.prev = _context4.next) {
-          case 0:
-            _context4.next = 2;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS users ( id BIGINT PRIMARY KEY, email VARCHAR(30) NOT NULL UNIQUE, first_name VARCHAR(30) NOT NULL, last_name VARCHAR(30) NOT NULL, password VARCHAR(140) NOT NULL, address VARCHAR(400) NOT NULL, isAdmin BOOLEAN NOT NULL DEFAULT FALSE, phone VARCHAR(16) NOT NULL UNIQUE, account_number BIGINT NOT NULL, bank VARCHAR(20) NOT NULL, status VARCHAR(10) NOT NULL DEFAULT 'active', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
 
-          case 2:
-            _context4.next = 4;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT 'available', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )");
-
-          case 4:
-            _context4.next = 6;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT 'pending', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())");
-
-          case 6:
-            _context4.next = 8;
-            return _db2["default"].query("CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT 'pending', severity VARCHAR(20) NOT NULL DEFAULT 'minor') ");
-
-          case 8:
-            _context4.next = 10;
-            return dataValues();
-
-          case 10:
-            data = _context4.sent;
-            _context4.next = 13;
-            return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
-
-          case 13:
-            _context4.next = 15;
-            return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
-
-          case 15:
-          case "end":
-            return _context4.stop();
-        }
-      }
-    }, _callee4, this);
-  })));
-  after(
-  /*#__PURE__*/
-  _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee5() {
-    return regeneratorRuntime.wrap(function _callee5$(_context5) {
-      while (1) {
-        switch (_context5.prev = _context5.next) {
-          case 0:
-            _context5.next = 2;
-            return _db2["default"].query("DELETE FROM flags");
-
-          case 2:
-            _context5.next = 4;
-            return _db2["default"].query("DELETE FROM orders");
-
-          case 4:
-            _context5.next = 6;
-            return _db2["default"].query("DELETE FROM cars");
-
-          case 6:
-            _context5.next = 8;
-            return _db2["default"].query("DELETE FROM users");
-
-          case 8:
-          case "end":
-            return _context5.stop();
-        }
-      }
-    }, _callee5, this);
-  })));
   describe('User create', function () {
     it('should return a new user with the supplied properties',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee6() {
+    regeneratorRuntime.mark(function _callee4() {
       var userDetails, res;
-      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               userDetails = dataValues();
-              _context6.next = 3;
+              _context4.next = 3;
               return _chai2["default"].request(_index2["default"]).post(signupUrl).send(userDetails);
 
             case 3:
-              res = _context6.sent;
+              res = _context4.sent;
               expect(res.status).to.eq(201);
               expect(res.body.data).to.have.property('token');
               expect(res.body.data).to.have.property('id');
@@ -252,12 +191,66 @@ describe('User', function () {
 
             case 10:
             case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, this);
+    })));
+    it('should return error if password and its confirmation does not match',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee5() {
+      var data, res;
+      return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              data = dataValues();
+              data.password_confirmation = 'password1';
+              _context5.next = 4;
+              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
+
+            case 4:
+              res = _context5.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Password and confirmation does not match');
+
+            case 7:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, this);
+    })));
+    it('should return error if all required fields are not supplied',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee6() {
+      var data, res;
+      return regeneratorRuntime.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              data = dataValues();
+              data.first_name = '';
+              _context6.next = 4;
+              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
+
+            case 4:
+              res = _context6.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Fill all required fields with a valid email address');
+
+            case 7:
+            case "end":
               return _context6.stop();
           }
         }
       }, _callee6, this);
     })));
-    it('should return error if password and its confirmation does not match',
+    it('should return error if invalid email address is supplied',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -268,14 +261,14 @@ describe('User', function () {
           switch (_context7.prev = _context7.next) {
             case 0:
               data = dataValues();
-              data.password_confirmation = 'password1';
+              data.email = "".concat(Math.random().toString(36).substring(2, 15), "gmail.com");
               _context7.next = 4;
               return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
 
             case 4:
               res = _context7.sent;
               expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Password and confirmation does not match');
+              expect(res.body.message).to.eq('Fill all required fields with a valid email address');
 
             case 7:
             case "end":
@@ -284,7 +277,7 @@ describe('User', function () {
         }
       }, _callee7, this);
     })));
-    it('should return error if all required fields are not supplied',
+    it('should return error if length of password is less than 6 characters',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -295,76 +288,22 @@ describe('User', function () {
           switch (_context8.prev = _context8.next) {
             case 0:
               data = dataValues();
-              data.first_name = '';
-              _context8.next = 4;
-              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
-
-            case 4:
-              res = _context8.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Fill all required fields with a valid email address');
-
-            case 7:
-            case "end":
-              return _context8.stop();
-          }
-        }
-      }, _callee8, this);
-    })));
-    it('should return error if invalid email address is supplied',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee9() {
-      var data, res;
-      return regeneratorRuntime.wrap(function _callee9$(_context9) {
-        while (1) {
-          switch (_context9.prev = _context9.next) {
-            case 0:
-              data = dataValues();
-              data.email = "".concat(Math.random().toString(36).substring(2, 15), "gmail.com");
-              _context9.next = 4;
-              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
-
-            case 4:
-              res = _context9.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Fill all required fields with a valid email address');
-
-            case 7:
-            case "end":
-              return _context9.stop();
-          }
-        }
-      }, _callee9, this);
-    })));
-    it('should return error if length of password is less than 6 characters',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee10() {
-      var data, res;
-      return regeneratorRuntime.wrap(function _callee10$(_context10) {
-        while (1) {
-          switch (_context10.prev = _context10.next) {
-            case 0:
-              data = dataValues();
               data.password = 'passw';
               data.password_confirmation = 'passw';
-              _context10.next = 5;
+              _context8.next = 5;
               return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
 
             case 5:
-              res = _context10.sent;
+              res = _context8.sent;
               expect(res.status).to.eq(400);
               expect(res.body.message).to.eq('Ensure password is atleast 6 characters, name and email not more than 30 characters');
 
             case 8:
             case "end":
-              return _context10.stop();
+              return _context8.stop();
           }
         }
-      }, _callee10, this);
+      }, _callee8, this);
     })));
     it('should return error if last name or first name or email is more than 30 characters', function (done) {
       var data = dataValues();
@@ -380,69 +319,69 @@ describe('User', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee11() {
-      var _ref14, rows, data, res;
+    regeneratorRuntime.mark(function _callee9() {
+      var _ref12, rows, data, res;
 
-      return regeneratorRuntime.wrap(function _callee11$(_context11) {
+      return regeneratorRuntime.wrap(function _callee9$(_context9) {
         while (1) {
-          switch (_context11.prev = _context11.next) {
+          switch (_context9.prev = _context9.next) {
             case 0:
-              _context11.next = 2;
+              _context9.next = 2;
               return _db2["default"].query('SELECT email from users limit 1');
 
             case 2:
-              _ref14 = _context11.sent;
-              rows = _ref14.rows;
+              _ref12 = _context9.sent;
+              rows = _ref12.rows;
               data = dataValues();
               data.email = "".concat(rows[0].email);
-              _context11.next = 8;
+              _context9.next = 8;
               return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
 
             case 8:
-              res = _context11.sent;
+              res = _context9.sent;
               expect(res.status).to.eq(400);
               expect(res.body.message).to.eq('User with given email or phone already exist');
 
             case 11:
             case "end":
-              return _context11.stop();
+              return _context9.stop();
           }
         }
-      }, _callee11, this);
+      }, _callee9, this);
     })));
     it('should return error if given phone has been used',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee12() {
-      var _ref16, rows, data, res;
+    regeneratorRuntime.mark(function _callee10() {
+      var _ref14, rows, data, res;
 
-      return regeneratorRuntime.wrap(function _callee12$(_context12) {
+      return regeneratorRuntime.wrap(function _callee10$(_context10) {
         while (1) {
-          switch (_context12.prev = _context12.next) {
+          switch (_context10.prev = _context10.next) {
             case 0:
-              _context12.next = 2;
+              _context10.next = 2;
               return _db2["default"].query('SELECT phone from users limit 1');
 
             case 2:
-              _ref16 = _context12.sent;
-              rows = _ref16.rows;
+              _ref14 = _context10.sent;
+              rows = _ref14.rows;
               data = dataValues();
               data.phone = "".concat(rows[0].phone);
-              _context12.next = 8;
+              _context10.next = 8;
               return _chai2["default"].request(_index2["default"]).post(signupUrl).send(data);
 
             case 8:
-              res = _context12.sent;
+              res = _context10.sent;
               expect(res.status).to.eq(400);
               expect(res.body.message).to.eq('User with given email or phone already exist');
 
             case 11:
             case "end":
-              return _context12.stop();
+              return _context10.stop();
           }
         }
-      }, _callee12, this);
+      }, _callee10, this);
     })));
   }); // user sign in
 
@@ -451,43 +390,104 @@ describe('User', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee13() {
+    regeneratorRuntime.mark(function _callee11() {
       var email, data, res;
-      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+      return regeneratorRuntime.wrap(function _callee11$(_context11) {
         while (1) {
-          switch (_context13.prev = _context13.next) {
+          switch (_context11.prev = _context11.next) {
             case 0:
-              _context13.next = 2;
+              _context11.next = 2;
               return userEmail();
 
             case 2:
-              email = _context13.sent;
+              email = _context11.sent;
               data = {
                 email: "".concat(email),
                 password: 'password'
               };
-              _context13.next = 6;
+              _context11.next = 6;
               return _chai2["default"].request(_index2["default"]).post(loginUrl).send(data);
 
             case 6:
-              res = _context13.sent;
+              res = _context11.sent;
               expect(res.status).to.eq(200);
               expect(res).to.have.header('x-auth');
               expect(res.body.data).to.have.property('email').eq(data.email);
 
             case 10:
             case "end":
-              return _context13.stop();
+              return _context11.stop();
           }
         }
-      }, _callee13, this);
+      }, _callee11, this);
     })));
     it('should return error 400 if user did not supply password',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee14() {
+    regeneratorRuntime.mark(function _callee12() {
       var email, res;
+      return regeneratorRuntime.wrap(function _callee12$(_context12) {
+        while (1) {
+          switch (_context12.prev = _context12.next) {
+            case 0:
+              _context12.next = 2;
+              return userEmail();
+
+            case 2:
+              email = _context12.sent;
+              _context12.next = 5;
+              return _chai2["default"].request(_index2["default"]).post(loginUrl).send({
+                email: email
+              });
+
+            case 5:
+              res = _context12.sent;
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Invalid login credentials');
+
+            case 8:
+            case "end":
+              return _context12.stop();
+          }
+        }
+      }, _callee12, this);
+    })));
+    it('should return error 404 if user email is not found',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee13() {
+      var data, res;
+      return regeneratorRuntime.wrap(function _callee13$(_context13) {
+        while (1) {
+          switch (_context13.prev = _context13.next) {
+            case 0:
+              data = {
+                email: 'ooooookoook@email.com',
+                password: 'password'
+              };
+              _context13.next = 3;
+              return _chai2["default"].request(_index2["default"]).post(loginUrl).send(data);
+
+            case 3:
+              res = _context13.sent;
+              expect(res.status).to.eq(404);
+              expect(res.body.message).to.eq('Wrong username/password');
+
+            case 6:
+            case "end":
+              return _context13.stop();
+          }
+        }
+      }, _callee13, this);
+    })));
+    it('should return error 401 if password is incorrect for given username',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee14() {
+      var email, data, res;
       return regeneratorRuntime.wrap(function _callee14$(_context14) {
         while (1) {
           switch (_context14.prev = _context14.next) {
@@ -497,90 +497,95 @@ describe('User', function () {
 
             case 2:
               email = _context14.sent;
-              _context14.next = 5;
-              return _chai2["default"].request(_index2["default"]).post(loginUrl).send({
-                email: email
-              });
+              data = {
+                email: "".concat(email),
+                password: 'pasword'
+              };
+              _context14.next = 6;
+              return _chai2["default"].request(_index2["default"]).post(loginUrl).send(data);
 
-            case 5:
+            case 6:
               res = _context14.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Invalid login credentials');
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('Wrong username/password');
 
-            case 8:
+            case 9:
             case "end":
               return _context14.stop();
           }
         }
       }, _callee14, this);
     })));
-    it('should return error 404 if user email is not found',
+  }); // user change password
+
+  describe('User change password', function () {
+    it('should return user with updated password',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee15() {
-      var data, res;
+      var token, res;
       return regeneratorRuntime.wrap(function _callee15$(_context15) {
         while (1) {
           switch (_context15.prev = _context15.next) {
             case 0:
-              data = {
-                email: 'ooooookoook@email.com',
-                password: 'password'
-              };
-              _context15.next = 3;
-              return _chai2["default"].request(_index2["default"]).post(loginUrl).send(data);
+              _context15.next = 2;
+              return genToken();
 
-            case 3:
+            case 2:
+              token = _context15.sent;
+              _context15.next = 5;
+              return _chai2["default"].request(_index2["default"]).patch(changePasswordUrl).set('x-auth', token).send({
+                currentPassword: 'password',
+                newPassword: 'newpassword'
+              });
+
+            case 5:
               res = _context15.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.message).to.eq('Wrong username/password');
+              expect(res.status).to.eq(200);
+              expect(res.body.data).to.be.an('Object');
 
-            case 6:
+            case 8:
             case "end":
               return _context15.stop();
           }
         }
       }, _callee15, this);
     })));
-    it('should return error 401 if password is incorrect for given username',
+    it('should return 400 if current password is wrong',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee16() {
-      var email, data, res;
+      var token, res;
       return regeneratorRuntime.wrap(function _callee16$(_context16) {
         while (1) {
           switch (_context16.prev = _context16.next) {
             case 0:
               _context16.next = 2;
-              return userEmail();
+              return genToken();
 
             case 2:
-              email = _context16.sent;
-              data = {
-                email: "".concat(email),
-                password: 'pasword'
-              };
-              _context16.next = 6;
-              return _chai2["default"].request(_index2["default"]).post(loginUrl).send(data);
+              token = _context16.sent;
+              _context16.next = 5;
+              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
+                currentPassword: 'password1',
+                newPassword: 'anotherpassword'
+              });
 
-            case 6:
+            case 5:
               res = _context16.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('Wrong username/password');
+              expect(res.body.status).to.eq(400);
+              expect(res.body.message).to.eq('Wrong current password, use password reset link');
 
-            case 9:
+            case 8:
             case "end":
               return _context16.stop();
           }
         }
       }, _callee16, this);
     })));
-  }); // user change password
-
-  describe('User change password', function () {
-    it('should return user with updated password',
+    it('should return 400 if current password is not supplied',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -596,15 +601,14 @@ describe('User', function () {
             case 2:
               token = _context17.sent;
               _context17.next = 5;
-              return _chai2["default"].request(_index2["default"]).patch(changePasswordUrl).set('x-auth', token).send({
-                currentPassword: 'password',
+              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
                 newPassword: 'newpassword'
               });
 
             case 5:
               res = _context17.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('Object');
+              expect(res.status).to.eq(400);
+              expect(res.body.message).to.eq('Fill the required fields');
 
             case 8:
             case "end":
@@ -613,40 +617,38 @@ describe('User', function () {
         }
       }, _callee17, this);
     })));
-    it('should return 400 if current password is wrong',
+    it('should return 401 if user is not logged in',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee18() {
-      var token, res;
+      var res;
       return regeneratorRuntime.wrap(function _callee18$(_context18) {
         while (1) {
           switch (_context18.prev = _context18.next) {
             case 0:
               _context18.next = 2;
-              return genToken();
-
-            case 2:
-              token = _context18.sent;
-              _context18.next = 5;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
-                currentPassword: 'password1',
-                newPassword: 'anotherpassword'
+              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user').send({
+                currentPassword: 'password',
+                newPassword: 'newpassword'
               });
 
-            case 5:
+            case 2:
               res = _context18.sent;
-              expect(res.body.status).to.eq(400);
-              expect(res.body.message).to.eq('Wrong current password, use password reset link');
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('No authorization token provided');
 
-            case 8:
+            case 5:
             case "end":
               return _context18.stop();
           }
         }
       }, _callee18, this);
     })));
-    it('should return 400 if current password is not supplied',
+  }); // admin get all users
+
+  describe('get all users', function () {
+    it('should return all registered users',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -657,19 +659,17 @@ describe('User', function () {
           switch (_context19.prev = _context19.next) {
             case 0:
               _context19.next = 2;
-              return genToken();
+              return adminToken();
 
             case 2:
               token = _context19.sent;
               _context19.next = 5;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user').set('x-auth', token).send({
-                newPassword: 'newpassword'
-              });
+              return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
 
             case 5:
               res = _context19.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.message).to.eq('Fill the required fields');
+              expect(res.status).to.eq(200);
+              expect(res.body.data).to.be.an('Array');
 
             case 8:
             case "end":
@@ -678,121 +678,60 @@ describe('User', function () {
         }
       }, _callee19, this);
     })));
-    it('should return 401 if user is not logged in',
+    it('should return error 401 if user is not admin',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee20() {
-      var res;
+      var token, res;
       return regeneratorRuntime.wrap(function _callee20$(_context20) {
         while (1) {
           switch (_context20.prev = _context20.next) {
             case 0:
               _context20.next = 2;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user').send({
-                currentPassword: 'password',
-                newPassword: 'newpassword'
-              });
+              return genToken();
 
             case 2:
-              res = _context20.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('No authorization token provided');
+              token = _context20.sent;
+              _context20.next = 5;
+              return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
 
             case 5:
+              res = _context20.sent;
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('You dont have the permission to access this resource');
+
+            case 8:
             case "end":
               return _context20.stop();
           }
         }
       }, _callee20, this);
     })));
-  }); // admin get all users
-
-  describe('get all users', function () {
-    it('should return all registered users',
+    it('should return error 401 if user is not logged in',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee21() {
-      var token, res;
+      var res;
       return regeneratorRuntime.wrap(function _callee21$(_context21) {
         while (1) {
           switch (_context21.prev = _context21.next) {
             case 0:
               _context21.next = 2;
-              return adminToken();
-
-            case 2:
-              token = _context21.sent;
-              _context21.next = 5;
-              return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
-
-            case 5:
-              res = _context21.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('Array');
-
-            case 8:
-            case "end":
-              return _context21.stop();
-          }
-        }
-      }, _callee21, this);
-    })));
-    it('should return error 401 if user is not admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee22() {
-      var token, res;
-      return regeneratorRuntime.wrap(function _callee22$(_context22) {
-        while (1) {
-          switch (_context22.prev = _context22.next) {
-            case 0:
-              _context22.next = 2;
-              return genToken();
-
-            case 2:
-              token = _context22.sent;
-              _context22.next = 5;
-              return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
-
-            case 5:
-              res = _context22.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('You dont have the permission to access this resource');
-
-            case 8:
-            case "end":
-              return _context22.stop();
-          }
-        }
-      }, _callee22, this);
-    })));
-    it('should return error 401 if user is not logged in',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee23() {
-      var res;
-      return regeneratorRuntime.wrap(function _callee23$(_context23) {
-        while (1) {
-          switch (_context23.prev = _context23.next) {
-            case 0:
-              _context23.next = 2;
               return _chai2["default"].request(_index2["default"]).get('/api/v1/users');
 
             case 2:
-              res = _context23.sent;
+              res = _context21.sent;
               expect(res.status).to.eq(401);
               expect(res.body.message).to.eq('No authorization token provided');
 
             case 5:
             case "end":
-              return _context23.stop();
+              return _context21.stop();
           }
         }
-      }, _callee23, this);
+      }, _callee21, this);
     })));
   }); // make user admin
 
@@ -801,9 +740,81 @@ describe('User', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee24() {
-      var token, _ref29, rows, id, res;
+    regeneratorRuntime.mark(function _callee22() {
+      var token, _ref27, rows, id, res;
 
+      return regeneratorRuntime.wrap(function _callee22$(_context22) {
+        while (1) {
+          switch (_context22.prev = _context22.next) {
+            case 0:
+              _context22.next = 2;
+              return adminToken();
+
+            case 2:
+              token = _context22.sent;
+              _context22.next = 5;
+              return _db2["default"].query('SELECT id FROM users limit 2');
+
+            case 5:
+              _ref27 = _context22.sent;
+              rows = _ref27.rows;
+              id = rows[1].id;
+              _context22.next = 10;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(id)).set('x-auth', token);
+
+            case 10:
+              res = _context22.sent;
+              expect(res.status).to.eq(200);
+              expect(res.body.data).to.have.property('id').eq(id); // eslint-disable-next-line no-unused-expressions
+
+              expect(res.body.data).to.have.property('isadmin').to.be["true"];
+
+            case 14:
+            case "end":
+              return _context22.stop();
+          }
+        }
+      }, _callee22, this);
+    })));
+    it('Should return error 401 if admin is not logged in',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee23() {
+      var _ref29, rows, id, res;
+
+      return regeneratorRuntime.wrap(function _callee23$(_context23) {
+        while (1) {
+          switch (_context23.prev = _context23.next) {
+            case 0:
+              _context23.next = 2;
+              return _db2["default"].query('SELECT id FROM users limit 2');
+
+            case 2:
+              _ref29 = _context23.sent;
+              rows = _ref29.rows;
+              id = rows[1].id;
+              _context23.next = 7;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(id));
+
+            case 7:
+              res = _context23.sent;
+              expect(res.status).to.eq(401);
+              expect(res.body.message).to.eq('No authorization token provided');
+
+            case 10:
+            case "end":
+              return _context23.stop();
+          }
+        }
+      }, _callee23, this);
+    })));
+    it('Should return error 404 if user is not found',
+    /*#__PURE__*/
+    _asyncToGenerator(
+    /*#__PURE__*/
+    regeneratorRuntime.mark(function _callee24() {
+      var token, res;
       return regeneratorRuntime.wrap(function _callee24$(_context24) {
         while (1) {
           switch (_context24.prev = _context24.next) {
@@ -814,91 +825,19 @@ describe('User', function () {
             case 2:
               token = _context24.sent;
               _context24.next = 5;
-              return _db2["default"].query('SELECT id FROM users limit 2');
-
-            case 5:
-              _ref29 = _context24.sent;
-              rows = _ref29.rows;
-              id = rows[1].id;
-              _context24.next = 10;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(id)).set('x-auth', token);
-
-            case 10:
-              res = _context24.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.have.property('id').eq(id); // eslint-disable-next-line no-unused-expressions
-
-              expect(res.body.data).to.have.property('isadmin').to.be["true"];
-
-            case 14:
-            case "end":
-              return _context24.stop();
-          }
-        }
-      }, _callee24, this);
-    })));
-    it('Should return error 401 if admin is not logged in',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee25() {
-      var _ref31, rows, id, res;
-
-      return regeneratorRuntime.wrap(function _callee25$(_context25) {
-        while (1) {
-          switch (_context25.prev = _context25.next) {
-            case 0:
-              _context25.next = 2;
-              return _db2["default"].query('SELECT id FROM users limit 2');
-
-            case 2:
-              _ref31 = _context25.sent;
-              rows = _ref31.rows;
-              id = rows[1].id;
-              _context25.next = 7;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(id));
-
-            case 7:
-              res = _context25.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.message).to.eq('No authorization token provided');
-
-            case 10:
-            case "end":
-              return _context25.stop();
-          }
-        }
-      }, _callee25, this);
-    })));
-    it('Should return error 404 if user is not found',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee26() {
-      var token, res;
-      return regeneratorRuntime.wrap(function _callee26$(_context26) {
-        while (1) {
-          switch (_context26.prev = _context26.next) {
-            case 0:
-              _context26.next = 2;
-              return adminToken();
-
-            case 2:
-              token = _context26.sent;
-              _context26.next = 5;
               return _chai2["default"].request(_index2["default"]).patch('/api/v1/user/1212121212121').set('x-auth', token);
 
             case 5:
-              res = _context26.sent;
+              res = _context24.sent;
               expect(res.status).to.eq(404);
               expect(res.body.message).to.eq('User not found or inactive');
 
             case 8:
             case "end":
-              return _context26.stop();
+              return _context24.stop();
           }
         }
-      }, _callee26, this);
+      }, _callee24, this);
     })));
   }); // // user logout
   // describe('User logout', () => {
@@ -916,70 +855,70 @@ describe('User', function () {
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee27() {
-      var token, _ref34, rows, id, res;
+    regeneratorRuntime.mark(function _callee25() {
+      var token, _ref32, rows, id, res;
 
-      return regeneratorRuntime.wrap(function _callee27$(_context27) {
+      return regeneratorRuntime.wrap(function _callee25$(_context25) {
         while (1) {
-          switch (_context27.prev = _context27.next) {
+          switch (_context25.prev = _context25.next) {
             case 0:
-              _context27.next = 2;
+              _context25.next = 2;
               return adminToken();
 
             case 2:
-              token = _context27.sent;
-              _context27.next = 5;
+              token = _context25.sent;
+              _context25.next = 5;
               return _db2["default"].query('SELECT id FROM users limit 2');
 
             case 5:
-              _ref34 = _context27.sent;
-              rows = _ref34.rows;
+              _ref32 = _context25.sent;
+              rows = _ref32.rows;
               id = rows[1].id;
-              _context27.next = 10;
+              _context25.next = 10;
               return _chai2["default"].request(_index2["default"]).patch("/api/v1/users/".concat(id)).set('x-auth', token);
 
             case 10:
-              res = _context27.sent;
+              res = _context25.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data.id).to.eq(id);
               expect(res.body.data.status).to.eq('disabled');
 
             case 14:
             case "end":
-              return _context27.stop();
+              return _context25.stop();
           }
         }
-      }, _callee27, this);
+      }, _callee25, this);
     })));
     it('should return error 404 if user is not found',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee28() {
+    regeneratorRuntime.mark(function _callee26() {
       var token, res;
-      return regeneratorRuntime.wrap(function _callee28$(_context28) {
+      return regeneratorRuntime.wrap(function _callee26$(_context26) {
         while (1) {
-          switch (_context28.prev = _context28.next) {
+          switch (_context26.prev = _context26.next) {
             case 0:
-              _context28.next = 2;
+              _context26.next = 2;
               return adminToken();
 
             case 2:
-              token = _context28.sent;
-              _context28.next = 5;
+              token = _context26.sent;
+              _context26.next = 5;
               return _chai2["default"].request(_index2["default"]).patch('/api/v1/users/1212121212121').set('x-auth', token);
 
             case 5:
-              res = _context28.sent;
+              res = _context26.sent;
               expect(res.status).to.eq(404);
               expect(res.body.message).to.eq('User not found or inactive');
 
             case 8:
             case "end":
-              return _context28.stop();
+              return _context26.stop();
           }
         }
-      }, _callee28, this);
+      }, _callee26, this);
     })));
   });
 });

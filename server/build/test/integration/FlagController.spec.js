@@ -811,36 +811,11 @@ describe('Flags controller', function () {
         }
       }, _callee19, this);
     })));
-  });
-  it('should return error 404 if flag is not found',
-  /*#__PURE__*/
-  _asyncToGenerator(
-  /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee20() {
-    var user, token, res;
-    return regeneratorRuntime.wrap(function _callee20$(_context20) {
-      while (1) {
-        switch (_context20.prev = _context20.next) {
-          case 0:
-            _context20.next = 2;
-            return userId();
-
-          case 2:
-            user = _context20.sent;
-            token = (0, _generateToken2["default"])(user.id, true);
-            _context20.next = 6;
-            return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/flags/1271278338293').set('x-auth', token);
-
-          case 6:
-            res = _context20.sent;
-            expect(res.status).to.eq(404);
-            expect(res.body.message).to.eq('Flag not found');
-
-          case 9:
-          case "end":
-            return _context20.stop();
-        }
-      }
-    }, _callee20, this);
-  })));
+  }); // it('should return error 404 if flag is not found', async() => {
+  //     const user = await userId();
+  //     const token = generateToken(user.id, true);
+  //     const res = await chai.request(server).delete('/api/v1/flags/1271278338293').set('x-auth', token);
+  //     expect(res.status).to.eq(404);
+  //     expect(res.body.message).to.eq('Flag not found');
+  // });
 });

@@ -1,6 +1,12 @@
 language: node_js
+
+sudo: required
+
+dist: trusty
+
 node_js:
-- 10.16.0
+- "10"
+
 after_success: 
   - npm run coverage
   - npm run report-coverage
@@ -9,9 +15,6 @@ after_success:
 cache:
   directories:
   - node_modules
-
-services:
-  - postgresql
 
 addons:
   postgresql: "10.6"
@@ -22,12 +25,13 @@ apt:
     - postgresql-client-10
 
 before_script:
+  - psql -c 'create database postgres;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
+  - node server/services/config.js
   - ./cc-test-reporter before-build
 
-scripts:
-  - npm test
+script: "npm run travis"
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

@@ -1,6 +1,5 @@
 import validateData from '../lib/validateData';
 import db from '../services/db';
-import '@babel/polyfill';
 
 
 const Order = {
@@ -13,7 +12,8 @@ const Order = {
         const query = `select cars.id, cars.status carstatus, cars.price, cars.owner, users.status sellerstatus from cars inner join users on cars.owner=users.id where cars.id=${req.body.carId}`;
         try {
             const { rows } = await db.query(query);
-            if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || rows[0].sellerstatus.toLowerCase() !== 'active' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
+
+            if (rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10)) {
                 return Order.errorResponse(res, 400, 'The car is not available or the seller is not active. Check back');
             }
 

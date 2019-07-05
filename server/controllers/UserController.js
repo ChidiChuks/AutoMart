@@ -96,10 +96,12 @@ const User = {
         const query = `SELECT * FROM users WHERE email='${req.body.email}'`;
         try {
             const { rows } = await db.query(query);
+            console.log(rows);
             if (rows.length < 1) {
                 return User.errorResponse(res, 404, 'Wrong username/password');
             }
             const user = rows[0];
+
             const validPassword = await comparePassword(req.body.password, user.password);
             if (!validPassword) {
                 return User.errorResponse(res, 401, 'Wrong username/password');

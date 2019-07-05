@@ -190,47 +190,48 @@ var User = {
             case 7:
               _ref3 = _context3.sent;
               rows = _ref3.rows;
+              console.log(rows);
 
               if (!(rows.length < 1)) {
-                _context3.next = 11;
+                _context3.next = 12;
                 break;
               }
 
               return _context3.abrupt("return", User.errorResponse(res, 404, 'Wrong username/password'));
 
-            case 11:
+            case 12:
               user = rows[0];
-              _context3.next = 14;
+              _context3.next = 15;
               return (0, _handlePassword.comparePassword)(req.body.password, user.password);
 
-            case 14:
+            case 15:
               validPassword = _context3.sent;
 
               if (validPassword) {
-                _context3.next = 17;
+                _context3.next = 18;
                 break;
               }
 
               return _context3.abrupt("return", User.errorResponse(res, 401, 'Wrong username/password'));
 
-            case 17:
+            case 18:
               user.token = (0, _generateToken2["default"])(user.id, user.isadmin);
               return _context3.abrupt("return", res.status(200).header('x-auth', user.token).send({
                 status: 200,
                 data: user
               }));
 
-            case 21:
-              _context3.prev = 21;
+            case 22:
+              _context3.prev = 22;
               _context3.t0 = _context3["catch"](4);
               return _context3.abrupt("return", User.errorResponse(res, 404, _context3.t0));
 
-            case 24:
+            case 25:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, this, [[4, 21]]);
+      }, _callee3, this, [[4, 22]]);
     }));
 
     function signIn(_x5, _x6) {

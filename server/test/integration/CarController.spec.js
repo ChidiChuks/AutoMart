@@ -59,16 +59,16 @@ describe('Cars', () => {
         await db.query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
         await db.query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
         await db.query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
-        // const data = await dataValues();
-        // await chai.request(server).post(signupUrl).send(data);
+        const data = await dataValues();
+        await chai.request(server).post(signupUrl).send(data);
     });
 
-    // after(async() => {
-    //     await db.query('DELETE FROM flags');
-    //     await db.query('DELETE FROM orders');
-    //     await db.query('DELETE FROM cars');
-    //     await db.query('DELETE FROM users');
-    // });
+    after(async() => {
+        // await db.query('DELETE FROM flags');
+        // await db.query('DELETE FROM orders');
+        // await db.query('DELETE FROM cars');
+        // await db.query('DELETE FROM users');
+    });
 
     describe('Create Ad', () => {
         it('should create a new ad', async() => {
@@ -148,6 +148,7 @@ describe('Cars', () => {
         //     const data = newAdValues();
         //     data.img = '';
         //     const res = await chai.request(server).post(adUrl).set('x-auth', token).send(data);
+        //     console.log(res)
         //     expect(res.body.message).to.eq('Fill all required fields');
         //     expect(res.status).to.eq(400);
         // });
@@ -228,23 +229,23 @@ describe('Cars', () => {
 
     // view all unsold cars
     describe('view all available cars', () => {
-        //     it('should return all unsold cars', async() => {
-        //         const data = await userId();
-        //         const newAd = await newAdValues();
-        //         await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-        //   '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-        //         const res = await chai.request(server).get('/api/v1/cars');
-        //         expect(res.status).to.eq(200);
-        //         expect(res.body).to.have.property('data').to.be.an('ARRAY');
-        //     });
+        it('should return all unsold cars', async() => {
+            const data = await userId();
+            const newAd = await newAdValues();
+            await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
+          '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
+            const res = await chai.request(server).get('/api/v1/cars/status/available');
+            expect(res.status).to.eq(200);
+            expect(res.body).to.have.property('data').to.be.an('ARRAY');
+        });
 
-        // it('should return 404 when there are no unsold cars', async() => {
-        //     await db.query('UPDATE cars SET status=\'sold\'');
+        it('should return 404 when there are no unsold cars', async() => {
+            await db.query('UPDATE cars SET status=\'sold\'');
 
-        //     const res = await chai.request(server).get('/api/v1/cars');
-        //     expect(res.status).to.eq(404);
-        //     expect(res.body.message).to.eq('There are no cars available now. Check back');
-        // });
+            const res = await chai.request(server).get('/api/v1/cars/status/available');
+            expect(res.status).to.eq(404);
+            expect(res.body.message).to.eq('There are no cars available now. Check back');
+        });
     });
 
     // get ad by id
@@ -332,22 +333,19 @@ describe('Cars', () => {
             expect(res.status).to.eq(401);
             expect(res.body.message).to.eq('No authorization token provided');
         });
-        // it('should update ad status if its admin', async () => {
-        //   const data = await userId();
-        //   const newAd = await newAdValues();
-        // eslint-disable-next-line max-len
-        //   await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-        // eslint-disable-next-line max-len
+        // it('should update ad status if its admin', async() => {
+        //     const data = await userId();
+        //     const newAd = await newAdValues();
+        //     await db.query(`INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
         //   '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-        //   const { rows } = await db.query('SELECT id FROM cars limit');
-        //   const { id } = rows[rows.length - 1];
-        //   const token = await generateToken(userid, true);
+        //     const { rows } = await db.query('SELECT id FROM cars limit');
+        //     const { id } = rows[rows.length - 1];
+        //     const token = await generateToken(userid, true);
 
-        // eslint-disable-next-line max-len
-        //   const res = await chai.request(server).patch(`/api/v1/car/${id}`).set('x-auth', token).send(updateInfo);
-        //   expect(res.body.data.price).to.eq(updateInfo.price);
-        //   expect(res.status).to.eq(200);
-        //   expect(res.body.data.description).to.eq(updateInfo.description);
+        //     const res = await chai.request(server).patch(`/api/v1/car/${id}`).set('x-auth', token).send(updateInfo);
+        //     expect(res.body.data.price).to.eq(updateInfo.price);
+        //     expect(res.status).to.eq(200);
+        //     expect(res.body.data.description).to.eq(updateInfo.description);
         // });
     });
 

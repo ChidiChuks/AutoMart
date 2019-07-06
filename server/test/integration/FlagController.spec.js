@@ -50,16 +50,16 @@ describe('Flags controller', () => {
         await db.query('CREATE TABLE IF NOT EXISTS cars (id BIGINT PRIMARY KEY,  owner BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), state VARCHAR(8) NOT NULL, status VARCHAR(15) NOT NULL DEFAULT \'available\', price NUMERIC(10, 2) NOT NULL CHECK(price > 0), manufacturer VARCHAR(30) NOT NULL, model VARCHAR(30) NOT NULL, body_type VARCHAR(30) NOT NULL, description TEXT NOT NULL, img VARCHAR(150) NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW() )');
         await db.query('CREATE TABLE IF NOT EXISTS orders (id BIGINT PRIMARY KEY, buyerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,  carId BIGINT NOT NULL REFERENCES cars(id) ON DELETE RESTRICT, sellerId BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT, price NUMERIC NOT NULL CHECK(price > 0), status VARCHAR(20) NOT NULL DEFAULT \'pending\', date TIMESTAMPTZ NOT NULL DEFAULT NOW(), priceOffered NUMERIC NOT NULL CHECK(priceOffered > 0), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())');
         await db.query('CREATE TABLE IF NOT EXISTS flags (id BIGINT PRIMARY KEY, carId BIGINT REFERENCES cars(id) ON DELETE RESTRICT, created_on TIMESTAMPTZ NOT NULL DEFAULT NOW(), reason VARCHAR(20) NOT NULL, description TEXT, reportedBy BIGINT NOT NULL REFERENCES users(id), status VARCHAR(20) NOT NULL DEFAULT \'pending\', severity VARCHAR(20) NOT NULL DEFAULT \'minor\') ');
-        // const data = await dataValues();
-        // await chai.request(server).post('/api/v1/auth/signup').send(data);
+        const data = await dataValues();
+        await chai.request(server).post('/api/v1/auth/signup').send(data);
     });
 
-    // after(async() => {
-    //     await db.query('DELETE FROM flags');
-    //     await db.query('DELETE FROM orders');
-    //     await db.query('DELETE FROM cars');
-    //     await db.query('DELETE FROM users');
-    // });
+    after(async() => {
+        await db.query('DELETE FROM flags');
+        await db.query('DELETE FROM orders');
+        await db.query('DELETE FROM cars');
+        await db.query('DELETE FROM users');
+    });
 
 
     describe('Create a flag', () => {
@@ -239,11 +239,11 @@ describe('Flags controller', () => {
             expect(res.body.message).to.eq('Invalid flag id');
         });
     });
-    // it('should return error 404 if flag is not found', async() => {
-    //     const user = await userId();
-    //     const token = generateToken(user.id, true);
-    //     const res = await chai.request(server).delete('/api/v1/flags/1271278338293').set('x-auth', token);
-    //     expect(res.status).to.eq(404);
-    //     expect(res.body.message).to.eq('Flag not found');
-    // });
+    it('should return error 404 if flag is not found', async() => {
+        const user = await userId();
+        const token = generateToken(user.id, true);
+        const res = await chai.request(server).delete('/api/v1/flags/1271278338293').set('x-auth', token);
+        expect(res.status).to.eq(404);
+        expect(res.body.message).to.eq('Flag not found');
+    });
 });

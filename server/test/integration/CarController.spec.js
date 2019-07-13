@@ -275,6 +275,7 @@ describe('Cars', () => {
         });
     });
 
+
     // seller update ad price
     describe('Seller update ad price, status and description', () => {
         it('should return the ad with updated price', async() => {

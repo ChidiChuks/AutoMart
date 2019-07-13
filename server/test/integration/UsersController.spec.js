@@ -57,6 +57,7 @@ describe('User', () => {
         // await db.query('DELETE FROM users');
     });
 
+
     describe('User create', () => {
         it('should return a new user with the supplied properties', async() => {
             const userDetails = dataValues();

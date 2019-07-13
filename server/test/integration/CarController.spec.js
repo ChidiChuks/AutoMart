@@ -70,7 +70,6 @@ describe('Cars', () => {
         // await db.query('DELETE FROM users');
     });
 
-
     describe('Create Ad', () => {
         it('should create a new ad', async() => {
             const data = await userId();

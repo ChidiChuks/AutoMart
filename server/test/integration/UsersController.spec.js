@@ -217,7 +217,6 @@ describe('User', () => {
         });
     });
 
-
     // admin get all users
     describe('get all users', () => {
         it('should return all registered users', async() => {

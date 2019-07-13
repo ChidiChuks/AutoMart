@@ -87,7 +87,6 @@ const User = {
         }
     },
 
-
     async signIn(req, res) {
         delete req.headers['x-auth'];
         if (validateData(['email', 'password'], req.body) || !validEmail(req.body.email)) {

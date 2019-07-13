@@ -135,7 +135,6 @@ describe('User', () => {
         });
     });
 
-
     // user sign in
     describe('User Signin', () => {
         // it('should login a user and set token in the header', async() => {

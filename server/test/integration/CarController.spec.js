@@ -377,6 +377,7 @@ describe('Cars', () => {
             expect(res.body.message).to.eq('Invalid ad id');
         });
     });
+
     // get ads within a price range
     describe('Get ads within a price range', () => {
         it('should return an array of ads within a price range', async() => {

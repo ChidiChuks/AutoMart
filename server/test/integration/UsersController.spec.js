@@ -123,6 +123,7 @@ describe('User', () => {
             });
         });
 
+
         it('should return error if given phone has been used', async() => {
             const { rows } = await db.query('SELECT phone from users limit 1');
             const data = dataValues();

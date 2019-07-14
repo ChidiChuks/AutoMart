@@ -9,6 +9,7 @@ import '@babel/polyfill';
 const { expect } = chai;
 chai.use(chaiHttp);
 
+
 describe('Order transaction', () => {
     const userId = async() => {
         await db.query(`INSERT INTO users (id, email, first_name, last_name, password, address, isadmin, phone ) VALUES ('${Date.now()}', '${Math.random().toString(36).substring(2, 15)}@yahoo.com', 'chukwu', 'chi', 'password', 'addreess', false, '${Date.now()}')`);
@@ -64,6 +65,7 @@ describe('Order transaction', () => {
         carId: 1288392382934,
         priceOffered: '6000000',
     };
+
 
     describe('Create order', () => {
         // it('should create an order', async() => {
@@ -185,6 +187,7 @@ describe('Order transaction', () => {
 
     });
 
+
     // User retrieves his/her orders
     describe('User get his/her ads', () => {
 
@@ -232,6 +235,7 @@ describe('Order transaction', () => {
             expect(res.body.message).to.eq('You dont have the permission to access this resource');
         });
     });
+
     // view a single order
     describe('View a single order', () => {
 
@@ -273,6 +277,7 @@ describe('Order transaction', () => {
         });
 
     });
+
     describe('User retrieves his/her ads', () => {
         it('should return error 404 if user has not sold on the platform', async() => {
             const newUser = await dataValues();

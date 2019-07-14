@@ -1,7 +1,6 @@
 import validateData from '../lib/validateData';
 import db from '../services/db';
 
-
 const Order = {
     async create(req, res) {
         req.body.buyerId = req.userId;

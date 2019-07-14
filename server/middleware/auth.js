@@ -11,7 +11,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const auth = (req, res, next) => {
-    const token = req.header('x-auth');
+    const token = req.header('x-auth') || req.headers.token || req.body[('x-auth')] || req.body.token;
     if (!token) {
         return res.status(401).send({
             status: 401,

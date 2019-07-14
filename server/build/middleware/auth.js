@@ -24,7 +24,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 _dotenv2["default"].config();
 
 var auth = function auth(req, res, next) {
-  var token = req.header('x-auth');
+  var token = req.header('x-auth') || req.headers.token || req.body['x-auth'] || req.body.token;
 
   if (!token) {
     return res.status(401).send({

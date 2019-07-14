@@ -276,6 +276,7 @@ describe('Order transaction', () => {
         });
 
     });
+
     describe('User retrieves his/her ads', () => {
         it('should return error 404 if user has not sold on the platform', async() => {
             const newUser = await dataValues();

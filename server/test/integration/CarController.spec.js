@@ -275,6 +275,7 @@ describe('Cars', () => {
         });
     });
 
+
     // seller update ad price
     describe('Seller update ad price, status and description', () => {
         it('should return the ad with updated price', async() => {
@@ -349,6 +350,7 @@ describe('Cars', () => {
         // });
     });
 
+
     // get single ad
     describe('User can view single ad', () => {
         it('should return full details of an ad', async() => {
@@ -376,6 +378,7 @@ describe('Cars', () => {
             expect(res.body.message).to.eq('Invalid ad id');
         });
     });
+
     // get ads within a price range
     describe('Get ads within a price range', () => {
         it('should return an array of ads within a price range', async() => {
@@ -413,6 +416,7 @@ describe('Cars', () => {
             expect(res.body.message).to.eq('There are no cars within the selected range');
         });
     });
+
 
     // admin can view all ads whether sold or available
     describe('admin view all ads', () => {

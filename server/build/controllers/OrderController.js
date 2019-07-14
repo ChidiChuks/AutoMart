@@ -29,8 +29,8 @@ var Order = {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              req.body.buyer_id = req.user_id;
-              requiredParams = ['car_id', 'price_offered', 'buyer_id'];
+              req.body.buyerId = req.userId;
+              requiredParams = ['carId', 'priceOffered', 'buyerId'];
 
               if (!((0, _validateData2["default"])(requiredParams, req.body) || req.body.carId.toString().length !== 13)) {
                 _context.next = 4;
@@ -40,7 +40,7 @@ var Order = {
               return _context.abrupt("return", Order.errorResponse(res, 400, 'Select car and state amount you want to pay'));
 
             case 4:
-              query = "select cars.id, cars.status car_status, cars.price, cars.owner, users.status seller_status from cars inner join users on cars.owner=users.id where cars.id=".concat(req.body.car_id);
+              query = "select cars.id, cars.status carstatus, cars.price, cars.owner, users.status sellerstatus from cars inner join users on cars.owner=users.id where cars.id=".concat(req.body.carId);
               _context.prev = 5;
               _context.next = 8;
               return _db2["default"].query(query);
@@ -49,7 +49,7 @@ var Order = {
               _ref = _context.sent;
               rows = _ref.rows;
 
-              if (!(rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || parseInt(rows[0].owner, 10) === parseInt(req.user_id, 10))) {
+              if (!(rows.length < 1 || rows[0].carstatus.toLowerCase() !== 'available' || parseInt(rows[0].owner, 10) === parseInt(req.userId, 10))) {
                 _context.next = 12;
                 break;
               }
@@ -58,7 +58,7 @@ var Order = {
 
             case 12:
               // check that the buyer doesn't have the order in pending, accepted or completed state
-              checkOrderInDb = "SELECT id FROM orders WHERE car_id=".concat(req.body.car_id, " AND buyer_id=").concat(req.body.buyer_id, " AND status NOT IN ('rejected', 'cancelled')");
+              checkOrderInDb = "SELECT id FROM orders WHERE carid=".concat(req.body.carId, " AND buyerid=").concat(req.body.buyerId, " AND status NOT IN ('rejected', 'cancelled')");
               _context.next = 15;
               return _db2["default"].query(checkOrderInDb);
 
@@ -73,9 +73,9 @@ var Order = {
               return _context.abrupt("return", Order.errorResponse(res, 400, 'You have a similar uncompleted/completed order '));
 
             case 18:
-              text = 'INSERT INTO orders (id, buyer_id, car_id, seller_id, price, price_offered) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *'; // eslint-disable-next-line max-len
+              text = 'INSERT INTO orders (id, buyerid, carid, sellerid, price, priceoffered) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *'; // eslint-disable-next-line max-len
 
-              values = [Date.now(), req.user_id, req.body.car_id, rows[0].owner, rows[0].price, req.body.price_offered];
+              values = [Date.now(), req.userId, req.body.carId, rows[0].owner, rows[0].price, req.body.priceOffered];
               _context.next = 22;
               return _db2["default"].query(text, values);
 
@@ -112,10 +112,10 @@ var Order = {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              requiredParams = ['order_id', 'new_price'];
+              requiredParams = ['orderId', 'newPrice'];
               newPrice = parseFloat(req.body.newPrice);
 
-              if (!((0, _validateData2["default"])(requiredParams, req.body) || req.body.order_id.trim().length !== 13)) {
+              if (!((0, _validateData2["default"])(requiredParams, req.body) || req.body.orderId.trim().length !== 13)) {
                 _context2.next = 4;
                 break;
               }
@@ -125,8 +125,8 @@ var Order = {
             case 4:
               // check that the request is coming from the buyer with a different price
               // and the order is still pending
-              buyer = req.user_id;
-              text = "SELECT price FROM orders WHERE id=".concat(req.body.order_id, " AND buyer_id=").concat(buyer, " AND status NOT IN ('pending', 'cancelled')");
+              buyer = req.userId;
+              text = "SELECT price FROM orders WHERE id=".concat(req.body.orderId, " AND buyerid=").concat(buyer, " AND status NOT IN ('pending', 'cancelled')");
               _context2.prev = 6;
               _context2.next = 9;
               return _db2["default"].query(text);
@@ -145,7 +145,7 @@ var Order = {
             case 13:
               // update the price and return the response
               tm = new Date().toLocaleString();
-              query = "UPDATE orders SET price_offered=".concat(newPrice, ", updated_at='").concat(tm, "' WHERE id=").concat(req.body.order_id, " AND buyer_id=").concat(buyer, " returning *");
+              query = "UPDATE orders SET priceoffered=".concat(newPrice, ", updated_at='").concat(tm, "' WHERE id=").concat(req.body.orderId, " AND buyerid=").concat(buyer, " returning *");
               _context2.next = 17;
               return _db2["default"].query(query);
 
@@ -183,7 +183,7 @@ var Order = {
           switch (_context3.prev = _context3.next) {
             case 0:
               userId = req.userId;
-              text = "SELECT * FROM orders WHERE seller_id=".concat(user_id);
+              text = "SELECT * FROM orders WHERE sellerid=".concat(userId);
               _context3.prev = 2;
               _context3.next = 5;
               return _db2["default"].query(text);
@@ -260,7 +260,7 @@ var Order = {
     var _updateOrderStatus = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee5(req, res) {
-      var newStatus, order_id, reqPerson, query, updateQuery, _ref5, rows, buyer, seller, statusInDb, updatedOrder;
+      var newStatus, orderId, reqPerson, query, updateQuery, _ref5, rows, buyer, seller, statusInDb, updatedOrder;
 
       return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
@@ -269,9 +269,9 @@ var Order = {
               newStatus = req.body.status;
               newStatus = newStatus.toLowerCase(); // get orderid
 
-              order_id = req.params.order_id;
+              orderId = req.params.orderId;
 
-              if (!(!order_id || !newStatus)) {
+              if (!(!orderId || !newStatus)) {
                 _context5.next = 5;
                 break;
               }
@@ -280,8 +280,8 @@ var Order = {
 
             case 5:
               reqPerson = req.userId;
-              query = "SELECT buyer_id, seller_id, status FROM orders WHERE id=".concat(order_id);
-              updateQuery = "UPDATE orders SET status='".concat(new_status, "' WHERE id=").concat(order_id, " RETURNING *");
+              query = "SELECT buyerid, sellerid, status FROM orders WHERE id=".concat(orderId);
+              updateQuery = "UPDATE orders SET status='".concat(newStatus, "' WHERE id=").concat(orderId, " RETURNING *");
               _context5.prev = 8;
               _context5.next = 11;
               return _db2["default"].query(query);
@@ -298,8 +298,8 @@ var Order = {
               return _context5.abrupt("return", Order.errorResponse(res, 404, 'The order is not available'));
 
             case 15:
-              buyer = rows[0].buyer_id;
-              seller = rows[0].seller_id;
+              buyer = rows[0].buyerid;
+              seller = rows[0].sellerid;
               statusInDb = rows[0].status.toLowerCase();
 
               if (!(reqPerson !== buyer && reqPerson !== seller)) {

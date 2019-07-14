@@ -40,7 +40,7 @@ var User = {
     var _create = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(req, res) {
-      var requiredProperties, query, values, _ref, rows, _rows$, id, email, first_name, last_name, address, is_admin, phone, status, token;
+      var requiredProperties, query, values, _ref, rows, _rows$, id, email, first_name, last_name, address, isadmin, phone, status, token;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -77,7 +77,7 @@ var User = {
 
             case 9:
               req.body.password = _context.sent;
-              query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, is_admin, phone, status';
+              query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
               values = [Date.now(), req.body.email, req.body.first_name, req.body.last_name, req.body.password, req.body.address, req.body.phone];
               _context.prev = 12;
               _context.next = 15;
@@ -86,7 +86,7 @@ var User = {
             case 15:
               _ref = _context.sent;
               rows = _ref.rows;
-              _rows$ = rows[0], id = _rows$.id, email = _rows$.email, first_name = _rows$.first_name, last_name = _rows$.last_name, address = _rows$.address, is_admin = _rows$.is_admin, phone = _rows$.phone, status = _rows$.status;
+              _rows$ = rows[0], id = _rows$.id, email = _rows$.email, first_name = _rows$.first_name, last_name = _rows$.last_name, address = _rows$.address, isadmin = _rows$.isadmin, phone = _rows$.phone, status = _rows$.status;
               token = (0, _generateToken2["default"])(id, isadmin);
               return _context.abrupt("return", res.status(201).set('x-auth', token).send({
                 status: 201,
@@ -97,7 +97,7 @@ var User = {
                   first_name: first_name,
                   last_name: last_name,
                   address: address,
-                  is_admin: is_admin,
+                  isadmin: isadmin,
                   phone: phone,
                   status: status
                 }
@@ -133,7 +133,7 @@ var User = {
           switch (_context2.prev = _context2.next) {
             case 0:
               // const users = UserModel.getAllUsers();
-              selectAllUsers = 'SELECT (id, email, first_name, last_name, address, is_admin, phone, status) FROM users LIMIT 50';
+              selectAllUsers = 'SELECT (id, email, first_name, last_name, address, isAdmin, phone, status) FROM users LIMIT 50';
               _context2.prev = 1;
               _context2.next = 4;
               return _db2["default"].query(selectAllUsers);

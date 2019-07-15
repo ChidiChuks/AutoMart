@@ -45,7 +45,7 @@ const Car = {
     },
     async getAll(req, res) {
         // const cars = CarModel.getAllCars();
-        const query = 'SELECT * FROM cars LIMIT 100';
+        // const query = 'SELECT * FROM cars LIMIT 100';
         try {
             const { rows } = await CarService.getAllCars();
 
@@ -96,7 +96,7 @@ const Car = {
 
     async getSingleAd(req, res) {
         if (req.params.id.trim().length !== 13) {
-            return Car.errorResponse(res, 400, 'Invalid ad id');
+            return util.sendError(res, 400, 'Invalid ad id');
         }
         // const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars WHERE id=${req.params.id}`;
         try {
@@ -115,6 +115,48 @@ const Car = {
         //     return Car.errorResponse(res, 500, err);
     },
 
+    async updateAdStatus(req, res) {
+        const { car_id } = req.params;
+        const { status } = req.body;
+        const { userId } = req;
+        if (!car_id || car_id.trim().length !== 13 || !status) {
+            return util.sendError(res, 400, 'Supply a valid ad id and status');
+        }
+
+        try {
+            const { rows } = await CarService.getSingleCarAllPpties(car_id);
+
+            if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
+                return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+            }
+
+            const updatedCar = await CarService.updateStatus(status, car_id);
+            return util.sendSuccess(res, 200, updatedCar.rows[0]);
+        } catch (error) {
+            return util.sendError(res, 500, error.message);
+        }
+    },
+
+    async updateAdPrice(req, res) {
+        const { car_id } = req.params;
+        const { price } = req.body;
+        const { userId } = req;
+        if (!car_id || car_id.trim().length !== 13 || !price) {
+            return util.sendError(res, 400, 'Supply a valid ad id and status');
+        }
+        try {
+            const { rows } = await CarService.getSingleCarAllPpties(car_id);
+
+            if (rows.length !== 1 || parseFloat(rows[0].owner) !== parseFloat(userId)) {
+                return util.sendError(res, 400, 'Only sellers can update cars that are availabe');
+            }
+
+            const updatedCar = await CarService.updatePrice(price, car_id);
+            return util.sendSuccess(res, 200, updatedCar.rows[0]);
+        } catch (error) {
+            return util.sendError(res, 500, error.message);
+        }
+    },
 
     async updateAdvert(req, res) {
         const reqFields = ['status', 'price', 'description'];

@@ -123,7 +123,7 @@ const User = {
             };
             return res.status(200).header('x-auth', user.token).send({
                 status: 200,
-                data: user,
+                data,
             });
         } catch (error) {
             return util.sendError(res, 500, error.message);

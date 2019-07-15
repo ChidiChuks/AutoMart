@@ -21,7 +21,7 @@ class CarService {
     }
 
     static getSingleCar(id) {
-        const query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, image_url FROM cars WHERE id=$1';
+        const query = 'SELECT * FROM cars WHERE id=$1';
         return db.query(query, [id]);
     }
 
@@ -53,6 +53,16 @@ class CarService {
     static updateByAdmin(data) {
         const query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
         return db.query(query, data);
+    }
+
+    static updateStatus(status, id) {
+        const query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
+        return db.query(query, [status, id]);
+    }
+
+    static updatePrice(price, id) {
+        const query = 'UPDATE cars SET price=$1 WHERE id=$2 RETURNING *';
+        return db.query(query, [price, id]);
     }
 
     static gerUserAds(userId) {

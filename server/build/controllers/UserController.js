@@ -18,11 +18,13 @@ var _validateData = require("../lib/validateData");
 
 var _validateData2 = _interopRequireDefault(_validateData);
 
-var _db = require("../services/db");
+var _UserService = require("../services/UserService");
 
-var _db2 = _interopRequireDefault(_db);
+var _UserService2 = _interopRequireDefault(_UserService);
 
-require("@babel/polyfill");
+var _Util = require("../lib/Util");
+
+var _Util2 = _interopRequireDefault(_Util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -40,54 +42,46 @@ var User = {
     var _create = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(req, res) {
-      var requiredProperties, query, values, _ref, rows, _rows$, id, email, first_name, last_name, address, isadmin, phone, status, token;
+      var requiredProperties, values, _ref, rows, _rows$, id, email, first_name, last_name, address, is_admin, phone, status, token;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              requiredProperties = ['email', 'first_name', 'last_name', 'password', 'phone', 'password_confirmation'];
+              requiredProperties = ['email', 'first_name', 'last_name', 'password', 'address'];
 
               if (!((0, _validateData2["default"])(requiredProperties, req.body) || !(0, _validateEmail2["default"])(req.body.email))) {
                 _context.next = 3;
                 break;
               }
 
-              return _context.abrupt("return", User.errorResponse(res, 400, 'Fill all required fields with a valid email address'));
+              return _context.abrupt("return", _Util2["default"].sendError(res, 400, 'Fill all required fields with a valid email address'));
 
             case 3:
-              if (!(req.body.password.localeCompare(req.body.password_confirmation) !== 0)) {
+              if (!(req.body.password.length < 6 || req.body.email.length >= 30 || req.body.first_name.length >= 30 || req.body.last_name.length >= 30)) {
                 _context.next = 5;
                 break;
               }
 
-              return _context.abrupt("return", User.errorResponse(res, 400, 'Password and confirmation does not match'));
+              return _context.abrupt("return", _Util2["default"].sendError(res, 400, 'Ensure password is atleast 6 characters, name and email not more than 30 characters'));
 
             case 5:
-              if (!(req.body.password.length < 6 || req.body.email.length >= 30 || req.body.first_name.length >= 30 || req.body.last_name.length >= 30)) {
-                _context.next = 7;
-                break;
-              }
-
-              return _context.abrupt("return", User.errorResponse(res, 400, 'Ensure password is atleast 6 characters, name and email not more than 30 characters'));
-
-            case 7:
-              _context.next = 9;
+              _context.next = 7;
               return (0, _handlePassword.hashPassword)(req.body.password);
 
-            case 9:
+            case 7:
               req.body.password = _context.sent;
-              query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
+              // const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
               values = [Date.now(), req.body.email, req.body.first_name, req.body.last_name, req.body.password, req.body.address, req.body.phone];
-              _context.prev = 12;
-              _context.next = 15;
-              return _db2["default"].query(query, values);
+              _context.prev = 9;
+              _context.next = 12;
+              return _UserService2["default"].createUser(values);
 
-            case 15:
+            case 12:
               _ref = _context.sent;
               rows = _ref.rows;
-              _rows$ = rows[0], id = _rows$.id, email = _rows$.email, first_name = _rows$.first_name, last_name = _rows$.last_name, address = _rows$.address, isadmin = _rows$.isadmin, phone = _rows$.phone, status = _rows$.status;
-              token = (0, _generateToken2["default"])(id, isadmin);
+              _rows$ = rows[0], id = _rows$.id, email = _rows$.email, first_name = _rows$.first_name, last_name = _rows$.last_name, address = _rows$.address, is_admin = _rows$.is_admin, phone = _rows$.phone, status = _rows$.status;
+              token = (0, _generateToken2["default"])(id, is_admin, first_name);
               return _context.abrupt("return", res.status(201).set('x-auth', token).send({
                 status: 201,
                 data: {
@@ -97,23 +91,23 @@ var User = {
                   first_name: first_name,
                   last_name: last_name,
                   address: address,
-                  isadmin: isadmin,
+                  is_admin: is_admin,
                   phone: phone,
                   status: status
                 }
               }));
 
-            case 22:
-              _context.prev = 22;
-              _context.t0 = _context["catch"](12);
-              return _context.abrupt("return", _context.t0.routine === '_bt_check_unique' ? User.errorResponse(res, 400, 'User with given email or phone already exist') : User.errorResponse(res, 400, _context.t0));
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](9);
+              return _context.abrupt("return", _context.t0.routine === '_bt_check_unique' ? _Util2["default"].sendError(res, 400, 'User with given email or phone already exist') : _Util2["default"].sendError(res, 500, _context.t0.message));
 
-            case 25:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[12, 22]]);
+      }, _callee, this, [[9, 19]]);
     }));
 
     function create(_x, _x2) {
@@ -126,34 +120,32 @@ var User = {
     var _getAll = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee2(req, res) {
-      var selectAllUsers, _ref2, rows;
+      var _ref2, rows;
 
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              // const users = UserModel.getAllUsers();
-              selectAllUsers = 'SELECT (id, email, first_name, last_name, address, isAdmin, phone, status) FROM users LIMIT 50';
-              _context2.prev = 1;
-              _context2.next = 4;
-              return _db2["default"].query(selectAllUsers);
+              _context2.prev = 0;
+              _context2.next = 3;
+              return _UserService2["default"].getAllUsers();
 
-            case 4:
+            case 3:
               _ref2 = _context2.sent;
               rows = _ref2.rows;
-              return _context2.abrupt("return", User.successResponse(res, 200, rows));
+              return _context2.abrupt("return", _Util2["default"].sendSuccess(res, 200, rows));
 
-            case 9:
-              _context2.prev = 9;
-              _context2.t0 = _context2["catch"](1);
-              return _context2.abrupt("return", User.errorResponse(res, 400, _context2.t0.details));
+            case 8:
+              _context2.prev = 8;
+              _context2.t0 = _context2["catch"](0);
+              return _context2.abrupt("return", _Util2["default"].sendError(res, 500, _context2.t0.message));
 
-            case 12:
+            case 11:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[1, 9]]);
+      }, _callee2, this, [[0, 8]]);
     }));
 
     function getAll(_x3, _x4) {
@@ -166,7 +158,7 @@ var User = {
     var _signIn = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee3(req, res) {
-      var query, _ref3, rows, user, validPassword;
+      var _ref3, rows, user, validPassword, data;
 
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
@@ -179,59 +171,66 @@ var User = {
                 break;
               }
 
-              return _context3.abrupt("return", User.errorResponse(res, 400, 'Invalid login credentials'));
+              return _context3.abrupt("return", _Util2["default"].sendError(res, 400, 'Invalid login credentials'));
 
             case 3:
-              query = "SELECT * FROM users WHERE email='".concat(req.body.email, "'");
-              _context3.prev = 4;
-              _context3.next = 7;
-              return _db2["default"].query(query);
+              _context3.prev = 3;
+              _context3.next = 6;
+              return _UserService2["default"].getUserByEmail(req.body.email);
 
-            case 7:
+            case 6:
               _ref3 = _context3.sent;
               rows = _ref3.rows;
-              console.log(rows);
 
               if (!(rows.length < 1)) {
-                _context3.next = 12;
+                _context3.next = 10;
                 break;
               }
 
-              return _context3.abrupt("return", User.errorResponse(res, 404, 'Wrong username/password'));
+              return _context3.abrupt("return", _Util2["default"].sendError(res, 404, 'Wrong username/password'));
 
-            case 12:
+            case 10:
               user = rows[0];
-              _context3.next = 15;
+              _context3.next = 13;
               return (0, _handlePassword.comparePassword)(req.body.password, user.password);
 
-            case 15:
+            case 13:
               validPassword = _context3.sent;
 
               if (validPassword) {
-                _context3.next = 18;
+                _context3.next = 16;
                 break;
               }
 
-              return _context3.abrupt("return", User.errorResponse(res, 401, 'Wrong username/password'));
+              return _context3.abrupt("return", _Util2["default"].sendError(res, 401, 'Wrong username/password'));
 
-            case 18:
-              user.token = (0, _generateToken2["default"])(user.id, user.isadmin);
+            case 16:
+              user.token = (0, _generateToken2["default"])(user.id, user.is_admin);
+              data = {
+                id: user.id,
+                email: user.email,
+                is_admin: user.is_admin,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                status: user.status,
+                token: user.token
+              };
               return _context3.abrupt("return", res.status(200).header('x-auth', user.token).send({
                 status: 200,
                 data: user
               }));
 
-            case 22:
-              _context3.prev = 22;
-              _context3.t0 = _context3["catch"](4);
-              return _context3.abrupt("return", User.errorResponse(res, 404, _context3.t0));
+            case 21:
+              _context3.prev = 21;
+              _context3.t0 = _context3["catch"](3);
+              return _context3.abrupt("return", _Util2["default"].sendError(res, 500, _context3.t0.message));
 
-            case 25:
+            case 24:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, this, [[4, 22]]);
+      }, _callee3, this, [[3, 21]]);
     }));
 
     function signIn(_x5, _x6) {
@@ -244,7 +243,7 @@ var User = {
     var _changePassword = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee4(req, res) {
-      var userId, query, _ref4, rows, confirmPassword, hashNewPassword, updateQuery, result;
+      var userId, _ref4, rows, confirmPassword, hashNewPassword, result;
 
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
@@ -257,55 +256,53 @@ var User = {
                 break;
               }
 
-              return _context4.abrupt("return", User.errorResponse(res, 400, 'Fill the required fields'));
+              return _context4.abrupt("return", _Util2["default"].sendError(res, 400, 'Fill the required fields'));
 
             case 3:
-              query = "SELECT password FROM users WHERE id=".concat(userId);
-              _context4.prev = 4;
-              _context4.next = 7;
-              return _db2["default"].query(query);
+              _context4.prev = 3;
+              _context4.next = 6;
+              return _UserService2["default"].selectPassword(userId);
 
-            case 7:
+            case 6:
               _ref4 = _context4.sent;
               rows = _ref4.rows;
-              _context4.next = 11;
+              _context4.next = 10;
               return (0, _handlePassword.comparePassword)(req.body.currentPassword, rows[0].password);
 
-            case 11:
+            case 10:
               confirmPassword = _context4.sent;
 
               if (confirmPassword) {
-                _context4.next = 14;
+                _context4.next = 13;
                 break;
               }
 
-              return _context4.abrupt("return", User.errorResponse(res, 400, 'Wrong current password, use password reset link'));
+              return _context4.abrupt("return", _Util2["default"].sendError(res, 400, 'Wrong current password, use password reset link'));
 
-            case 14:
-              _context4.next = 16;
+            case 13:
+              _context4.next = 15;
               return (0, _handlePassword.hashPassword)(req.body.newPassword);
 
-            case 16:
+            case 15:
               hashNewPassword = _context4.sent;
-              updateQuery = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
-              _context4.next = 20;
-              return _db2["default"].query(updateQuery, [hashNewPassword, userId]);
+              _context4.next = 18;
+              return _UserService2["default"].updateUserPassword([hashNewPassword, userId]);
 
-            case 20:
+            case 18:
               result = _context4.sent;
-              return _context4.abrupt("return", User.successResponse(res, 200, result.rows[0]));
+              return _context4.abrupt("return", _Util2["default"].sendSuccess(res, 200, result.rows[0]));
 
-            case 24:
-              _context4.prev = 24;
-              _context4.t0 = _context4["catch"](4);
-              return _context4.abrupt("return", User.errorResponse(res, 500, _context4.t0));
+            case 22:
+              _context4.prev = 22;
+              _context4.t0 = _context4["catch"](3);
+              return _context4.abrupt("return", _Util2["default"].sendError(res, 500, _context4.t0.message));
 
-            case 27:
+            case 25:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[4, 24]]);
+      }, _callee4, this, [[3, 22]]);
     }));
 
     function changePassword(_x7, _x8) {
@@ -318,7 +315,7 @@ var User = {
     var _makeAdmin = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee5(req, res) {
-      var makeAdminQuery, _ref5, rows;
+      var _ref5, rows;
 
       return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
@@ -329,30 +326,29 @@ var User = {
                 break;
               }
 
-              return _context5.abrupt("return", User.errorResponse(res, 400, 'Request does not contain required fields'));
+              return _context5.abrupt("return", _Util2["default"].sendError(res, 400, 'Request does not contain required fields'));
 
             case 2:
-              makeAdminQuery = 'UPDATE users SET isadmin=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
-              _context5.prev = 3;
-              _context5.next = 6;
-              return _db2["default"].query(makeAdminQuery, [true, req.params.id, 'active']);
+              _context5.prev = 2;
+              _context5.next = 5;
+              return _UserService2["default"].makeUserAdmin([true, req.params.id, 'active']);
 
-            case 6:
+            case 5:
               _ref5 = _context5.sent;
               rows = _ref5.rows;
-              return _context5.abrupt("return", rows.length < 1 ? User.errorResponse(res, 404, 'User not found or inactive') : User.successResponse(res, 200, rows[0]));
+              return _context5.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'User not found or inactive') : _Util2["default"].sendSuccess(res, 200, rows[0]));
 
-            case 11:
-              _context5.prev = 11;
-              _context5.t0 = _context5["catch"](3);
-              return _context5.abrupt("return", User.errorResponse(res, 500, _context5.t0));
+            case 10:
+              _context5.prev = 10;
+              _context5.t0 = _context5["catch"](2);
+              return _context5.abrupt("return", _Util2["default"].sendError(res, 500, _context5.t0.message));
 
-            case 14:
+            case 13:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, this, [[3, 11]]);
+      }, _callee5, this, [[2, 10]]);
     }));
 
     function makeAdmin(_x9, _x10) {
@@ -362,40 +358,40 @@ var User = {
     return makeAdmin;
   }(),
   logout: function logout(req, res) {
-    return User.errorResponse(res, 200, 'You have been logged out successfully');
+    return _Util2["default"].sendSuccess(res, 200, 'Successfully logged out');
   },
   disableUser: function () {
     var _disableUser = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee6(req, res) {
-      var userId, disableQuery, _ref6, rows;
+      var userId, _ref6, rows;
 
       return regeneratorRuntime.wrap(function _callee6$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
-              userId = req.params.userId;
-              disableQuery = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
-              _context6.prev = 2;
-              _context6.next = 5;
-              return _db2["default"].query(disableQuery, ['disabled', userId, 'active']);
+              userId = req.params.userId; // const disableQuery = 'UPDATE users SET status=$1 WHERE id=$2 AND status=$3 RETURNING id, email, first_name, last_name, isadmin, phone, status';
 
-            case 5:
+              _context6.prev = 1;
+              _context6.next = 4;
+              return _UserService2["default"].disableUser(['disabled', userId, 'active']);
+
+            case 4:
               _ref6 = _context6.sent;
               rows = _ref6.rows;
-              return _context6.abrupt("return", rows.length < 1 ? User.errorResponse(res, 404, 'User not found or inactive') : User.successResponse(res, 200, rows[0]));
+              return _context6.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'User not found or inactive') : _Util2["default"].sendSuccess(res, 200, rows[0]));
 
-            case 10:
-              _context6.prev = 10;
-              _context6.t0 = _context6["catch"](2);
-              return _context6.abrupt("return", User.errorResponse(res, 404, _context6.t0));
+            case 9:
+              _context6.prev = 9;
+              _context6.t0 = _context6["catch"](1);
+              return _context6.abrupt("return", _Util2["default"].sendError(res, 404, _context6.t0));
 
-            case 13:
+            case 12:
             case "end":
               return _context6.stop();
           }
         }
-      }, _callee6, this, [[2, 10]]);
+      }, _callee6, this, [[1, 9]]);
     }));
 
     function disableUser(_x11, _x12) {
@@ -403,18 +399,6 @@ var User = {
     }
 
     return disableUser;
-  }(),
-  errorResponse: function errorResponse(res, statuscode, message) {
-    return res.status(statuscode).send({
-      status: statuscode,
-      message: message
-    });
-  },
-  successResponse: function successResponse(res, statuscode, data) {
-    return res.status(statuscode).send({
-      status: statuscode,
-      data: data
-    });
-  }
+  }()
 };
 exports["default"] = User;

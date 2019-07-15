@@ -10,7 +10,6 @@ import upload from '../lib/upload';
 
 
 const router = express.Router();
-
 // user signup
 router.post('/auth/signup', User.create);
 
@@ -20,14 +19,14 @@ router.post('/auth/signin', User.signIn);
 // user log out
 router.get('/auth/logout', logout, User.logout);
 
-// get cars within a price range
-router.get('/car/price/', Car.getCarsWithinPriceRange);
+// get cars within a price range => /car/status=available&min=$min&max=$max
+router.get('/car', Car.getCars);
 
 // get cars by manufacturer
 router.get('/car/manufacturer/:manufacturer', Car.getCarsByProperty);
 
 // get cars by body type
-router.get('/car/bodytype/:body_type', Car.getCarsByProperty);
+router.get('/car/body_type/:body_type', Car.getCarsByProperty);
 
 // get cars by state
 router.get('/car/state/:state', Car.getCarsByProperty);
@@ -36,7 +35,7 @@ router.get('/car/state/:state', Car.getCarsByProperty);
 router.get('/car/:id', Car.getSingleAd);
 
 // get all unsold cars
-router.get('/cars/status/available', Car.getAllUnsoldCars);
+// router.get('/car/status', Car.getAllUnsoldCars);
 
 /**
  * Protected routes - users
@@ -45,7 +44,10 @@ router.get('/cars/status/available', Car.getAllUnsoldCars);
 router.post('/order', auth, Order.create);
 
 // create an advert
-router.post('/car', auth, upload.single('img'), Car.create);
+router.post('/car', auth, upload.single('img_url'), Car.create);
+
+// user gets all orders
+router.get('/ads/me', auth, Car.getMyAds);
 
 // User gets all his/her sold ads
 router.get('/orders/me', auth, Order.mySoldAds);
@@ -58,12 +60,13 @@ router.delete('/orders/:orderId', auth, Order.deleteAnOrder);
 
 
 // seller update offer price
-router.patch('/order', auth, Order.updatePrice);
+router.patch('/order/:order_id/price', auth, Order.updatePrice);
 
 router.patch('/orders/:orderId', auth, Order.updateOrderStatus);
 // flag an ad
 router.post('/flag', auth, Flag.createFlag);
-// update ad. Possible status include [ available, pending, suspended, accepted, sold]
+
+// update ad. Possible status include [ available, suspended, sold]
 router.patch('/car/:id', auth, Car.updateAdvert);
 
 // change password
@@ -74,10 +77,10 @@ router.patch('/user', auth, User.changePassword);
  */
 
 // get all cars
-router.get('/car', adminAuth, Car.getAll);
+router.get('/cars', adminAuth, Car.getAll);
 
 // admin delete an ad
-router.delete('/car/:id', adminAuth, Car.deleteAd);
+router.delete('/car/:car_id', adminAuth, Car.deleteAd);
 
 // make user an admin
 router.patch('/user/:id', adminAuth, User.makeAdmin);

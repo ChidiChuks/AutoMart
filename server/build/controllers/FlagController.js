@@ -8,11 +8,13 @@ var _validateData = require("../lib/validateData");
 
 var _validateData2 = _interopRequireDefault(_validateData);
 
-var _db = require("../services/db");
+var _FlagService = require("../services/FlagService");
 
-var _db2 = _interopRequireDefault(_db);
+var _FlagService2 = _interopRequireDefault(_FlagService);
 
-require("@babel/polyfill");
+var _Util = require("../lib/Util");
+
+var _Util2 = _interopRequireDefault(_Util);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -25,7 +27,7 @@ var Flag = {
     var _createFlag = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(req, res) {
-      var flagsReqs, description, carId, reason, severity, query, text, createQuery, _ref, rows, result, values, newFlag;
+      var flagsReqs, description, carId, reason, severity, _ref, rows, result, values, newFlag;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -39,7 +41,7 @@ var Flag = {
                 break;
               }
 
-              return _context.abrupt("return", Flag.errorResponse(res, 400, 'Ensure to indicate the ad id and reason for the report'));
+              return _context.abrupt("return", _Util2["default"].sendError(res, 400, 'Ensure to indicate the ad id and reason for the report'));
 
             case 4:
               description = req.body.description ? req.body.description : 'none';
@@ -49,60 +51,60 @@ var Flag = {
 
               if (reason === 'fake' || reason === 'stolen' || reason === 'suspicious') {
                 severity = 'extreme';
-              }
+              } // const query = `SELECT id FROM flags WHERE carid=${carId} AND reportedby=${req.body.reportedBy}`;
+              // const text = `SELECT owner FROM cars WHERE id=${carId} AND status='available'`;
+              // const createQuery = 'INSERT INTO flags(id, carid, reason, description, reportedby, severity) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
 
-              query = "SELECT id FROM flags WHERE carid=".concat(carId, " AND reportedby=").concat(req.body.reportedBy);
-              text = "SELECT owner FROM cars WHERE id=".concat(carId, " AND status='available'");
-              createQuery = 'INSERT INTO flags(id, carid, reason, description, reportedby, severity) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
-              _context.prev = 12;
-              _context.next = 15;
-              return _db2["default"].query(query);
 
-            case 15:
+              _context.prev = 9;
+              _context.next = 12;
+              return _FlagService2["default"].getReportByUser([carId, req.body.reportedBy]);
+
+            case 12:
               _ref = _context.sent;
               rows = _ref.rows;
 
               if (!(rows.length > 0)) {
-                _context.next = 19;
+                _context.next = 16;
                 break;
               }
 
-              return _context.abrupt("return", Flag.errorResponse(res, 406, 'Your report on this ad is already recorded'));
+              return _context.abrupt("return", _Util2["default"].sendError(res, 406, 'Your report on this ad is already recorded'));
 
-            case 19:
-              _context.next = 21;
-              return _db2["default"].query(text);
+            case 16:
+              _context.next = 18;
+              return _FlagService2["default"].getCarOwner(carId);
 
-            case 21:
+            case 18:
               result = _context.sent;
 
               if (!(result.rows.length < 1)) {
-                _context.next = 24;
+                _context.next = 21;
                 break;
               }
 
-              return _context.abrupt("return", Flag.errorResponse(res, 406, 'This ad is no longer available'));
+              return _context.abrupt("return", _Util2["default"].sendError(res, 406, 'This ad is no longer available'));
+
+            case 21:
+              values = [Date.now(), carId, reason, description, req.userId, severity];
+              _context.next = 24;
+              return _FlagService2["default"].createNewFlag(values);
 
             case 24:
-              values = [Date.now(), carId, reason, description, req.userId, severity];
-              _context.next = 27;
-              return _db2["default"].query(createQuery, values);
-
-            case 27:
               newFlag = _context.sent;
-              return _context.abrupt("return", Flag.successResponse(res, 201, newFlag.rows[0]));
+              return _context.abrupt("return", _Util2["default"].sendSuccess(res, 201, newFlag.rows[0]));
+
+            case 28:
+              _context.prev = 28;
+              _context.t0 = _context["catch"](9);
+              return _context.abrupt("return", _Util2["default"].sendError(res, 500, _context.t0.message));
 
             case 31:
-              _context.prev = 31;
-              _context.t0 = _context["catch"](12);
-              return _context.abrupt("return", Flag.errorResponse(res, 500, _context.t0));
-
-            case 34:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, this, [[12, 31]]);
+      }, _callee, this, [[9, 28]]);
     }));
 
     function createFlag(_x, _x2) {
@@ -115,7 +117,7 @@ var Flag = {
     var _updateFlag = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee2(req, res) {
-      var text, _ref2, rows;
+      var _ref2, rows;
 
       return regeneratorRuntime.wrap(function _callee2$(_context2) {
         while (1) {
@@ -126,30 +128,29 @@ var Flag = {
                 break;
               }
 
-              return _context2.abrupt("return", Flag.errorResponse(res, 400, 'Invalid flag id'));
+              return _context2.abrupt("return", _Util2["default"].sendError(res, 400, 'Invalid flag id'));
 
             case 2:
-              text = "UPDATE flags SET status='resolved' WHERE id=".concat(req.params.flagId, " AND status='pending' RETURNING *");
-              _context2.prev = 3;
-              _context2.next = 6;
-              return _db2["default"].query(text);
+              _context2.prev = 2;
+              _context2.next = 5;
+              return _FlagService2["default"].updateFlag(req.params.flagId);
 
-            case 6:
+            case 5:
               _ref2 = _context2.sent;
               rows = _ref2.rows;
-              return _context2.abrupt("return", rows.length < 1 ? Flag.errorResponse(res, 404, 'Flag already updated or not available') : Flag.successResponse(res, 200, rows[0]));
+              return _context2.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'Flag already updated or not available') : _Util2["default"].sendSuccess(res, 200, rows[0]));
 
-            case 11:
-              _context2.prev = 11;
-              _context2.t0 = _context2["catch"](3);
-              return _context2.abrupt("return", Flag.errorResponse(res, 500, _context2.t0));
+            case 10:
+              _context2.prev = 10;
+              _context2.t0 = _context2["catch"](2);
+              return _context2.abrupt("return", _Util2["default"].sendError(res, 500, _context2.t0.message));
 
-            case 14:
+            case 13:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[3, 11]]);
+      }, _callee2, this, [[2, 10]]);
     }));
 
     function updateFlag(_x3, _x4) {
@@ -162,7 +163,7 @@ var Flag = {
     var _deleteFlag = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee3(req, res) {
-      var query, _ref3, rows;
+      var _ref3, rows;
 
       return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
@@ -173,30 +174,29 @@ var Flag = {
                 break;
               }
 
-              return _context3.abrupt("return", Flag.errorResponse(res, 400, 'Invalid flag id'));
+              return _context3.abrupt("return", _Util2["default"].sendError(res, 400, 'Invalid flag id'));
 
             case 2:
-              query = "DELETE FROM flags WHERE id=".concat(req.params.flagId, " RETURNING *");
-              _context3.prev = 3;
-              _context3.next = 6;
-              return _db2["default"].query(query);
+              _context3.prev = 2;
+              _context3.next = 5;
+              return _FlagService2["default"].deleteFlag(req.params.flagId);
 
-            case 6:
+            case 5:
               _ref3 = _context3.sent;
               rows = _ref3.rows;
-              return _context3.abrupt("return", rows.length < 1 ? Flag.errorResponse(res, 404, 'Flag not found') : Flag.successResponse(res, 200, rows[0]));
+              return _context3.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'Flag not found') : _Util2["default"].sendSuccess(res, 200, rows[0]));
 
-            case 11:
-              _context3.prev = 11;
-              _context3.t0 = _context3["catch"](3);
-              return _context3.abrupt("return", Flag.errorResponse(res, 500, _context3.t0));
+            case 10:
+              _context3.prev = 10;
+              _context3.t0 = _context3["catch"](2);
+              return _context3.abrupt("return", _Util2["default"].sendError(res, 500, _context3.t0.message));
 
-            case 14:
+            case 13:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, this, [[3, 11]]);
+      }, _callee3, this, [[2, 10]]);
     }));
 
     function deleteFlag(_x5, _x6) {
@@ -209,33 +209,32 @@ var Flag = {
     var _getAllFlags = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee4(req, res) {
-      var query, _ref4, rows;
+      var _ref4, rows;
 
       return regeneratorRuntime.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              query = 'SELECT * FROM flags GROUP BY status, id';
-              _context4.prev = 1;
-              _context4.next = 4;
-              return _db2["default"].query(query);
+              _context4.prev = 0;
+              _context4.next = 3;
+              return _FlagService2["default"].getAllFlags();
 
-            case 4:
+            case 3:
               _ref4 = _context4.sent;
               rows = _ref4.rows;
-              return _context4.abrupt("return", rows.length < 1 ? Flag.errorResponse(res, 200, 'There are no flags today') : Flag.successResponse(res, 200, rows));
+              return _context4.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no flags today') : _Util2["default"].sendSuccess(res, 200, rows));
 
-            case 9:
-              _context4.prev = 9;
-              _context4.t0 = _context4["catch"](1);
-              return _context4.abrupt("return", Flag.errorResponse(res, 500, _context4.t0));
+            case 8:
+              _context4.prev = 8;
+              _context4.t0 = _context4["catch"](0);
+              return _context4.abrupt("return", _Util2["default"].sendError(res, 500, _context4.t0.message));
 
-            case 12:
+            case 11:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, this, [[1, 9]]);
+      }, _callee4, this, [[0, 8]]);
     }));
 
     function getAllFlags(_x7, _x8) {
@@ -243,18 +242,6 @@ var Flag = {
     }
 
     return getAllFlags;
-  }(),
-  errorResponse: function errorResponse(res, statuscode, message) {
-    return res.status(statuscode).send({
-      status: statuscode,
-      message: message
-    });
-  },
-  successResponse: function successResponse(res, statuscode, data) {
-    return res.status(statuscode).send({
-      status: statuscode,
-      data: data
-    });
-  }
+  }()
 };
 exports["default"] = Flag;

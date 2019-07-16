@@ -733,48 +733,34 @@ describe('Cars', function () {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee19() {
-      var data, newAd, _ref22, rows, id, token, res;
+      var _ref22, rows, id, token, res;
 
       return regeneratorRuntime.wrap(function _callee19$(_context19) {
         while (1) {
           switch (_context19.prev = _context19.next) {
             case 0:
               _context19.next = 2;
-              return userId();
-
-            case 2:
-              data = _context19.sent;
-              _context19.next = 5;
-              return newAdValues();
-
-            case 5:
-              newAd = _context19.sent;
-              _context19.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n      '").concat(newAd.img, "', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
-
-            case 8:
-              _context19.next = 10;
               return _db2["default"].query('SELECT id FROM cars limit 1');
 
-            case 10:
+            case 2:
               _ref22 = _context19.sent;
               rows = _ref22.rows;
               id = rows[0].id;
-              _context19.next = 15;
-              return genToken();
+              _context19.next = 7;
+              return genToken(rows[0].owner, false);
 
-            case 15:
+            case 7:
               token = _context19.sent;
-              _context19.next = 18;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id)).set('x-auth', token).send(updateInfo);
+              _context19.next = 10;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/car/".concat(id, "/price")).set('x-auth', token).send({
+                price: 80000
+              });
 
-            case 18:
+            case 10:
               res = _context19.sent;
-              expect(res.body.data.price).to.eq(updateInfo.price);
               expect(res.status).to.eq(200);
-              expect(res.body.data.description).to.eq(updateInfo.description);
 
-            case 22:
+            case 12:
             case "end":
               return _context19.stop();
           }

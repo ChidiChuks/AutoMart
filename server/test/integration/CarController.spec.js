@@ -272,18 +272,12 @@ describe('Cars', () => {
     // seller update ad price
     describe('Seller update ad price, status and description', () => {
         it('should return the ad with updated price', async() => {
-            const data = await userId();
-            const newAd = await newAdValues();
-            await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
-      '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
             const { rows } = await db.query('SELECT id FROM cars limit 1');
             const { id } = rows[0];
-            const token = await genToken();
-
-            const res = await chai.request(server).patch(`/api/v1/car/${id}`).set('x-auth', token).send(updateInfo);
-            expect(res.body.data.price).to.eq(updateInfo.price);
+            const token = await genToken(rows[0].owner, false);
+            const res = await chai.request(server).patch(`/api/v1/car/${id}/price`).set('x-auth', token).send({ price: 80000 });
             expect(res.status).to.eq(200);
-            expect(res.body.data.description).to.eq(updateInfo.description);
+
         });
 
         it('should return error 404 if ad is not found', async() => {

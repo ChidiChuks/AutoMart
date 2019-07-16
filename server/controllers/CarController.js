@@ -22,7 +22,7 @@ const Car = {
             return util.sendError(res, 400, 'Fill all required fields');
         }
 
-        // const carsByUser = `SELECT id FROM cars WHERE owner=$1 AND state=$2 AND status='available' AND manufacturer=$3 AND model=$4 AND body_type=$5`;
+        const carsByUser = `SELECT id FROM cars WHERE owner=$1 AND state=$2 AND status='available' AND manufacturer=$3 AND model=$4 AND body_type=$5`;
         // eslint-disable-next-line no-multi-str
         // const createQuery = 'INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type, status) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
 
@@ -35,7 +35,7 @@ const Car = {
                 return util.sendError(res, 400, 'You have a similar unsold car');
             }
 
-            const image = req.file ? await cloudinary.uploader.upload(req.file.path, { folder: 'automart/', format: 'jpg' }) : { url: req.img_url };
+            const image = req.file ? await cloudinary.uploader.upload(req.file.path) : { url: req.img_url };
 
             const carPpties = [Date.now(), req.body.price, req.body.description, image.url, ...values];
             const newCar = await CarService.createCar(carPpties);

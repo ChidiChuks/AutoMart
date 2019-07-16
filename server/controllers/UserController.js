@@ -15,6 +15,7 @@ const User = {
      * @returns {object}
      */
     async create(req, res) {
+        console.log(req);
         const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'address'];
 
         if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {

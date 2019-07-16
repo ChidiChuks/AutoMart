@@ -14,7 +14,6 @@ cloudinary.v2.config({
 
 const Car = {
     async create(req, res) {
-        console.log(req.body);
         // eslint-disable-next-line max-len
         const requiredFields = ['state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
         req.body.owner = req.userId;
@@ -22,20 +21,16 @@ const Car = {
             return util.sendError(res, 400, 'Fill all required fields');
         }
 
-        const carsByUser = `SELECT id FROM cars WHERE owner=$1 AND state=$2 AND status='available' AND manufacturer=$3 AND model=$4 AND body_type=$5`;
-        // eslint-disable-next-line no-multi-str
-        // const createQuery = 'INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type, status) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
-
         // eslint-disable-next-line max-len
         const values = [req.body.owner, req.body.state, req.body.manufacturer, req.body.model, req.body.body_type];
         try {
-            // eslint-disable-next-line max-len
-            const { rows } = await CarService.query(carsByUser, values);
+            const { rows } = await CarService.getCarsByUser(values);
             if (rows.length > 0) {
                 return util.sendError(res, 400, 'You have a similar unsold car');
             }
 
-            const image = req.file ? await cloudinary.uploader.upload(req.file.path) : { url: req.img_url };
+            const image = req.file ? await cloudinary.uploader.upload(req.file.path, { folder: 'automart/', format: 'png' }) :
+                { url: req.img_url };
 
             const carPpties = [Date.now(), req.body.price, req.body.description, image.url, ...values];
             const newCar = await CarService.createCar(carPpties);

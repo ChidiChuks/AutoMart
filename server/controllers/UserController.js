@@ -4,6 +4,7 @@ import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
 import UserService from '../services/UserService';
 import util from '../lib/Util';
+import Util from '../lib/Util';
 
 
 
@@ -72,6 +73,7 @@ const User = {
                 },
             });
         } catch (error) {
+            console.log(res);
             return (error.routine === '_bt_check_unique') ? util.sendError(res, 400, 'User with given email or phone already exist') :
                 util.sendError(res, 500, error.message);
         }

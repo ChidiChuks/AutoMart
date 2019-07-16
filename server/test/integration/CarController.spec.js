@@ -235,8 +235,8 @@ describe('Cars', () => {
 
         it('should return 404 when there are no unsold cars', async() => {
             await db.query('UPDATE cars SET status=\'sold\'');
-
-            const res = await chai.request(server).get('/api/v1/car?status=available');
+            const token = await genToken();
+            const res = await chai.request(server).get('/api/v1/car?status=available').set('x-auth', token);
             expect(res.status).to.eq(404);
             expect(res.body.error).to.eq('There are no cars available now. Check back');
         });

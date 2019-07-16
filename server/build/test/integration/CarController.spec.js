@@ -596,7 +596,7 @@ describe('Cars', function () {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee15() {
-      var res;
+      var token, res;
       return regeneratorRuntime.wrap(function _callee15$(_context15) {
         while (1) {
           switch (_context15.prev = _context15.next) {
@@ -606,14 +606,19 @@ describe('Cars', function () {
 
             case 2:
               _context15.next = 4;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/car?status=available');
+              return genToken();
 
             case 4:
+              token = _context15.sent;
+              _context15.next = 7;
+              return _chai2["default"].request(_index2["default"]).get('/api/v1/car?status=available').set('x-auth', token);
+
+            case 7:
               res = _context15.sent;
               expect(res.status).to.eq(404);
               expect(res.body.error).to.eq('There are no cars available now. Check back');
 
-            case 7:
+            case 10:
             case "end":
               return _context15.stop();
           }

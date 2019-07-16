@@ -205,7 +205,7 @@ describe('Order transaction', function () {
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee5() {
-      var data, newAd, newUser, _ref7, rows, user, token, res;
+      var data, newUser, newAd, _ref7, rows, user, token, res;
 
       return regeneratorRuntime.wrap(function _callee5$(_context5) {
         while (1) {
@@ -217,21 +217,21 @@ describe('Order transaction', function () {
             case 2:
               data = _context5.sent;
               _context5.next = 5;
-              return newAdValues();
+              return dataValues();
 
             case 5:
-              newAd = _context5.sent;
+              newUser = _context5.sent;
               _context5.next = 8;
-              return _db2["default"].query("INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    'image_url.png', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
+              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
 
             case 8:
               _context5.next = 10;
-              return dataValues();
+              return newAdValues();
 
             case 10:
-              newUser = _context5.sent;
+              newAd = _context5.sent;
               _context5.next = 13;
-              return _chai2["default"].request(_index2["default"]).post('/api/v1/auth/signup').send(newUser);
+              return _db2["default"].query("INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('".concat(Date.now(), "', 8000000, '").concat(newAd.description, "',\n    'image_url.png', ").concat(data.id, ", '").concat(newAd.state, "', '").concat(newAd.manufacturer, "', '").concat(newAd.model, "', '").concat(newAd.body_type, "')"));
 
             case 13:
               _context5.next = 15;
@@ -241,16 +241,16 @@ describe('Order transaction', function () {
               _ref7 = _context5.sent;
               rows = _ref7.rows;
               _context5.next = 19;
-              return _db2["default"].query('SELECT id FROM users LIMIT 2');
+              return _db2["default"].query('SELECT id FROM users LIMIT 1');
 
             case 19:
               user = _context5.sent;
               _context5.next = 22;
-              return (0, _generateToken2["default"])(user.rows[1].id, false);
+              return (0, _generateToken2["default"])(user.rows[0].id, false);
 
             case 22:
               token = _context5.sent;
-              orderData.carId = rows[0].id;
+              orderData.car_id = rows[0].id;
               _context5.next = 26;
               return _chai2["default"].request(_index2["default"]).post('/api/v1/order').set('x-auth', token).send(orderData);
 
@@ -258,12 +258,10 @@ describe('Order transaction', function () {
               res = _context5.sent;
               expect(res.status).to.eq(201);
               expect(res.body.data).to.have.property('id');
-              expect(res.body.data).to.have.property('carid').eq(orderData.carId);
-              expect(res.body.data.price_offered).to.eq(orderData.price_offered);
+              expect(res.body.data).to.have.property('car_id').eq(orderData.car_id);
               expect(res.body.data.seller_id).to.eq(data.id);
-              expect(res.body.data.buyer_id).to.eq(user.rows[1].id);
 
-            case 33:
+            case 31:
             case "end":
               return _context5.stop();
           }
@@ -343,7 +341,7 @@ describe('Order transaction', function () {
 
             case 2:
               token = _context8.sent;
-              orderData.carId = 1288392382934;
+              orderData.car_id = 1288392382934;
               _context8.next = 6;
               return _chai2["default"].request(_index2["default"]).post('/api/v1/order').set('x-auth', token).send(orderData);
 

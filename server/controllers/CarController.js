@@ -14,6 +14,7 @@ cloudinary.v2.config({
 
 const Car = {
     async create(req, res) {
+        console.log(req.body);
         // eslint-disable-next-line max-len
         const requiredFields = ['state', 'price', 'manufacturer', 'model', 'body_type', 'description'];
         req.body.owner = req.userId;

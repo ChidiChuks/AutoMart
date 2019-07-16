@@ -34,7 +34,7 @@ var Order = {
           switch (_context.prev = _context.next) {
             case 0:
               req.body.buyer_id = req.userId;
-              requiredParams = ['car_id', 'priceOffered', 'buyer_id'];
+              requiredParams = ['car_id', 'amount', 'buyer_id'];
 
               if (!((0, _validateData2["default"])(requiredParams, req.body) || req.body.car_id.toString().length !== 13)) {
                 _context.next = 4;
@@ -74,7 +74,6 @@ var Order = {
               return _context.abrupt("return", _Util2["default"].sendError(res, 400, 'You have a similar uncompleted/completed order '));
 
             case 16:
-              // const text = 'INSERT INTO orders (id, buyerid, carid, sellerid, price, priceoffered) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
               // eslint-disable-next-line max-len
               values = [Date.now(), req.userId, req.body.car_id, rows[0].owner, rows[0].price, req.body.amount];
               _context.next = 19;
@@ -87,7 +86,7 @@ var Order = {
             case 23:
               _context.prev = 23;
               _context.t0 = _context["catch"](4);
-              return _context.abrupt("return", Order.errorResponse(res, 500, _context.t0.message));
+              return _context.abrupt("return", _Util2["default"].sendError(res, 500, _context.t0.message));
 
             case 26:
             case "end":
@@ -113,52 +112,55 @@ var Order = {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              // const requiredParams = ['orderId', 'newPrice'];
-              newPrice = req.body.price; // if (validateData(requiredParams, req.body) || req.body.orderId.trim().length !== 13) {
-              //     return Order.errorResponse(res, 400, 'Ensure to send the order id and new price');
-              // }
-              // check that the request is coming from the buyer with a different price
-              // and the order is still pending
+              newPrice = req.body.price;
 
-              buyer = req.userId; // const text = `SELECT price FROM orders WHERE id=${req.body.orderId} AND buyerid=${buyer} AND status NOT IN ('pending', 'cancelled')`;
-
-              _context2.prev = 2;
-              _context2.next = 5;
-              return _OrderService2["default"].getOrderPrice([req.params.order_id]);
-
-            case 5:
-              _ref2 = _context2.sent;
-              rows = _ref2.rows;
-
-              if (!(rows.length !== 1 || parseFloat(rows[0].price_offered) === parseFloat(newPrice))) {
-                _context2.next = 9;
+              if (!(!req.params.order_id || !newPrice || req.params.order_id.trim().length !== 13)) {
+                _context2.next = 3;
                 break;
               }
 
-              return _context2.abrupt("return", _Util2["default"].sendError(res, 400, 'Check that the order id is valid and not cancelled and your new price is different'));
+              return _context2.abrupt("return", _Util2["default"].sendError(res, 400, 'Ensure to send the order id and new price'));
 
-            case 9:
-              // update the price and return the response
-              tm = new Date().toLocaleString(); // const query = `UPDATE orders SET priceoffered=${newPrice}, updated_at='${tm}' WHERE id=${req.body.orderId} AND buyerid=${buyer} returning *`;
+            case 3:
+              // check that the request is coming from the buyer with a different price
+              // and the order is still pending
+              buyer = req.userId;
+              _context2.prev = 4;
+              _context2.next = 7;
+              return _OrderService2["default"].getOrderPrice([req.params.order_id]);
 
-              _context2.next = 12;
+            case 7:
+              _ref2 = _context2.sent;
+              rows = _ref2.rows;
+
+              if (!(rows.length !== 1 // || parseFloat(rows[0].price_offered) === parseFloat(newPrice)
+              )) {
+                _context2.next = 11;
+                break;
+              }
+
+              return _context2.abrupt("return", _Util2["default"].sendError(res, 400, 'Check that the order id is valid and your new price is different'));
+
+            case 11:
+              tm = new Date().toLocaleString();
+              _context2.next = 14;
               return _OrderService2["default"].updateOrder([newPrice, tm, req.params.order_id, buyer]);
 
-            case 12:
+            case 14:
               result = _context2.sent;
               return _context2.abrupt("return", _Util2["default"].sendSuccess(res, 200, result.rows[0]));
 
-            case 16:
-              _context2.prev = 16;
-              _context2.t0 = _context2["catch"](2);
+            case 18:
+              _context2.prev = 18;
+              _context2.t0 = _context2["catch"](4);
               return _context2.abrupt("return", _Util2["default"].sendError(res, 500, _context2.t0.message));
 
-            case 19:
+            case 21:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[2, 16]]);
+      }, _callee2, this, [[4, 18]]);
     }));
 
     function updatePrice(_x3, _x4) {
@@ -177,8 +179,7 @@ var Order = {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              userId = req.userId; // const text = `SELECT * FROM orders WHERE sellerid=${userId}`;
-
+              userId = req.userId;
               _context3.prev = 1;
               _context3.next = 4;
               return _OrderService2["default"].getUserOrders(userId);
@@ -273,9 +274,7 @@ var Order = {
               return _context5.abrupt("return", _Util2["default"].sendError(res, 400, 'Invalid input'));
 
             case 5:
-              reqPerson = req.userId; // const query = `SELECT buyerid, sellerid, status FROM orders WHERE id=${orderId}`;
-              // const updateQuery = `UPDATE orders SET status='${newStatus}' WHERE id=${orderId} RETURNING *`;
-
+              reqPerson = req.userId;
               _context5.prev = 6;
               _context5.next = 9;
               return _OrderService2["default"].getBuyerAndSeller(orderId);
@@ -356,9 +355,7 @@ var Order = {
               return _context6.abrupt("return", _Util2["default"].sendError(res, 400, 'Wrong order id'));
 
             case 2:
-              userId = req.userId, role = req.role; // const query = (role) ? `DELETE FROM orders WHERE id=${req.params.orderId} RETURNING *` :
-              //     `DELETE FROM orders WHERE id=${req.params.orderId} AND sellerId=${userId} AND status='cancelled' RETURNING *`;
-
+              userId = req.userId, role = req.role;
               _context6.prev = 3;
 
               if (!role) {
@@ -423,8 +420,7 @@ var Order = {
               return _context7.abrupt("return", _Util2["default"].sendError(res, 400, 'Invalid order id'));
 
             case 2:
-              userId = req.userId, role = req.role; // const query = `SELECT buyerid, sellerid FROM orders WHERE id=${req.params.orderId}`;
-
+              userId = req.userId, role = req.role;
               _context7.prev = 3;
               _context7.next = 6;
               return _OrderService2["default"].getBuyerAndSeller(req.params.orderId);
@@ -446,7 +442,7 @@ var Order = {
 
             case 12:
               result = _context7.sent;
-              return _context7.abrupt("return", result.rows.length !== 1 ? _Util2["default"].sendError(res, 404, 'Order not found') : _Util2["default"].sendSuccess(res, 200, result.rows[0]));
+              return _context7.abrupt("return", result.rows.length !== 1 ? _Util2["default"].sendError(res, 200, 'Order not found') : _Util2["default"].sendSuccess(res, 200, result.rows[0]));
 
             case 16:
               _context7.prev = 16;

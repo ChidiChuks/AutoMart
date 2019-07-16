@@ -12,6 +12,10 @@ var _dotenv = require("dotenv");
 
 var _dotenv2 = _interopRequireDefault(_dotenv);
 
+var _cors = require("cors");
+
+var _cors2 = _interopRequireDefault(_cors);
+
 var _index = require("./routes/index");
 
 var _index2 = _interopRequireDefault(_index);
@@ -34,6 +38,13 @@ app.use(_express2["default"].urlencoded({
 app.use((0, _morgan2["default"])('tiny', {
   stream: _logger2["default"].stream
 }));
+app.use((0, _cors2["default"])()); // cors
+
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Access-Token');
+  next();
+});
 app.use('/api/v1', _index2["default"]);
 var port = process.env.PORT || 4000;
 app.listen(port, function () {

@@ -51,7 +51,7 @@ router.post('/auth/signin', _UserController2["default"].signIn); // user log out
 
 router.get('/auth/logout', _logout2["default"], _UserController2["default"].logout); // get cars within a price range => /car/status=available&min=$min&max=$max
 
-router.get('/car', _CarController2["default"].getCars); // get cars by manufacturer
+router.get('/car', _auth2["default"], _CarController2["default"].getCars); // get cars by manufacturer
 
 router.get('/car/manufacturer/:manufacturer', _CarController2["default"].getCarsByProperty); // get cars by body type
 
@@ -83,8 +83,10 @@ router.patch('/order/:order_id/price', _auth2["default"], _OrderController2["def
 router.patch('/orders/:orderId', _auth2["default"], _OrderController2["default"].updateOrderStatus); // flag an ad
 
 router.post('/flag', _auth2["default"], _FlagController2["default"].createFlag); // update ad. Possible status include [ available, suspended, sold]
+// router.patch('/car/:id', auth, Car.updateAdvert);
 
-router.patch('/car/:id', _auth2["default"], _CarController2["default"].updateAdvert); // change password
+router.patch('/car/:car_id/status', _auth2["default"], _CarController2["default"].updateAdStatus);
+router.patch('/car/:car_id/price', _auth2["default"], _CarController2["default"].updateAdPrice); // change password
 
 router.patch('/user', _auth2["default"], _UserController2["default"].changePassword);
 /**
@@ -94,7 +96,7 @@ router.patch('/user', _auth2["default"], _UserController2["default"].changePassw
 
 router.get('/cars', _admin2["default"], _CarController2["default"].getAll); // admin delete an ad
 
-router["delete"]('/car/:car_id', _admin2["default"], _CarController2["default"].deleteAd); // make user an admin
+router["delete"]('/car/:car_id', _auth2["default"], _CarController2["default"].deleteAd); // make user an admin
 
 router.patch('/user/:id', _admin2["default"], _UserController2["default"].makeAdmin); // view all orders
 

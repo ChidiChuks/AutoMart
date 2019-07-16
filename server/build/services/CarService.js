@@ -49,7 +49,7 @@ function () {
   }, {
     key: "getSingleCar",
     value: function getSingleCar(id) {
-      var query = 'SELECT id, state, status, price, manufacturer, model, body_type, description, image_url FROM cars WHERE id=$1';
+      var query = 'SELECT * FROM cars WHERE id=$1';
       return _db2["default"].query(query, [id]);
     }
   }, {
@@ -87,6 +87,18 @@ function () {
     value: function updateByAdmin(data) {
       var query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
       return _db2["default"].query(query, data);
+    }
+  }, {
+    key: "updateStatus",
+    value: function updateStatus(status, id) {
+      var query = 'UPDATE cars SET status=$1 WHERE id=$2 RETURNING *';
+      return _db2["default"].query(query, [status, id]);
+    }
+  }, {
+    key: "updatePrice",
+    value: function updatePrice(price, id) {
+      var query = 'UPDATE cars SET price=$1 WHERE id=$2 RETURNING *';
+      return _db2["default"].query(query, [price, id]);
     }
   }, {
     key: "gerUserAds",

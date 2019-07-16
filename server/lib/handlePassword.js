@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import "regenerator-runtime/runtime";
 
 /**
  * @description -function to hash password

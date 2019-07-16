@@ -42,7 +42,7 @@ var User = {
     var _create = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(req, res) {
-      var requiredProperties, values, _ref, rows, _rows$, id, email, first_name, last_name, address, is_admin, phone, status, token;
+      var requiredProperties, values, _ref, rows, _rows$, id, email, first_name, last_name, address, is_admin, status, token;
 
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
@@ -71,8 +71,7 @@ var User = {
 
             case 7:
               req.body.password = _context.sent;
-              // const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
-              values = [Date.now(), req.body.email, req.body.first_name, req.body.last_name, req.body.password, req.body.address, req.body.phone];
+              values = [Date.now(), req.body.email, req.body.first_name, req.body.last_name, req.body.password, req.body.address];
               _context.prev = 9;
               _context.next = 12;
               return _UserService2["default"].createUser(values);
@@ -80,7 +79,7 @@ var User = {
             case 12:
               _ref = _context.sent;
               rows = _ref.rows;
-              _rows$ = rows[0], id = _rows$.id, email = _rows$.email, first_name = _rows$.first_name, last_name = _rows$.last_name, address = _rows$.address, is_admin = _rows$.is_admin, phone = _rows$.phone, status = _rows$.status;
+              _rows$ = rows[0], id = _rows$.id, email = _rows$.email, first_name = _rows$.first_name, last_name = _rows$.last_name, address = _rows$.address, is_admin = _rows$.is_admin, status = _rows$.status;
               token = (0, _generateToken2["default"])(id, is_admin, first_name);
               return _context.abrupt("return", res.status(201).set('x-auth', token).send({
                 status: 201,
@@ -92,7 +91,6 @@ var User = {
                   last_name: last_name,
                   address: address,
                   is_admin: is_admin,
-                  phone: phone,
                   status: status
                 }
               }));

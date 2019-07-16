@@ -61,14 +61,11 @@ var Car = {
               return _context.abrupt("return", _Util2["default"].sendError(res, 400, 'Fill all required fields'));
 
             case 4:
-              // const carsByUser = `SELECT id FROM cars WHERE owner=$1 AND state=$2 AND status='available' AND manufacturer=$3 AND model=$4 AND body_type=$5`;
-              // eslint-disable-next-line no-multi-str
-              // const createQuery = 'INSERT INTO cars (id, price, description, img, owner, state, manufacturer, model, body_type, status) VALUES  ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
               // eslint-disable-next-line max-len
               values = [req.body.owner, req.body.state, req.body.manufacturer, req.body.model, req.body.body_type];
               _context.prev = 5;
               _context.next = 8;
-              return _CarService2["default"].query(carsByUser, values);
+              return _CarService2["default"].getCarsByUser(values);
 
             case 8:
               _ref = _context.sent;
@@ -90,7 +87,7 @@ var Car = {
               _context.next = 15;
               return _cloudinary2["default"].uploader.upload(req.file.path, {
                 folder: 'automart/',
-                format: 'jpg'
+                format: 'png'
               });
 
             case 15:
@@ -149,28 +146,19 @@ var Car = {
             case 3:
               _ref2 = _context2.sent;
               rows = _ref2.rows;
+              return _context2.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no cars available now. Check back') : _Util2["default"].sendSuccess(res, 200, rows));
 
-              if (!(rows.length < 1)) {
-                _context2.next = 7;
-                break;
-              }
-
-              return _context2.abrupt("return", _Util2["default"].sendError(res, 404, 'There are no cars available now. Check back'));
-
-            case 7:
-              return _context2.abrupt("return", _Util2["default"].sendSuccess(res, 200, rows));
-
-            case 10:
-              _context2.prev = 10;
+            case 8:
+              _context2.prev = 8;
               _context2.t0 = _context2["catch"](0);
               return _context2.abrupt("return", _Util2["default"].sendError(res, 500, _context2.t0.message));
 
-            case 13:
+            case 11:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, this, [[0, 10]]);
+      }, _callee2, this, [[0, 8]]);
     }));
 
     function getAll(_x3, _x4) {
@@ -459,79 +447,78 @@ var Car = {
             case 0:
               reqFields = ['status', 'price', 'description'];
 
-              if ((0, _validateData2["default"])(reqFields, req.body)) {
-                _Util2["default"].sendError(res, 400, 'Fill all fields');
-              } // const query = `SELECT * FROM cars WHERE id=${req.params.id}`;
+              if (!(0, _validateData2["default"])(reqFields, req.body)) {
+                _context8.next = 3;
+                break;
+              }
 
+              return _context8.abrupt("return", _Util2["default"].sendError(res, 400, 'Fill all fields'));
 
-              _context8.prev = 2;
-              _context8.next = 5;
+            case 3:
+              _context8.prev = 3;
+              _context8.next = 6;
               return _CarService2["default"].getSingleCarAllPpties(req.params.id);
 
-            case 5:
+            case 6:
               _ref8 = _context8.sent;
               rows = _ref8.rows;
 
               if (!(rows.length < 1)) {
-                _context8.next = 9;
+                _context8.next = 10;
                 break;
               }
 
               return _context8.abrupt("return", _Util2["default"].sendError(res, 404, 'The advert you want to update is not available'));
 
-            case 9:
+            case 10:
               userId = req.userId, role = req.role;
 
               if (!(parseInt(userId, 10) !== parseInt(rows[0].owner, 10) && !role)) {
-                _context8.next = 12;
+                _context8.next = 13;
                 break;
               }
 
               return _context8.abrupt("return", _Util2["default"].sendError(res, 401, 'You do not have the permission to update this data'));
 
-            case 12:
+            case 13:
               adminQ = [req.body.status, req.params.id];
-              data = [req.body.price, req.body.description].concat(adminQ); // if it's seller update status, price & desc. else if its admin only the status
-              // status can be available, sold or suspended;
-              // const text = (parseInt(userId, 10) === parseInt(rows[0].owner, 10)) ?
-              //     `UPDATE cars SET status='${req.body.status}', price=${req.body.price}, description='${req.body.description}' WHERE id=${req.params.id} RETURNING *` :
-              //     `UPDATE cars SET status='${req.body.status}' WHERE id=${req.params.id} RETURNING *`;
+              data = [req.body.price, req.body.description].concat(adminQ);
 
               if (!(parseInt(userId, 10) === parseInt(rows[0].owner, 10))) {
-                _context8.next = 20;
+                _context8.next = 21;
                 break;
               }
 
-              _context8.next = 17;
+              _context8.next = 18;
               return _CarService2["default"].updateBySeller(data);
 
-            case 17:
+            case 18:
               _context8.t0 = _context8.sent;
-              _context8.next = 23;
+              _context8.next = 24;
               break;
 
-            case 20:
-              _context8.next = 22;
+            case 21:
+              _context8.next = 23;
               return _CarService2["default"].updateByAdmin(adminQ);
 
-            case 22:
+            case 23:
               _context8.t0 = _context8.sent;
 
-            case 23:
+            case 24:
               result = _context8.t0;
               return _context8.abrupt("return", _Util2["default"].sendSuccess(res, 200, result.rows[0]));
 
-            case 27:
-              _context8.prev = 27;
-              _context8.t1 = _context8["catch"](2);
+            case 28:
+              _context8.prev = 28;
+              _context8.t1 = _context8["catch"](3);
               return _context8.abrupt("return", _Util2["default"].sendError(res, 500, _context8.t1.message));
 
-            case 30:
+            case 31:
             case "end":
               return _context8.stop();
           }
         }
-      }, _callee8, this, [[2, 27]]);
+      }, _callee8, this, [[3, 28]]);
     }));
 
     function updateAdvert(_x15, _x16) {
@@ -544,7 +531,7 @@ var Car = {
     var _getCars = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee9(req, res) {
-      var params, paramsArray, paramsLength, min, max, _ref9, rows, reqParam, ppty, _ref10, _rows, _ref11, _rows2;
+      var params, paramsArray, paramsLength, min, max, _ref9, _rows, reqParam, ppty, _ref10, _rows2, _ref11, _rows3, _ref12, rows;
 
       return regeneratorRuntime.wrap(function _callee9$(_context9) {
         while (1) {
@@ -561,15 +548,14 @@ var Car = {
               }
 
               min = req.query.min_price ? req.query.min_price : 0;
-              max = req.query.max_price ? req.query.max_price : 30000000; // console.log(min);
-
+              max = req.query.max_price ? req.query.max_price : 30000000;
               _context9.next = 9;
               return _CarService2["default"].getCarsInRange(req.query.status, min, max);
 
             case 9:
               _ref9 = _context9.sent;
-              rows = _ref9.rows;
-              return _context9.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no cars within the selected range') : _Util2["default"].sendSuccess(res, 200, rows));
+              _rows = _ref9.rows;
+              return _context9.abrupt("return", _rows.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no cars within the selected range') : _Util2["default"].sendSuccess(res, 200, _rows));
 
             case 12:
               if (!(paramsLength === 2)) {
@@ -600,8 +586,8 @@ var Car = {
 
             case 25:
               _ref10 = _context9.sent;
-              _rows = _ref10.rows;
-              return _context9.abrupt("return", _rows.length < 1 ? _Util2["default"].sendError(res, 404, "There are no cars for the selected ".concat(reqParam)) : _Util2["default"].sendSuccess(res, 200, _rows));
+              _rows2 = _ref10.rows;
+              return _context9.abrupt("return", _rows2.length < 1 ? _Util2["default"].sendError(res, 404, "There are no cars for the selected ".concat(reqParam)) : _Util2["default"].sendSuccess(res, 200, _rows2));
 
             case 28:
               if (!(paramsLength === 1)) {
@@ -614,23 +600,29 @@ var Car = {
 
             case 31:
               _ref11 = _context9.sent;
-              _rows2 = _ref11.rows;
-              return _context9.abrupt("return", _rows2.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no cars available now. Check back') : _Util2["default"].sendSuccess(res, 200, _rows2));
+              _rows3 = _ref11.rows;
+              return _context9.abrupt("return", _rows3.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no cars available now. Check back') : _Util2["default"].sendSuccess(res, 200, _rows3));
 
             case 34:
-              return _context9.abrupt("return", _Util2["default"].sendError(res, 400, 'Invalid query parameters'));
+              _context9.next = 36;
+              return _CarService2["default"].getAllCars();
 
-            case 37:
-              _context9.prev = 37;
+            case 36:
+              _ref12 = _context9.sent;
+              rows = _ref12.rows;
+              return _context9.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'There are no cars available now. Check back') : _Util2["default"].sendSuccess(res, 200, rows));
+
+            case 41:
+              _context9.prev = 41;
               _context9.t1 = _context9["catch"](3);
               return _context9.abrupt("return", _Util2["default"].sendError(res, 500, _context9.t1.message));
 
-            case 40:
+            case 44:
             case "end":
               return _context9.stop();
           }
         }
-      }, _callee9, this, [[3, 37]]);
+      }, _callee9, this, [[3, 41]]);
     }));
 
     function getCars(_x17, _x18) {
@@ -639,23 +631,11 @@ var Car = {
 
     return getCars;
   }(),
-  // async getCarsWithinPriceRange(req, res) {
-  //     const min = req.query.min ? req.query.min : 0;
-  //     const max = req.query.max ? req.query.max : 30000000;
-  //     const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where price BETWEEN ${min} AND ${max}`;
-  //     try {
-  //         const { rows } = await db.query(query);
-  //         return (rows.length < 1) ? Car.errorResponse(res, 404, 'There are no cars within the selected range') :
-  //             Car.successResponse(res, 200, rows);
-  //     } catch (err) {
-  //         return Car.errorResponse(res, 500, err);
-  //     }
-  // },
   deleteAd: function () {
     var _deleteAd = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee10(req, res) {
-      var _ref12, rows;
+      var _ref13, rows;
 
       return regeneratorRuntime.wrap(function _callee10$(_context10) {
         while (1) {
@@ -674,8 +654,8 @@ var Car = {
               return _CarService2["default"].deleteCar(req.params.car_id);
 
             case 5:
-              _ref12 = _context10.sent;
-              rows = _ref12.rows;
+              _ref13 = _context10.sent;
+              rows = _ref13.rows;
               return _context10.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'Selected ad not available') : _Util2["default"].sendSuccess(res, 200, rows[0]));
 
             case 10:
@@ -701,7 +681,7 @@ var Car = {
     var _getMyAds = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee11(req, res) {
-      var userId, _ref13, rows;
+      var userId, _ref14, rows;
 
       return regeneratorRuntime.wrap(function _callee11$(_context11) {
         while (1) {
@@ -713,8 +693,8 @@ var Car = {
               return _CarService2["default"].gerUserAds(userId);
 
             case 4:
-              _ref13 = _context11.sent;
-              rows = _ref13.rows;
+              _ref14 = _context11.sent;
+              rows = _ref14.rows;
               return _context11.abrupt("return", rows.length < 1 ? _Util2["default"].sendError(res, 404, 'You do not have ads yet') : _Util2["default"].sendSuccess(res, 200, rows));
 
             case 9:

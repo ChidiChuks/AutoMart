@@ -226,9 +226,11 @@ describe('Cars', () => {
             const newAd = await newAdValues();
             await db.query(`INSERT INTO cars (id, price, description, image_url, owner, state, manufacturer, model, body_type) VALUES  ('${Date.now()}', 8000000, '${newAd.description}',
       '${newAd.img}', ${data.id}, '${newAd.state}', '${newAd.manufacturer}', '${newAd.model}', '${newAd.body_type}')`);
-            const res = await chai.request(server).get('/api/v1/car?status=available');
+            const token = await genToken();
+            const res = await chai.request(server).get('/api/v1/car?status=available').set('x-auth', token);
             expect(res.status).to.eq(200);
             expect(res.body).to.have.property('data').to.be.an('ARRAY');
+            console.log(res);
         });
 
         it('should return 404 when there are no unsold cars', async() => {

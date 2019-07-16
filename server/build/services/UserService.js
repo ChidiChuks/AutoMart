@@ -55,13 +55,13 @@ function () {
   }, {
     key: "updateUserPassword",
     value: function updateUserPassword(data) {
-      var text = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
+      var text = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, status';
       return _db2["default"].query(text, data);
     }
   }, {
     key: "createUser",
     value: function createUser(data) {
-      var text = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, is_admin, phone, status';
+      var text = 'INSERT INTO users (id, email, first_name, last_name, password, address) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
       return _db2["default"].query(text, data);
     }
   }]);

@@ -64,12 +64,12 @@ describe('Cars', () => {
         await chai.request(server).post(signupUrl).send(data);
     });
 
-    // after(async() => {
-    //     await db.query('DELETE FROM flags');
-    //     await db.query('DELETE FROM orders');
-    //     await db.query('DELETE FROM cars');
-    //     await db.query('DELETE FROM users');
-    // });
+    after(async() => {
+        await db.query('DELETE FROM flags');
+        await db.query('DELETE FROM orders');
+        await db.query('DELETE FROM cars');
+        await db.query('DELETE FROM users');
+    });
 
     describe('Create Ad', () => {
         it('should create a new ad', async() => {

@@ -52,12 +52,12 @@ describe('Flags controller', () => {
         await chai.request(server).post('/api/v1/auth/signup').send(data);
     });
 
-    // after(async() => {
-    //     await db.query('DELETE FROM flags');
-    //     await db.query('DELETE FROM orders');
-    //     await db.query('DELETE FROM cars');
-    //     await db.query('DELETE FROM users');
-    // });
+    after(async() => {
+        await db.query('DELETE FROM flags');
+        await db.query('DELETE FROM orders');
+        await db.query('DELETE FROM cars');
+        await db.query('DELETE FROM users');
+    });
 
 
     describe('Create a flag', () => {

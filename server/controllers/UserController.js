@@ -31,7 +31,7 @@ const User = {
             return util.sendError(res, 400, 'Ensure password is atleast 6 characters, name and email not more than 30 characters');
         }
 
-        req.body.password = await hashPassword(req.body.password);
+        // req.body.password = await hashPassword(req.body.password);
 
         // const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
         const values = [

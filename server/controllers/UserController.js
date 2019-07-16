@@ -16,14 +16,13 @@ const User = {
      * @returns {object}
      */
     async create(req, res) {
-        console.log(req);
         const requiredProperties = ['email', 'first_name', 'last_name', 'password', 'address'];
 
         if (validateData(requiredProperties, req.body) || !validEmail(req.body.email)) {
             return util.sendError(res, 400, 'Fill all required fields with a valid email address');
         }
         // if (req.body.password.localeCompare(req.body.password_confirmation) !== 0) {
-        //     return User.errorResponse(res, 400, 'Password and confirmation does not match');
+        //   return util.sendError(res, 400, 'Password and confirmation does not match');
         // }
 
         if (req.body.password.length < 6 || req.body.email.length >= 30 ||
@@ -31,9 +30,8 @@ const User = {
             return util.sendError(res, 400, 'Ensure password is atleast 6 characters, name and email not more than 30 characters');
         }
 
-        // req.body.password = await hashPassword(req.body.password);
+        req.body.password = await hashPassword(req.body.password);
 
-        // const query = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, isadmin, phone, status';
         const values = [
             Date.now(),
             req.body.email,
@@ -42,7 +40,6 @@ const User = {
             req.body.password,
             req.body.address,
         ];
-
         try {
             const { rows } = await UserService.createUser(values);
 
@@ -73,7 +70,6 @@ const User = {
                 },
             });
         } catch (error) {
-            console.log(res);
             return (error.routine === '_bt_check_unique') ? util.sendError(res, 400, 'User with given email or phone already exist') :
                 util.sendError(res, 500, error.message);
         }

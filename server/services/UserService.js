@@ -26,12 +26,12 @@ class UserService {
     }
 
     static updateUserPassword(data) {
-        const text = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, phone, status';
+        const text = 'UPDATE users SET password=$1 WHERE id=$2 RETURNING id, email, first_name, last_name, status';
         return db.query(text, data);
     }
 
     static createUser(data) {
-        const text = 'INSERT INTO users (id, email, first_name, last_name, password, address, phone) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, email, first_name, last_name, address, is_admin, phone, status';
+        const text = 'INSERT INTO users (id, email, first_name, last_name, password, address) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, email, first_name, last_name, address, is_admin, status';
         return db.query(text, data);
     }
 }

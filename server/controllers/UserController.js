@@ -39,7 +39,6 @@ const User = {
             req.body.last_name,
             req.body.password,
             req.body.address,
-            req.body.phone,
         ];
 
         try {
@@ -53,7 +52,6 @@ const User = {
                 last_name,
                 address,
                 is_admin,
-                phone,
                 status,
             } = rows[0];
 
@@ -69,7 +67,6 @@ const User = {
                     last_name,
                     address,
                     is_admin,
-                    phone,
                     status,
                 },
             });

@@ -510,13 +510,20 @@ describe('Flags controller', function () {
           }
         }
       }, _callee10, this);
-    })));
-    it('should return error 401 if admin is not logged in',
+    }))); // it('should return error 401 if admin is not logged in', async() => {
+    //     const { rows } = await db.query('SELECT id FROM flags WHERE status=\'pending\'');
+    //     const flagid = rows[rows.length - 1].id;
+    //     const res = await chai.request(server).patch(`/api/v1/flag/${flagid}`);
+    //     expect(res.status).to.eq(401);
+    //     expect(res.body.error).to.eq('No authorization token provided');
+    // });
+
+    it('should return error 401 if logged in user is not admin',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee11() {
-      var _ref18, rows, flagid, res;
+      var _ref18, rows, id, user, token, res;
 
       return regeneratorRuntime.wrap(function _callee11$(_context11) {
         while (1) {
@@ -528,62 +535,60 @@ describe('Flags controller', function () {
             case 2:
               _ref18 = _context11.sent;
               rows = _ref18.rows;
-              flagid = rows[rows.length - 1].id;
+              id = rows[rows.length - 1].id;
               _context11.next = 7;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/flag/".concat(flagid));
+              return userId();
 
             case 7:
+              user = _context11.sent;
+              token = (0, _generateToken2["default"])(user.id, false);
+              _context11.next = 11;
+              return _chai2["default"].request(_index2["default"]).patch("/api/v1/flag/".concat(id)).set('x-auth', token);
+
+            case 11:
               res = _context11.sent;
               expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('No authorization token provided');
+              expect(res.body.error).to.eq('You dont have the permission to access this resource');
 
-            case 10:
+            case 14:
             case "end":
               return _context11.stop();
           }
         }
       }, _callee11, this);
     })));
-    it('should return error 401 if logged in user is not admin',
+    it('should return error 404 if flag id is wrong',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee12() {
-      var _ref20, rows, id, user, token, res;
-
+      var user, token, res;
       return regeneratorRuntime.wrap(function _callee12$(_context12) {
         while (1) {
           switch (_context12.prev = _context12.next) {
             case 0:
               _context12.next = 2;
-              return _db2["default"].query('SELECT id FROM flags WHERE status=\'pending\'');
-
-            case 2:
-              _ref20 = _context12.sent;
-              rows = _ref20.rows;
-              id = rows[rows.length - 1].id;
-              _context12.next = 7;
               return userId();
 
-            case 7:
+            case 2:
               user = _context12.sent;
-              token = (0, _generateToken2["default"])(user.id, false);
-              _context12.next = 11;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/flag/".concat(id)).set('x-auth', token);
+              token = (0, _generateToken2["default"])(user.id, true);
+              _context12.next = 6;
+              return _chai2["default"].request(_index2["default"]).patch('/api/v1/flag/1261727827383').set('x-auth', token);
 
-            case 11:
+            case 6:
               res = _context12.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('You dont have the permission to access this resource');
+              expect(res.status).to.eq(404);
+              expect(res.body.error).to.eq('Flag already updated or not available');
 
-            case 14:
+            case 9:
             case "end":
               return _context12.stop();
           }
         }
       }, _callee12, this);
     })));
-    it('should return error 404 if flag id is wrong',
+    it('should return error 400 if flag id is wrong',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -600,12 +605,12 @@ describe('Flags controller', function () {
               user = _context13.sent;
               token = (0, _generateToken2["default"])(user.id, true);
               _context13.next = 6;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/flag/1261727827383').set('x-auth', token);
+              return _chai2["default"].request(_index2["default"]).patch('/api/v1/flag/126172782738').set('x-auth', token);
 
             case 6:
               res = _context13.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.error).to.eq('Flag already updated or not available');
+              expect(res.status).to.eq(400);
+              expect(res.body.error).to.eq('Invalid flag id');
 
             case 9:
             case "end":
@@ -614,7 +619,9 @@ describe('Flags controller', function () {
         }
       }, _callee13, this);
     })));
-    it('should return error 400 if flag id is wrong',
+  });
+  describe('Get all flags', function () {
+    it('should return all flags',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
@@ -631,212 +638,136 @@ describe('Flags controller', function () {
               user = _context14.sent;
               token = (0, _generateToken2["default"])(user.id, true);
               _context14.next = 6;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/flag/126172782738').set('x-auth', token);
-
-            case 6:
-              res = _context14.sent;
-              expect(res.status).to.eq(400);
-              expect(res.body.error).to.eq('Invalid flag id');
-
-            case 9:
-            case "end":
-              return _context14.stop();
-          }
-        }
-      }, _callee14, this);
-    })));
-  });
-  describe('Get all flags', function () {
-    it('should return all flags',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee15() {
-      var user, token, res;
-      return regeneratorRuntime.wrap(function _callee15$(_context15) {
-        while (1) {
-          switch (_context15.prev = _context15.next) {
-            case 0:
-              _context15.next = 2;
-              return userId();
-
-            case 2:
-              user = _context15.sent;
-              token = (0, _generateToken2["default"])(user.id, true);
-              _context15.next = 6;
               return _chai2["default"].request(_index2["default"]).get('/api/v1/flags').set('x-auth', token);
 
             case 6:
-              res = _context15.sent;
+              res = _context14.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data).to.be.an('Array');
               expect(res.body.data[0]).to.be.an('Object');
 
             case 10:
             case "end":
-              return _context15.stop();
+              return _context14.stop();
           }
         }
-      }, _callee15, this);
-    })));
-    it('should return error 401 if user is not logged in',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee16() {
-      var res;
-      return regeneratorRuntime.wrap(function _callee16$(_context16) {
-        while (1) {
-          switch (_context16.prev = _context16.next) {
-            case 0:
-              _context16.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/flags');
-
-            case 2:
-              res = _context16.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('No authorization token provided');
-
-            case 5:
-            case "end":
-              return _context16.stop();
-          }
-        }
-      }, _callee16, this);
-    })));
-    it('should return error 401 if user is not admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee17() {
-      var user, token, res;
-      return regeneratorRuntime.wrap(function _callee17$(_context17) {
-        while (1) {
-          switch (_context17.prev = _context17.next) {
-            case 0:
-              _context17.next = 2;
-              return userId();
-
-            case 2:
-              user = _context17.sent;
-              token = (0, _generateToken2["default"])(user.id, false);
-              _context17.next = 6;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/flags').set('x-auth', token);
-
-            case 6:
-              res = _context17.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('You dont have the permission to access this resource');
-
-            case 9:
-            case "end":
-              return _context17.stop();
-          }
-        }
-      }, _callee17, this);
-    })));
+      }, _callee14, this);
+    }))); // it('should return error 401 if user is not logged in', async() => {
+    //     const res = await chai.request(server).get('/api/v1/flags');
+    //     expect(res.status).to.eq(401);
+    //     expect(res.body.error).to.eq('No authorization token provided');
+    // });
+    // it('should return error 401 if user is not admin', async() => {
+    //     const { rows } = await db.query('SELECT id FROM flags WHERE status=\'pending\'');
+    //     const { id } = rows[rows.length - 1];
+    //     const user = await userId();
+    //     const token = generateToken(user.id, false);
+    //     const res = await chai.request(server).patch(`/api/v1/flag/${id}`).set('x-auth', token);
+    //     expect(res.status).to.eq(401);
+    //     expect(res.body.error).to.eq('You dont have the permission to access this resource');
+    // });
   });
   describe('Admin can delete a given flag', function () {
     it('should delete a given flag id',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee18() {
-      var _ref27, rows, id, user, token, res;
+    regeneratorRuntime.mark(function _callee15() {
+      var _ref23, rows, id, user, token, res;
 
-      return regeneratorRuntime.wrap(function _callee18$(_context18) {
+      return regeneratorRuntime.wrap(function _callee15$(_context15) {
         while (1) {
-          switch (_context18.prev = _context18.next) {
+          switch (_context15.prev = _context15.next) {
             case 0:
-              _context18.next = 2;
+              _context15.next = 2;
               return _db2["default"].query('SELECT id FROM flags LIMIT 1');
 
             case 2:
-              _ref27 = _context18.sent;
-              rows = _ref27.rows;
+              _ref23 = _context15.sent;
+              rows = _ref23.rows;
               id = rows[rows.length - 1].id;
-              _context18.next = 7;
+              _context15.next = 7;
               return userId();
 
             case 7:
-              user = _context18.sent;
+              user = _context15.sent;
               token = (0, _generateToken2["default"])(user.id, true);
-              _context18.next = 11;
+              _context15.next = 11;
               return _chai2["default"].request(_index2["default"])["delete"]("/api/v1/flags/".concat(id)).set('x-auth', token);
 
             case 11:
-              res = _context18.sent;
+              res = _context15.sent;
               expect(res.status).to.eq(200);
               expect(res.body.data.id).to.eq(id);
 
             case 14:
             case "end":
-              return _context18.stop();
+              return _context15.stop();
           }
         }
-      }, _callee18, this);
+      }, _callee15, this);
     })));
     it('should return error 400 if flag id is wrong',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee19() {
+    regeneratorRuntime.mark(function _callee16() {
       var user, token, res;
-      return regeneratorRuntime.wrap(function _callee19$(_context19) {
+      return regeneratorRuntime.wrap(function _callee16$(_context16) {
         while (1) {
-          switch (_context19.prev = _context19.next) {
+          switch (_context16.prev = _context16.next) {
             case 0:
-              _context19.next = 2;
+              _context16.next = 2;
               return userId();
 
             case 2:
-              user = _context19.sent;
+              user = _context16.sent;
               token = (0, _generateToken2["default"])(user.id, true);
-              _context19.next = 6;
+              _context16.next = 6;
               return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/flags/126172782738').set('x-auth', token);
 
             case 6:
-              res = _context19.sent;
+              res = _context16.sent;
               expect(res.status).to.eq(400);
               expect(res.body.error).to.eq('Invalid flag id');
 
             case 9:
             case "end":
-              return _context19.stop();
+              return _context16.stop();
           }
         }
-      }, _callee19, this);
+      }, _callee16, this);
     })));
   });
   it('should return error 404 if flag is not found',
   /*#__PURE__*/
   _asyncToGenerator(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee20() {
+  regeneratorRuntime.mark(function _callee17() {
     var user, token, res;
-    return regeneratorRuntime.wrap(function _callee20$(_context20) {
+    return regeneratorRuntime.wrap(function _callee17$(_context17) {
       while (1) {
-        switch (_context20.prev = _context20.next) {
+        switch (_context17.prev = _context17.next) {
           case 0:
-            _context20.next = 2;
+            _context17.next = 2;
             return userId();
 
           case 2:
-            user = _context20.sent;
+            user = _context17.sent;
             token = (0, _generateToken2["default"])(user.id, true);
-            _context20.next = 6;
+            _context17.next = 6;
             return _chai2["default"].request(_index2["default"])["delete"]('/api/v1/flags/1271278338293').set('x-auth', token);
 
           case 6:
-            res = _context20.sent;
+            res = _context17.sent;
             expect(res.status).to.eq(404);
             expect(res.body.error).to.eq('Flag not found');
 
           case 9:
           case "end":
-            return _context20.stop();
+            return _context17.stop();
         }
       }
-    }, _callee20, this);
+    }, _callee17, this);
   })));
 });

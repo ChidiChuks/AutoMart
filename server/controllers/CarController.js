@@ -11,7 +11,6 @@ cloudinary.v2.config({
     api_key: process.env.CLOUDINARY_API,
     api_secret: process.env.CLOUDINARY_SECRET,
 });
-
 const Car = {
     async create(req, res) {
         // eslint-disable-next-line max-len
@@ -40,15 +39,11 @@ const Car = {
         }
     },
     async getAll(req, res) {
-        // const cars = CarModel.getAllCars();
-        // const query = 'SELECT * FROM cars LIMIT 100';
         try {
             const { rows } = await CarService.getAllCars();
 
-            if (rows.length < 1) {
-                return util.sendError(res, 404, 'There are no cars available now. Check back');
-            }
-            return util.sendSuccess(res, 200, rows);
+            return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back') :
+                util.sendSuccess(res, 200, rows);
         } catch (error) {
             return util.sendError(res, 500, error.message);
         }
@@ -69,7 +64,6 @@ const Car = {
                 ppty = req.params.state;
                 break;
         }
-        // const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where status='available' AND ${reqParam}='${ppty}' LIMIT 100`;
         try {
             const { rows } = await CarService.getCarsByProperty('available', reqParam, ppty);
             return (rows.length < 1) ? util.sendError(res, 404, `There are no cars for the selected ${reqParam}`) :
@@ -80,7 +74,6 @@ const Car = {
     },
 
     async getAllUnsoldCars(req, res) {
-        // const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img, owner FROM cars WHERE status='available'`;
         try {
             const { rows } = await CarService.getAllUnsoldCars();
             return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back') :
@@ -94,21 +87,13 @@ const Car = {
         if (req.params.id.trim().length !== 13) {
             return util.sendError(res, 400, 'Invalid ad id');
         }
-        // const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars WHERE id=${req.params.id}`;
         try {
             const { rows } = await CarService.getSingleCar(req.params.id);
-            // const car = rows[0];
             return (rows.length < 1) ? util.sendError(res, 404, 'The ad you are looking for is no longer available') :
                 util.sendSuccess(res, 200, rows[0]);
         } catch (error) {
             return util.sendError(res, 500, error.message);
         }
-        //     if (!car) {
-        //         return Car.errorResponse(res, 404, 'The ad you are looking for is no longer available');
-        //     }
-        //     return Car.successResponse(res, 200, car);
-        // } catch (err) {
-        //     return Car.errorResponse(res, 500, err);
     },
 
     async updateAdStatus(req, res) {
@@ -153,13 +138,11 @@ const Car = {
             return util.sendError(res, 500, error.message);
         }
     },
-
     async updateAdvert(req, res) {
         const reqFields = ['status', 'price', 'description'];
         if (validatenewCar(reqFields, req.body)) {
-            util.sendError(res, 400, 'Fill all fields');
+            return util.sendError(res, 400, 'Fill all fields');
         }
-        // const query = `SELECT * FROM cars WHERE id=${req.params.id}`;
         try {
             const { rows } = await CarService.getSingleCarAllPpties(req.params.id);
             if (rows.length < 1) {
@@ -173,19 +156,9 @@ const Car = {
 
             const adminQ = [req.body.status, req.params.id];
             const data = [req.body.price, req.body.description, ...adminQ];
-
-            // if it's seller update status, price & desc. else if its admin only the status
-            // status can be available, sold or suspended;
-
-            // const text = (parseInt(userId, 10) === parseInt(rows[0].owner, 10)) ?
-            //     `UPDATE cars SET status='${req.body.status}', price=${req.body.price}, description='${req.body.description}' WHERE id=${req.params.id} RETURNING *` :
-            //     `UPDATE cars SET status='${req.body.status}' WHERE id=${req.params.id} RETURNING *`;
-
             const result = (parseInt(userId, 10) === parseInt(rows[0].owner, 10)) ?
                 await CarService.updateBySeller(data) :
                 await CarService.updateByAdmin(adminQ);
-
-            // const updatedCar = result.rows[0];
 
             return util.sendSuccess(res, 200, result.rows[0]);
         } catch (error) {
@@ -201,7 +174,6 @@ const Car = {
             if (paramsLength === 3 && JSON.stringify(paramsArray) === JSON.stringify(['status', 'min_price', 'max_price'])) {
                 const min = req.query.min_price ? req.query.min_price : 0;
                 const max = req.query.max_price ? req.query.max_price : 30000000;
-                // console.log(min);
                 const { rows } = await CarService.getCarsInRange(req.query.status, min, max);
 
                 return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars within the selected range') :
@@ -230,31 +202,18 @@ const Car = {
                 return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back') :
                     util.sendSuccess(res, 200, rows);
             }
-            return util.sendError(res, 400, 'Invalid query parameters');
+            const { rows } = await CarService.getAllCars();
+            return (rows.length < 1) ? util.sendError(res, 404, 'There are no cars available now. Check back') :
+                util.sendSuccess(res, 200, rows);
         } catch (error) {
             return util.sendError(res, 500, error.message);
         }
     },
 
-    // async getCarsWithinPriceRange(req, res) {
-    //     const min = req.query.min ? req.query.min : 0;
-    //     const max = req.query.max ? req.query.max : 30000000;
-    //     const query = `SELECT id, state, status, price, manufacturer, model, body_type, description, img FROM cars where price BETWEEN ${min} AND ${max}`;
-    //     try {
-    //         const { rows } = await db.query(query);
-    //         return (rows.length < 1) ? Car.errorResponse(res, 404, 'There are no cars within the selected range') :
-    //             Car.successResponse(res, 200, rows);
-    //     } catch (err) {
-    //         return Car.errorResponse(res, 500, err);
-    //     }
-    // },
-
     async deleteAd(req, res) {
         if (req.params.car_id.trim().length !== 13) {
             return util.sendError(res, 400, 'Select the ad to delete');
         }
-
-        // const query = `DELETE FROM cars WHERE id=${req.params.id} RETURNING *`;
         try {
             const { rows } = await CarService.deleteCar(req.params.car_id);
             return (rows.length < 1) ? util.sendError(res, 404, 'Selected ad not available') :

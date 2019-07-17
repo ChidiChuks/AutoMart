@@ -47,12 +47,12 @@ describe('User', () => {
         await chai.request(server).post('/api/v1/auth/signup').send(data);
     });
 
-    after(async() => {
-        await db.query('DELETE FROM flags');
-        await db.query('DELETE FROM orders');
-        await db.query('DELETE FROM cars');
-        await db.query('DELETE FROM users');
-    });
+    // after(async() => {
+    //     await db.query('DELETE FROM flags');
+    //     await db.query('DELETE FROM orders');
+    //     await db.query('DELETE FROM cars');
+    //     await db.query('DELETE FROM users');
+    // });
 
     describe('User create', () => {
         it('should return a new user with the supplied properties', async() => {

@@ -243,12 +243,12 @@ describe('Flags controller', function () {
 
             case 19:
               res = _context5.sent;
-              console.log(res);
+              // console.log(res);
               expect(res.status).to.eq(201);
               expect(res.body.data).to.have.property('id');
               expect(res.body.data.reason).to.eq(newFlag.reason);
 
-            case 24:
+            case 23:
             case "end":
               return _context5.stop();
           }
@@ -510,23 +510,7 @@ describe('Flags controller', function () {
           }
         }
       }, _callee10, this);
-    }))); // it('should return error 401 if admin is not logged in', async() => {
-    //     const { rows } = await db.query('SELECT id FROM flags WHERE status=\'pending\'');
-    //     const flagid = rows[rows.length - 1].id;
-    //     const res = await chai.request(server).patch(`/api/v1/flag/${flagid}`);
-    //     expect(res.status).to.eq(401);
-    //     expect(res.body.error).to.eq('No authorization token provided');
-    // });
-    // it('should return error 401 if logged in user is not admin', async() => {
-    //     const { rows } = await db.query('SELECT id FROM flags WHERE status=\'pending\'');
-    //     const { id } = rows[rows.length - 1];
-    //     const user = await userId();
-    //     const token = generateToken(user.id, false);
-    //     const res = await chai.request(server).patch(`/api/v1/flag/${id}`).set('x-auth', token);
-    //     expect(res.status).to.eq(401);
-    //     expect(res.body.error).to.eq('You dont have the permission to access this resource');
-    // });
-
+    })));
     it('should return error 404 if flag id is wrong',
     /*#__PURE__*/
     _asyncToGenerator(
@@ -622,20 +606,7 @@ describe('Flags controller', function () {
           }
         }
       }, _callee13, this);
-    }))); // it('should return error 401 if user is not logged in', async() => {
-    //     const res = await chai.request(server).get('/api/v1/flags');
-    //     expect(res.status).to.eq(401);
-    //     expect(res.body.error).to.eq('No authorization token provided');
-    // });
-    // it('should return error 401 if user is not admin', async() => {
-    //     const { rows } = await db.query('SELECT id FROM flags WHERE status=\'pending\'');
-    //     const { id } = rows[rows.length - 1];
-    //     const user = await userId();
-    //     const token = generateToken(user.id, false);
-    //     const res = await chai.request(server).patch(`/api/v1/flag/${id}`).set('x-auth', token);
-    //     expect(res.status).to.eq(401);
-    //     expect(res.body.error).to.eq('You dont have the permission to access this resource');
-    // });
+    })));
   });
   describe('Admin can delete a given flag', function () {
     it('should delete a given flag id',

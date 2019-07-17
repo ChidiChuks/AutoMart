@@ -55,16 +55,6 @@ describe('User', () => {
     });
 
     describe('User create', () => {
-        // it('should return a new user with the supplied properties', async() => {
-        //     const userDetails = dataValues();
-        //     const res = await chai.request(server).post(signupUrl).send(userDetails);
-        //     expect(res.status).to.eq(201);
-        //     expect(res.body.data).to.have.property('token');
-        //     expect(res.body.data).to.have.property('id');
-        //     expect(res.body.data.email).to.eq(userDetails.email);
-        //     expect(res.body.data.phone).to.eq(userDetails.phone);
-        //     expect(res.body.data.status).to.eq('active');
-        // });
 
         it('should return error if all required fields are not supplied', async() => {
             const data = dataValues();
@@ -193,64 +183,6 @@ describe('User', () => {
         });
     });
 
-    // admin get all users
-    // describe('get all users', () => {
-    //     // it('should return all registered users', async() => {
-    //     //     const userDetails = dataValues();
-    //     //     await chai.request(server).post(signupUrl).send(userDetails);
-    //     //     const token = await adminToken();
-    //     //     const res = await chai.request(server).get(allUsersUrl).set('x-auth', token);
-    //     //     expect(res.status).to.eq(200);
-    //     //     expect(res.body.data).to.be.an('Array');
-    //     // });
-
-    //     // it('should return error 401 if user is not admin', async() => {
-    //     //     const token = await genToken();
-
-    //     //     const res = await chai.request(server).get(allUsersUrl).set('x-auth', token);
-    //     //     expect(res.status).to.eq(401);
-    //     //     expect(res.body.error).to.eq('You dont have the permission to access this resource');
-    //     // });
-
-    //     // it('should return error 401 if user is not logged in', async() => {
-    //     //     const res = await chai.request(server).get('/api/v1/users');
-    //     //     expect(res.status).to.eq(401);
-    //     //     expect(res.body.error).to.eq('No authorization token provided');
-    //     // });
-
-    // });
-
-    // make user admin
-    // describe('Admin make user admin', () => {
-    //     // it('Should make a user an admin', async() => {
-    //     //     const token = await adminToken();
-
-    //     //     const { rows } = await db.query('SELECT id FROM users limit 2');
-    //     //     const { id } = rows[1];
-    //     //     const res = await chai.request(server).patch(`/api/v1/user/${id}`).set('x-auth', token);
-    //     //     expect(res.status).to.eq(200);
-    //     //     expect(res.body.data).to.have.property('id').eq(id);
-    //     //     // eslint-disable-next-line no-unused-expressions
-    //     //     expect(res.body.data).to.have.property('is_admin').to.be.true;
-    //     // });
-
-    //     // it('Should return error 401 if admin is not logged in', async() => {
-    //     //     const { rows } = await db.query('SELECT id FROM users limit 2');
-    //     //     const { id } = rows[1];
-
-    //     //     const res = await chai.request(server).patch(`/api/v1/user/${id}`);
-    //     //     expect(res.status).to.eq(401);
-    //     //     expect(res.body.error).to.eq('No authorization token provided');
-    //     // });
-
-    //     it('Should return error 404 if user is not found', async() => {
-    //         const token = await adminToken();
-    //         const res = await chai.request(server).patch('/api/v1/user/1212121212121').set('x-auth', token);
-    //         expect(res.status).to.eq(404);
-    //         expect(res.body.error).to.eq('User not found or inactive');
-    //     });
-    // });
-
     // user logout
     describe('User logout', () => {
         it('should log a user out of the app', async() => {
@@ -258,26 +190,6 @@ describe('User', () => {
             const res = await chai.request(server).get('/api/v1/auth/logout').set('x-auth', token);
             expect(res.status).to.eq(200);
         });
-    });
-
-    describe('Admin disable a user', () => {
-        // it('should disable a user', async() => {
-        //     const token = await adminToken();
-        //     const { rows } = await db.query('SELECT id FROM users limit 2');
-        //     const { id } = rows[1];
-        //     const res = await chai.request(server).patch(`/api/v1/users/${id}`).set('x-auth', token);
-        //     expect(res.status).to.eq(200);
-        //     expect(res.body.data.id).to.eq(id);
-        //     expect(res.body.data.status).to.eq('disabled');
-        // });
-
-        // it('should return error 404 if user is not found', async() => {
-        //     const token = await adminToken();
-        //     const res = await chai.request(server).patch('/api/v1/users/1212121212121').set('x-auth', token);
-        //     expect(res.status).to.eq(404);
-        //     expect(res.body.error).to.eq('User not found or inactive');
-        // });
-
     });
 
 });

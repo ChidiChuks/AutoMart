@@ -230,7 +230,7 @@ describe('Cars', () => {
             const res = await chai.request(server).get('/api/v1/car?status=available').set('x-auth', token);
             expect(res.status).to.eq(200);
             expect(res.body).to.have.property('data').to.be.an('ARRAY');
-            console.log(res);
+            // console.log(res);
         });
 
         it('should return 404 when there are no unsold cars', async() => {

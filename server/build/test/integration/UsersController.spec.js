@@ -186,44 +186,49 @@ describe('User', function () {
         }
       }
     }, _callee4, this);
-  }))); // after(async() => {
-  //     await db.query('DELETE FROM flags');
-  //     await db.query('DELETE FROM orders');
-  //     await db.query('DELETE FROM cars');
-  //     await db.query('DELETE FROM users');
-  // });
+  })));
+  after(
+  /*#__PURE__*/
+  _asyncToGenerator(
+  /*#__PURE__*/
+  regeneratorRuntime.mark(function _callee5() {
+    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.next = 2;
+            return _db2["default"].query('DELETE FROM flags');
 
-  describe('User create', function () {
-    it('should return a new user with the supplied properties',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee5() {
-      var userDetails, res;
-      return regeneratorRuntime.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              userDetails = dataValues();
-              _context5.next = 3;
-              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(userDetails);
+          case 2:
+            _context5.next = 4;
+            return _db2["default"].query('DELETE FROM orders');
 
-            case 3:
-              res = _context5.sent;
-              expect(res.status).to.eq(201);
-              expect(res.body.data).to.have.property('token');
-              expect(res.body.data).to.have.property('id');
-              expect(res.body.data.email).to.eq(userDetails.email);
-              expect(res.body.data.phone).to.eq(userDetails.phone);
-              expect(res.body.data.status).to.eq('active');
+          case 4:
+            _context5.next = 6;
+            return _db2["default"].query('DELETE FROM cars');
 
-            case 10:
-            case "end":
-              return _context5.stop();
-          }
+          case 6:
+            _context5.next = 8;
+            return _db2["default"].query('DELETE FROM users');
+
+          case 8:
+          case "end":
+            return _context5.stop();
         }
-      }, _callee5, this);
-    })));
+      }
+    }, _callee5, this);
+  })));
+  describe('User create', function () {
+    // it('should return a new user with the supplied properties', async() => {
+    //     const userDetails = dataValues();
+    //     const res = await chai.request(server).post(signupUrl).send(userDetails);
+    //     expect(res.status).to.eq(201);
+    //     expect(res.body.data).to.have.property('token');
+    //     expect(res.body.data).to.have.property('id');
+    //     expect(res.body.data.email).to.eq(userDetails.email);
+    //     expect(res.body.data.phone).to.eq(userDetails.phone);
+    //     expect(res.body.data.status).to.eq('active');
+    // });
     it('should return error if all required fields are not supplied',
     /*#__PURE__*/
     _asyncToGenerator(
@@ -611,306 +616,100 @@ describe('User', function () {
       }, _callee17, this);
     })));
   }); // admin get all users
-
-  describe('get all users', function () {
-    it('should return all registered users',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee18() {
-      var userDetails, token, res;
-      return regeneratorRuntime.wrap(function _callee18$(_context18) {
-        while (1) {
-          switch (_context18.prev = _context18.next) {
-            case 0:
-              userDetails = dataValues();
-              _context18.next = 3;
-              return _chai2["default"].request(_index2["default"]).post(signupUrl).send(userDetails);
-
-            case 3:
-              _context18.next = 5;
-              return adminToken();
-
-            case 5:
-              token = _context18.sent;
-              _context18.next = 8;
-              return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
-
-            case 8:
-              res = _context18.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.be.an('Array');
-
-            case 11:
-            case "end":
-              return _context18.stop();
-          }
-        }
-      }, _callee18, this);
-    })));
-    it('should return error 401 if user is not admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee19() {
-      var token, res;
-      return regeneratorRuntime.wrap(function _callee19$(_context19) {
-        while (1) {
-          switch (_context19.prev = _context19.next) {
-            case 0:
-              _context19.next = 2;
-              return genToken();
-
-            case 2:
-              token = _context19.sent;
-              _context19.next = 5;
-              return _chai2["default"].request(_index2["default"]).get(allUsersUrl).set('x-auth', token);
-
-            case 5:
-              res = _context19.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('You dont have the permission to access this resource');
-
-            case 8:
-            case "end":
-              return _context19.stop();
-          }
-        }
-      }, _callee19, this);
-    })));
-    it('should return error 401 if user is not logged in',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee20() {
-      var res;
-      return regeneratorRuntime.wrap(function _callee20$(_context20) {
-        while (1) {
-          switch (_context20.prev = _context20.next) {
-            case 0:
-              _context20.next = 2;
-              return _chai2["default"].request(_index2["default"]).get('/api/v1/users');
-
-            case 2:
-              res = _context20.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('No authorization token provided');
-
-            case 5:
-            case "end":
-              return _context20.stop();
-          }
-        }
-      }, _callee20, this);
-    })));
-  }); // make user admin
-
-  describe('Admin make user admin', function () {
-    it('Should make a user an admin',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee21() {
-      var token, _ref25, rows, id, res;
-
-      return regeneratorRuntime.wrap(function _callee21$(_context21) {
-        while (1) {
-          switch (_context21.prev = _context21.next) {
-            case 0:
-              _context21.next = 2;
-              return adminToken();
-
-            case 2:
-              token = _context21.sent;
-              _context21.next = 5;
-              return _db2["default"].query('SELECT id FROM users limit 2');
-
-            case 5:
-              _ref25 = _context21.sent;
-              rows = _ref25.rows;
-              id = rows[1].id;
-              _context21.next = 10;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(id)).set('x-auth', token);
-
-            case 10:
-              res = _context21.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data).to.have.property('id').eq(id); // eslint-disable-next-line no-unused-expressions
-
-              expect(res.body.data).to.have.property('is_admin').to.be["true"];
-
-            case 14:
-            case "end":
-              return _context21.stop();
-          }
-        }
-      }, _callee21, this);
-    })));
-    it('Should return error 401 if admin is not logged in',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee22() {
-      var _ref27, rows, id, res;
-
-      return regeneratorRuntime.wrap(function _callee22$(_context22) {
-        while (1) {
-          switch (_context22.prev = _context22.next) {
-            case 0:
-              _context22.next = 2;
-              return _db2["default"].query('SELECT id FROM users limit 2');
-
-            case 2:
-              _ref27 = _context22.sent;
-              rows = _ref27.rows;
-              id = rows[1].id;
-              _context22.next = 7;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/user/".concat(id));
-
-            case 7:
-              res = _context22.sent;
-              expect(res.status).to.eq(401);
-              expect(res.body.error).to.eq('No authorization token provided');
-
-            case 10:
-            case "end":
-              return _context22.stop();
-          }
-        }
-      }, _callee22, this);
-    })));
-    it('Should return error 404 if user is not found',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee23() {
-      var token, res;
-      return regeneratorRuntime.wrap(function _callee23$(_context23) {
-        while (1) {
-          switch (_context23.prev = _context23.next) {
-            case 0:
-              _context23.next = 2;
-              return adminToken();
-
-            case 2:
-              token = _context23.sent;
-              _context23.next = 5;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/user/1212121212121').set('x-auth', token);
-
-            case 5:
-              res = _context23.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.error).to.eq('User not found or inactive');
-
-            case 8:
-            case "end":
-              return _context23.stop();
-          }
-        }
-      }, _callee23, this);
-    })));
-  }); // user logout
+  // describe('get all users', () => {
+  //     // it('should return all registered users', async() => {
+  //     //     const userDetails = dataValues();
+  //     //     await chai.request(server).post(signupUrl).send(userDetails);
+  //     //     const token = await adminToken();
+  //     //     const res = await chai.request(server).get(allUsersUrl).set('x-auth', token);
+  //     //     expect(res.status).to.eq(200);
+  //     //     expect(res.body.data).to.be.an('Array');
+  //     // });
+  //     // it('should return error 401 if user is not admin', async() => {
+  //     //     const token = await genToken();
+  //     //     const res = await chai.request(server).get(allUsersUrl).set('x-auth', token);
+  //     //     expect(res.status).to.eq(401);
+  //     //     expect(res.body.error).to.eq('You dont have the permission to access this resource');
+  //     // });
+  //     // it('should return error 401 if user is not logged in', async() => {
+  //     //     const res = await chai.request(server).get('/api/v1/users');
+  //     //     expect(res.status).to.eq(401);
+  //     //     expect(res.body.error).to.eq('No authorization token provided');
+  //     // });
+  // });
+  // make user admin
+  // describe('Admin make user admin', () => {
+  //     // it('Should make a user an admin', async() => {
+  //     //     const token = await adminToken();
+  //     //     const { rows } = await db.query('SELECT id FROM users limit 2');
+  //     //     const { id } = rows[1];
+  //     //     const res = await chai.request(server).patch(`/api/v1/user/${id}`).set('x-auth', token);
+  //     //     expect(res.status).to.eq(200);
+  //     //     expect(res.body.data).to.have.property('id').eq(id);
+  //     //     // eslint-disable-next-line no-unused-expressions
+  //     //     expect(res.body.data).to.have.property('is_admin').to.be.true;
+  //     // });
+  //     // it('Should return error 401 if admin is not logged in', async() => {
+  //     //     const { rows } = await db.query('SELECT id FROM users limit 2');
+  //     //     const { id } = rows[1];
+  //     //     const res = await chai.request(server).patch(`/api/v1/user/${id}`);
+  //     //     expect(res.status).to.eq(401);
+  //     //     expect(res.body.error).to.eq('No authorization token provided');
+  //     // });
+  //     it('Should return error 404 if user is not found', async() => {
+  //         const token = await adminToken();
+  //         const res = await chai.request(server).patch('/api/v1/user/1212121212121').set('x-auth', token);
+  //         expect(res.status).to.eq(404);
+  //         expect(res.body.error).to.eq('User not found or inactive');
+  //     });
+  // });
+  // user logout
 
   describe('User logout', function () {
     it('should log a user out of the app',
     /*#__PURE__*/
     _asyncToGenerator(
     /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee24() {
+    regeneratorRuntime.mark(function _callee18() {
       var token, res;
-      return regeneratorRuntime.wrap(function _callee24$(_context24) {
+      return regeneratorRuntime.wrap(function _callee18$(_context18) {
         while (1) {
-          switch (_context24.prev = _context24.next) {
+          switch (_context18.prev = _context18.next) {
             case 0:
-              _context24.next = 2;
+              _context18.next = 2;
               return genToken();
 
             case 2:
-              token = _context24.sent;
-              _context24.next = 5;
+              token = _context18.sent;
+              _context18.next = 5;
               return _chai2["default"].request(_index2["default"]).get('/api/v1/auth/logout').set('x-auth', token);
 
             case 5:
-              res = _context24.sent;
+              res = _context18.sent;
               expect(res.status).to.eq(200);
 
             case 7:
             case "end":
-              return _context24.stop();
+              return _context18.stop();
           }
         }
-      }, _callee24, this);
+      }, _callee18, this);
     })));
   });
-  describe('Admin disable a user', function () {
-    it('should disable a user',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee25() {
-      var token, _ref31, rows, id, res;
-
-      return regeneratorRuntime.wrap(function _callee25$(_context25) {
-        while (1) {
-          switch (_context25.prev = _context25.next) {
-            case 0:
-              _context25.next = 2;
-              return adminToken();
-
-            case 2:
-              token = _context25.sent;
-              _context25.next = 5;
-              return _db2["default"].query('SELECT id FROM users limit 2');
-
-            case 5:
-              _ref31 = _context25.sent;
-              rows = _ref31.rows;
-              id = rows[1].id;
-              _context25.next = 10;
-              return _chai2["default"].request(_index2["default"]).patch("/api/v1/users/".concat(id)).set('x-auth', token);
-
-            case 10:
-              res = _context25.sent;
-              expect(res.status).to.eq(200);
-              expect(res.body.data.id).to.eq(id);
-              expect(res.body.data.status).to.eq('disabled');
-
-            case 14:
-            case "end":
-              return _context25.stop();
-          }
-        }
-      }, _callee25, this);
-    })));
-    it('should return error 404 if user is not found',
-    /*#__PURE__*/
-    _asyncToGenerator(
-    /*#__PURE__*/
-    regeneratorRuntime.mark(function _callee26() {
-      var token, res;
-      return regeneratorRuntime.wrap(function _callee26$(_context26) {
-        while (1) {
-          switch (_context26.prev = _context26.next) {
-            case 0:
-              _context26.next = 2;
-              return adminToken();
-
-            case 2:
-              token = _context26.sent;
-              _context26.next = 5;
-              return _chai2["default"].request(_index2["default"]).patch('/api/v1/users/1212121212121').set('x-auth', token);
-
-            case 5:
-              res = _context26.sent;
-              expect(res.status).to.eq(404);
-              expect(res.body.error).to.eq('User not found or inactive');
-
-            case 8:
-            case "end":
-              return _context26.stop();
-          }
-        }
-      }, _callee26, this);
-    })));
+  describe('Admin disable a user', function () {// it('should disable a user', async() => {
+    //     const token = await adminToken();
+    //     const { rows } = await db.query('SELECT id FROM users limit 2');
+    //     const { id } = rows[1];
+    //     const res = await chai.request(server).patch(`/api/v1/users/${id}`).set('x-auth', token);
+    //     expect(res.status).to.eq(200);
+    //     expect(res.body.data.id).to.eq(id);
+    //     expect(res.body.data.status).to.eq('disabled');
+    // });
+    // it('should return error 404 if user is not found', async() => {
+    //     const token = await adminToken();
+    //     const res = await chai.request(server).patch('/api/v1/users/1212121212121').set('x-auth', token);
+    //     expect(res.status).to.eq(404);
+    //     expect(res.body.error).to.eq('User not found or inactive');
+    // });
   });
 });

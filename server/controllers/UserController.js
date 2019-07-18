@@ -4,7 +4,6 @@ import generateToken from '../lib/generateToken';
 import validateData from '../lib/validateData';
 import UserService from '../services/UserService';
 import util from '../lib/Util';
-import Util from '../lib/Util';
 
 
 

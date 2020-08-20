@@ -32,7 +32,7 @@
     "homepage": "https://github.com/ChidiChuks/AutoMart#readme",
     "dependencies": {
         "@babel/polyfill": "7.4.4",
-        "bcrypt": "3.0.6",
+        "bcrypt": "5.0.0",
         "cloudinary": "1.14.0",
         "cors": "2.8.5",
         "debug": "4.1.1",
